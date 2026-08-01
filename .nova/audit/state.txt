@@ -1,0 +1,8 @@
+NOVA READY STATE
+Sat Aug  1 08:40:26 AM CDT 2026
+
+COMMIT:
+c17950f NOVA security cleanup: remove secrets and generated files
+
+BRANCH:
+* main c17950f [origin/main] NOVA security cleanup: remove secrets and generated files
