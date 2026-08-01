@@ -1,5 +1,7 @@
 PRIMARY:
-PENDING ENGINEERING SELECTION
+real_Genie
 
 REASON:
-Requires comparison of NOVA-SOVERIGN, real_Genie, genie-sidekick, and related generations.
+Selected as primary NOVA lineage because it contains integrated backend,
+frontend, agent architecture, Docker configuration, and environment structure.
+Other generations remain preserved as historical migration sources.
