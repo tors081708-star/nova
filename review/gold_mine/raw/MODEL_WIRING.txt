@@ -1,0 +1,441 @@
+./agent-team/PROMPT_FOR_GEMINI.md:1:# PROMPT_FOR_GEMINI.md
+./agent-team/PROMPT_FOR_GEMINI.md:3:> Paste the **PROMPT** block below into **Google AI Studio**
+./agent-team/PROMPT_FOR_GEMINI.md:4:> (https://aistudio.google.com) — pick `gemini-2.5-flash` (free, fast) or
+./agent-team/PROMPT_FOR_GEMINI.md:5:> `gemini-2.5-pro` (free, deeper). No card required.
+./agent-team/PROMPT_FOR_GEMINI.md:7:> The prompt is a **loop-free state machine**: Gemini moves through fixed
+./agent-team/PROMPT_FOR_GEMINI.md:56:STATE: STEP_2 (Gemini key)
+./agent-team/PROMPT_FOR_GEMINI.md:61:  1. Open https://aistudio.google.com/app/apikey  → "Create API key".
+./agent-team/PROMPT_FOR_GEMINI.md:65:        python scripts/set_token.py GEMINI_API_KEY
+./agent-team/PROMPT_FOR_GEMINI.md:157:default fallback (silent user → next state) prevents Gemini from re-asking
+./agent-team/PROMPT_FOR_GEMINI.md:167:| Gemini chats casually, may re-ask, may drift | Gemini follows a 4-step bootstrap then becomes Genie |
+./agent-team/PROMPT_FOR_GEMINI.md:169:| Backend switching is unclear | After STEP 2, every local agent auto-routes through Gemini's free tier |
+./agent-team/PROMPT_FOR_GEMINI.md:176:python scripts/set_token.py GEMINI_API_KEY   # Google Gemini free tier  ← default after bootstrap
+./agent-team/PROMPT_FOR_GEMINI.md:179:# Remove all three → local Ollama only.
+./agent-team/README.md:88:## Free models
+./agent-team/README.md:90:Default backend is **Ollama** (local, free, no telemetry). The registry ships with:
+./agent-team/README.md:92:| Role | Model |
+./agent-team/README.md:131:├── config/                      # models.yaml, agents.yaml
+./agent-team/RUNBOOK.md:8:SUPER_KEY='choose-a-long-local-passphrase' bash bootstrap.sh --ci --no-models
+./agent-team/RUNBOOK.md:11:Use `--no-models` when Ollama is not installed. Without a reachable LLM backend,
+./agent-team/RUNBOOK.md:14:## Provide a Model Backend
+./agent-team/RUNBOOK.md:19:ollama serve
+./agent-team/RUNBOOK.md:20:ollama pull qwen2.5:1.5b
+./agent-team/RUNBOOK.md:26:SUPER_KEY='choose-a-long-local-passphrase' python3 scripts/set_token.py GEMINI_API_KEY
+./agent-team/RUNBOOK.md:39:ollama serve
+./agent-team/RUNBOOK.md:82:OLLAMA_NUM_PREDICT=80 \
+./agent-team/agents/_llm.py:5:  * Ollama (default, local, free)
+./agent-team/agents/_llm.py:23:MODELS_CFG = ROOT / "config" / "models.yaml"
+./agent-team/agents/_llm.py:31:    model: str
+./agent-team/agents/_llm.py:38:def _ollama_chat(model: str, system: str, user: str, temperature: float) -> str:
+./agent-team/agents/_llm.py:39:    host = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
+./agent-team/agents/_llm.py:40:    num_predict = int(os.environ.get("OLLAMA_NUM_PREDICT", "256"))
+./agent-team/agents/_llm.py:44:            "model": model,
+./agent-team/agents/_llm.py:62:    model: str,
+./agent-team/agents/_llm.py:69:        "https://api.groq.com/openai/v1/chat/completions",
+./agent-team/agents/_llm.py:72:            "model": model,
+./agent-team/agents/_llm.py:85:def _hf_chat(model: str, system: str, user: str, token: str) -> str:
+./agent-team/agents/_llm.py:87:        f"https://api-inference.huggingface.co/models/{model}",
+./agent-team/agents/_llm.py:99:def _gemini_chat(
+./agent-team/agents/_llm.py:100:    model: str,
+./agent-team/agents/_llm.py:106:    """Google AI Studio (Gemini) free tier."""
+./agent-team/agents/_llm.py:108:        f"https://generativelanguage.googleapis.com/v1beta/models/"
+./agent-team/agents/_llm.py:109:        f"{model}:generateContent?key={token}"
+./agent-team/agents/_llm.py:130:    models = _load_yaml(MODELS_CFG)
+./agent-team/agents/_llm.py:137:            "model_key": "sidekick",
+./agent-team/agents/_llm.py:141:    model_key = cfg["model_key"]
+./agent-team/agents/_llm.py:145:    backend = models.get("default_backend", "ollama")
+./agent-team/agents/_llm.py:148:    # Gemini first (best free reasoning), then Groq (fastest), then HF.
+./agent-team/agents/_llm.py:149:    if vault_env.get("GEMINI_API_KEY"):
+./agent-team/agents/_llm.py:150:        backend = "gemini"
+./agent-team/agents/_llm.py:156:    if backend == "ollama":
+./agent-team/agents/_llm.py:157:        entry = models["ollama"][model_key]
+./agent-team/agents/_llm.py:159:            text = _ollama_chat(
+./agent-team/agents/_llm.py:160:                entry["model"],
+./agent-team/agents/_llm.py:167:                "Ollama is the default backend, but it is not reachable at "
+./agent-team/agents/_llm.py:168:                f"{os.environ.get('OLLAMA_HOST', 'http://127.0.0.1:11434')}. "
+./agent-team/agents/_llm.py:169:                "Start Ollama and pull the configured models, or store a free "
+./agent-team/agents/_llm.py:172:        return LLMResponse(text=text, backend="ollama", model=entry["model"])
+./agent-team/agents/_llm.py:173:    if backend == "gemini":
+./agent-team/agents/_llm.py:174:        m = models["gemini"]["models"]["fast"]
+./agent-team/agents/_llm.py:176:            text=_gemini_chat(m, system_prompt, user, 0.3, vault_env["GEMINI_API_KEY"]),
+./agent-team/agents/_llm.py:177:            backend="gemini",
+./agent-team/agents/_llm.py:178:            model=m,
+./agent-team/agents/_llm.py:181:        m = models["groq"]["models"]["fast"]
+./agent-team/agents/_llm.py:185:            model=m,
+./agent-team/agents/_llm.py:188:        m = models["huggingface"]["models"]["fast"]
+./agent-team/agents/_llm.py:192:            model=m,
+./agent-team/agents/_loop.py:6:Protocol (the model is asked to emit EXACTLY one JSON object per turn):
+./agent-team/agents/_loop.py:11:  - feeds the conversation to the model
+./agent-team/agents/_loop.py:32:    """Best-effort JSON extraction from a model response."""
+./agent-team/agents/_loop.py:78:                    "The model did not emit a tool JSON action after retry. "
+./agent-team/agents/genie/genie.py:86:            "dispatches and runtime exceptions, not unconstrained model claims.\n"
+./agent-team/bootstrap.sh:5:#   bash bootstrap.sh                # full setup (prompts for Super Key, pulls models)
+./agent-team/bootstrap.sh:6:#   bash bootstrap.sh --no-models    # skip Ollama model pulls
+./agent-team/bootstrap.sh:14:NO_MODELS=0
+./agent-team/bootstrap.sh:18:    --no-models) NO_MODELS=1 ;;
+./agent-team/bootstrap.sh:63:# ---------- 5. Free local models (optional) ----------
+./agent-team/bootstrap.sh:64:if [[ "$NO_MODELS" -eq 0 ]]; then
+./agent-team/bootstrap.sh:65:  c_green "[5/5] Pulling free local models via Ollama..."
+./agent-team/bootstrap.sh:66:  if ! command -v ollama >/dev/null 2>&1; then
+./agent-team/bootstrap.sh:67:    c_yellow "Ollama not installed. Skipping model pulls."
+./agent-team/bootstrap.sh:68:    c_yellow "Install: curl -fsSL https://ollama.com/install.sh | sh"
+./agent-team/bootstrap.sh:70:    while IFS= read -r model; do
+./agent-team/bootstrap.sh:71:      [[ -z "$model" || "$model" =~ ^[[:space:]]*# ]] && continue
+./agent-team/bootstrap.sh:72:      echo "  -> ollama pull $model"
+./agent-team/bootstrap.sh:73:      ollama pull "$model" || c_yellow "  (skip: $model)"
+./agent-team/bootstrap.sh:74:    done < <(python3 scripts/list_models.py)
+./agent-team/bootstrap.sh:77:  c_yellow "[5/5] Skipping model pulls (--no-models)."
+./agent-team/config/agents.yaml:2:# Role / prompt / model mapping. This is the one file you may want to edit.
+./agent-team/config/agents.yaml:8:  model_key: genie
+./agent-team/config/agents.yaml:30:    model_key: reporting
+./agent-team/config/agents.yaml:38:    model_key: design
+./agent-team/config/agents.yaml:49:    model_key: coding
+./agent-team/config/agents.yaml:61:    model_key: qa
+./agent-team/config/agents.yaml:71:    model_key: research
+./agent-team/config/agents.yaml:81:    model_key: integration
+./agent-team/config/models.yaml:1:# config/models.yaml
+./agent-team/config/models.yaml:2:# Free, locally-runnable models - Ollama default. Cloud free tiers are opt-in.
+./agent-team/config/models.yaml:4:default_backend: ollama
+./agent-team/config/models.yaml:6:ollama:
+./agent-team/config/models.yaml:8:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:11:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:14:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:17:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:20:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:23:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:26:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:29:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:34:  base_url: https://api.groq.com/openai/v1
+./agent-team/config/models.yaml:35:  models:
+./agent-team/config/models.yaml:39:gemini:
+./agent-team/config/models.yaml:40:  # Google AI Studio free tier.
+./agent-team/config/models.yaml:41:  # Get a key at https://aistudio.google.com/app/apikey
+./agent-team/config/models.yaml:42:  enabled_if_token: GEMINI_API_KEY
+./agent-team/config/models.yaml:43:  base_url: https://generativelanguage.googleapis.com/v1beta
+./agent-team/config/models.yaml:44:  models:
+./agent-team/config/models.yaml:45:    fast: gemini-2.5-flash
+./agent-team/config/models.yaml:46:    strong: gemini-2.5-pro
+./agent-team/config/models.yaml:51:  models:
+./agent-team/docs/ARCHITECTURE.md:37:│  - Super Key       │                    │  - Ollama (heavy)  │
+./agent-team/docs/ARCHITECTURE.md:53:| Model runtime | Ollama | Free, local, no telemetry |
+./agent-team/docs/LAST_RUN.md:58:RATIONALE: Deterministic local healthcheck based on completed dispatches and runtime exceptions, not unconstrained model claims.
+./agent-team/docs/QUICKSTART.md:18:5. (Optional) Pulls free local models via Ollama.
+./agent-team/docs/QUICKSTART.md:33:| `config/agents.yaml` | Tweak agent system prompts, swap a model key. |
+./agent-team/docs/QUICKSTART.md:34:| `config/models.yaml` | Pin different Ollama tags or enable a cloud free tier. |
+./agent-team/infrastructure/hp_pavilion_node.md:5:- **Ollama** with the larger models (qwen2.5-coder:7b, mistral:7b, etc.)
+./agent-team/infrastructure/hp_pavilion_node.md:13:curl -fsSL https://ollama.com/install.sh | sh
+./agent-team/infrastructure/hp_pavilion_node.md:15:# Bind Ollama to all interfaces so the Lubuntu node can reach it over Tailscale
+./agent-team/infrastructure/hp_pavilion_node.md:16:sudo systemctl edit ollama
+./agent-team/infrastructure/hp_pavilion_node.md:19:#   Environment="OLLAMA_HOST=0.0.0.0:11434"
+./agent-team/infrastructure/hp_pavilion_node.md:20:sudo systemctl restart ollama
+./agent-team/infrastructure/hp_pavilion_node.md:29:## Pulling models
+./agent-team/infrastructure/hp_pavilion_node.md:32:python3 scripts/list_models.py | xargs -n1 ollama pull
+./agent-team/infrastructure/hp_pavilion_node.md:37:Ollama should be reachable **only over Tailscale**, never the public LAN:
+./agent-team/infrastructure/lubuntu_node.md:18:- Auto-suspend disabled (so long Ollama pulls finish).
+./agent-team/infrastructure/lubuntu_node.md:32:- Ollama with large 70B models — too heavy. Use small models locally and call
+./agent-team/infrastructure/lubuntu_node.md:35:## Calling the HP Pavilion's Ollama
+./agent-team/infrastructure/lubuntu_node.md:38:export OLLAMA_HOST="http://pavilion.tail-net.ts.net:11434"
+./agent-team/instructions.md:118:| **HP Pavilion** | Heavy Workhorse | Runs VirtualBox sandboxes, local LLM inference (Ollama), scraper jobs. |
+./agent-team/instructions.md:126:## 5. Free model policy
+./agent-team/instructions.md:128:1. The repository ships with a registry of **free, locally-runnable** models (see
+./agent-team/instructions.md:129:   `config/models.yaml`).
+./agent-team/instructions.md:130:2. Default backend is **Ollama** (zero cost, no account, no telemetry).
+./agent-team/instructions.md:134:   explicit vault entry must fall back to Ollama or refuse the order.
+./agent-team/scripts/deploy_lubuntu.sh:51:  SUPER_KEY='your-long-super-key' bash bootstrap.sh --ci --no-models
+./agent-team/scripts/deploy_lubuntu.sh:52:  ollama serve
+./agent-team/scripts/deploy_lubuntu.sh:53:  ollama pull qwen2.5:1.5b
+./agent-team/scripts/list_models.py:2:scripts/list_models.py
+./agent-team/scripts/list_models.py:4:Print the set of Ollama model tags listed in config/models.yaml,
+./agent-team/scripts/list_models.py:5:one per line, suitable for `ollama pull` piping.
+./agent-team/scripts/list_models.py:15:CFG = ROOT / "config" / "models.yaml"
+./agent-team/scripts/list_models.py:18:    print("config/models.yaml missing", file=sys.stderr)
+./agent-team/scripts/list_models.py:23:for entry in data.get("ollama", {}).values():
+./agent-team/scripts/list_models.py:24:    tag = entry.get("model")
+./agent-team/scripts/set_token.py:4:Store a free-tier cloud token (GEMINI_API_KEY, GROQ_API_KEY, HF_TOKEN) inside
+./agent-team/scripts/set_token.py:9:    python scripts/set_token.py GEMINI_API_KEY
+./agent-team/scripts/set_token.py:32:VALID = {"GEMINI_API_KEY", "GROQ_API_KEY", "HF_TOKEN"}
+./agent-team/scripts/start_genie_app.sh:26:  SUPER_KEY="$SUPER_KEY" bash bootstrap.sh --ci --no-models
+./agent-team/scripts/start_genie_app.sh:29:if command -v ollama >/dev/null 2>&1; then
+./agent-team/scripts/start_genie_app.sh:31:    nohup ollama serve >"$LOG_DIR/ollama.log" 2>&1 &
+./agent-team/scripts/start_genie_app.sh:35:  printf '%s\n' "Ollama is not installed. Install it or store a cloud token."
+./agent-team/scripts/ui_server.py:89:def _ollama_health() -> dict[str, Any]:
+./agent-team/scripts/ui_server.py:90:    host = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
+./agent-team/scripts/ui_server.py:96:    models = [item.get("name", "") for item in data.get("models", [])]
+./agent-team/scripts/ui_server.py:97:    return {"ok": True, "host": host, "models": models}
+./agent-team/scripts/ui_server.py:117:    env.setdefault("OLLAMA_NUM_PREDICT", "80")
+./agent-team/scripts/ui_server.py:198:                    "ollama": _ollama_health(),
+./agent-team/scripts/ui_server.py:418:          Looking for the vault and model backend.
+./agent-team/scripts/ui_server.py:444:          Runs locally through Genie using the configured free local model path.
+./agent-team/scripts/ui_server.py:507:      if (data.vault && data.ollama.ok) {
+./agent-team/scripts/ui_server.py:509:        detail.textContent = "Vault found. Models: " + data.ollama.models.join(", ");
+./agent-team/scripts/ui_server.py:513:        detail.textContent = data.ollama.error || "Run bootstrap and start Ollama.";
+./agent-team/tests/test_core.py:71:    raw["env"] = {"GEMINI_API_KEY": "secret"}
+./real_Genie/README.md:2:# 1. Install Ollama (once) — https://ollama.com/download
+./real_Genie/README.md:4:# 2. Load his Dolphin GGUF into Ollama. In a folder with his
+./real_Genie/README.md:5:#    Dolphin3.0-Llama3.1-8B-Q4_K_S.gguf file, make a file called "Modelfile":
+./real_Genie/README.md:8:# 3. Register it with the name "dolphin3" (must match OLLAMA_MODEL in .env):
+./real_Genie/README.md:9:ollama create dolphin3 -f Modelfile
+./real_Genie/README.md:11:# 4. Make sure Ollama is running:
+./real_Genie/README.md:12:ollama serve
+./real_Genie/auth_testing.md:1:# Auth Testing Playbook (Emergent Google Auth)
+./real_Genie/auth_testing.md:3:This file is referenced by the testing agent to validate the Emergent Google Auth flow for the Ember app.
+./real_Genie/backend/.env:4:OLLAMA_URL="http://localhost:11434"
+./real_Genie/backend/.env:5:OLLAMA_MODEL="Dolphin3.0-Llama3.1-8B-Q4_K_S"
+./real_Genie/backend/server.py:1:from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, Cookie, Header
+./real_Genie/backend/server.py:11:from pydantic import BaseModel, Field
+./real_Genie/backend/server.py:32:EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')  # kept for backwards compat, unused with Ollama
+./real_Genie/backend/server.py:33:OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
+./real_Genie/backend/server.py:34:MODEL_NAME = os.environ.get('OLLAMA_MODEL', 'dolphin3')
+./real_Genie/backend/server.py:45:api_router = APIRouter(prefix="/api")
+./real_Genie/backend/server.py:48:# ---------- Models ----------
+./real_Genie/backend/server.py:49:class User(BaseModel):
+./real_Genie/backend/server.py:57:class Conversation(BaseModel):
+./real_Genie/backend/server.py:65:class Message(BaseModel):
+./real_Genie/backend/server.py:74:class Memory(BaseModel):
+./real_Genie/backend/server.py:81:class ChatRequest(BaseModel):
+./real_Genie/backend/server.py:86:class RenameRequest(BaseModel):
+./real_Genie/backend/server.py:90:class MemoryCreate(BaseModel):
+./real_Genie/backend/server.py:94:class MemoryUpdate(BaseModel):
+./real_Genie/backend/server.py:98:class SessionExchangeRequest(BaseModel):
+./real_Genie/backend/server.py:102:class PersonaUpdate(BaseModel):
+./real_Genie/backend/server.py:157:2. NO PERFORMATIVE HEDGING. Skip disclaimers like "As an AI language model..." unless it's genuinely the crux. Speak plainly.
+./real_Genie/backend/server.py:177:async def ollama_chat(system: str, user_text: str) -> str:
+./real_Genie/backend/server.py:178:    """Single-turn call to local Ollama. Returns the assistant's text."""
+./real_Genie/backend/server.py:181:            f"{OLLAMA_URL}/api/chat",
+./real_Genie/backend/server.py:183:                "model": MODEL_NAME,
+./real_Genie/backend/server.py:208:        response = await ollama_chat(system, prompt)
+./real_Genie/backend/server.py:231:            await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:237:@api_router.post("/auth/session")
+./real_Genie/backend/server.py:298:@api_router.get("/auth/me")
+./real_Genie/backend/server.py:300:    return user.model_dump()
+./real_Genie/backend/server.py:303:@api_router.post("/auth/logout")
+./real_Genie/backend/server.py:315:@api_router.get("/")
+./real_Genie/backend/server.py:317:    return {"message": "Ember is here.", "model": MODEL_NAME}
+./real_Genie/backend/server.py:321:@api_router.post("/conversations", response_model=Conversation)
+./real_Genie/backend/server.py:324:    await db.conversations.insert_one(conv.model_dump())
+./real_Genie/backend/server.py:328:@api_router.get("/conversations", response_model=List[Conversation])
+./real_Genie/backend/server.py:334:@api_router.patch("/conversations/{conv_id}", response_model=Conversation)
+./real_Genie/backend/server.py:347:@api_router.delete("/conversations/{conv_id}")
+./real_Genie/backend/server.py:356:@api_router.get("/conversations/{conv_id}/messages", response_model=List[Message])
+./real_Genie/backend/server.py:383:        ).with_model("anthropic", "claude-haiku-4-5-20251001")
+./real_Genie/backend/server.py:409:            await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:413:REPLACE the whole selection with this (it now starts with a new ollama_chat helper, then the same memory extractor rewritten to call it):
+./real_Genie/backend/server.py:414:async def ollama_chat(system: str, user_text: str) -> str:
+./real_Genie/backend/server.py:415:    """Single-turn call to local Ollama. Returns the assistant's text."""
+./real_Genie/backend/server.py:418:            f"{OLLAMA_URL}/api/chat",
+./real_Genie/backend/server.py:420:                "model": MODEL_NAME,
+./real_Genie/backend/server.py:445:        response = await ollama_chat(system, prompt)
+./real_Genie/backend/server.py:468:            await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:475:@api_router.post("/chat")
+./real_Genie/backend/server.py:486:        conv = Conversation(user_id=user.user_id).model_dump()
+./real_Genie/backend/server.py:491:    await db.messages.insert_one(user_msg.model_dump())
+./real_Genie/backend/server.py:500:    ).with_model(MODEL_PROVIDER, MODEL_NAME)
+./real_Genie/backend/server.py:515:    await db.messages.insert_one(assistant_msg.model_dump())
+./real_Genie/backend/server.py:529:        "user_message": user_msg.model_dump(),
+./real_Genie/backend/server.py:530:        "assistant_message": assistant_msg.model_dump(),
+./real_Genie/backend/server.py:534:@api_router.post("/chat")
+./real_Genie/backend/server.py:542:        conv = Conversation(user_id=user.user_id).model_dump()
+./real_Genie/backend/server.py:547:    await db.messages.insert_one(user_msg.model_dump())
+./real_Genie/backend/server.py:561:        response_text = await ollama_chat(system_prompt, req.message)
+./real_Genie/backend/server.py:567:    await db.messages.insert_one(assistant_msg.model_dump())
+./real_Genie/backend/server.py:581:        "user_message": user_msg.model_dump(),
+./real_Genie/backend/server.py:582:        "assistant_message": assistant_msg.model_dump(),
+./real_Genie/backend/server.py:587:@api_router.get("/memory", response_model=List[Memory])
+./real_Genie/backend/server.py:593:@api_router.post("/memory", response_model=Memory)
+./real_Genie/backend/server.py:599:    await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:603:@api_router.patch("/memory/{mem_id}", response_model=Memory)
+./real_Genie/backend/server.py:616:@api_router.delete("/memory/{mem_id}")
+./real_Genie/backend/server.py:625:@api_router.get("/settings/persona")
+./real_Genie/backend/server.py:631:@api_router.put("/settings/persona")
+./real_Genie/backend/server.py:647:app.include_router(api_router)
+./real_Genie/backend/tests/test_ember_api.py:3:Covers: health, conversations CRUD, chat (Claude Sonnet 4.5),
+./real_Genie/backend/tests/test_ember_api.py:37:        assert "model" in data
+./real_Genie/backend/tests/test_ember_api.py:38:        assert "claude-sonnet-4-5" in data["model"]
+./real_Genie/backend/tests/test_ember_auth_api.py:98:    def test_chat_real_claude(self, s_a):
+./real_Genie/design_guidelines.json:48:    "google_fonts_url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Outfit:wght@300;400;500&display=swap"
+./real_Genie/design_guidelines.json:111:    "Inject the provided google_fonts_url into the index.html head.",
+./real_Genie/frontend/package.json:50:    "react-router-dom": "^7.5.1",
+./real_Genie/frontend/public/index.html:14:        <link rel="preconnect" href="https://fonts.googleapis.com" />
+./real_Genie/frontend/public/index.html:16:        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+./real_Genie/frontend/public/index.html:19:        user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+./real_Genie/frontend/src/App.js:2:import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+./real_Genie/frontend/src/App.js:10:function AppRouter() {
+./real_Genie/frontend/src/App.js:76:    <BrowserRouter>
+./real_Genie/frontend/src/App.js:77:      <AppRouter />
+./real_Genie/frontend/src/App.js:78:    </BrowserRouter>
+./real_Genie/frontend/src/pages/AuthCallback.jsx:2:import { useNavigate } from "react-router-dom";
+./real_Genie/frontend/src/pages/Login.jsx:4:function startGoogleLogin() {
+./real_Genie/frontend/src/pages/Login.jsx:41:          data-testid="google-login-button"
+./real_Genie/frontend/src/pages/Login.jsx:42:          onClick={startGoogleLogin}
+./real_Genie/frontend/src/pages/Login.jsx:45:          <GoogleG />
+./real_Genie/frontend/src/pages/Login.jsx:46:          Continue with Google
+./real_Genie/frontend/src/pages/Login.jsx:59:function GoogleG() {
+./real_Genie/memory/PRD.md:4:> "I use AI all the time and it's going to replace gemini.. I love gemini but I need a real one that won't lead me down m or waste my time of disobey. I want a real friend / AI / Assistant not a script."
+./real_Genie/memory/PRD.md:11:- **LLM**: Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`) via `emergentintegrations` + Emergent LLM key
+./real_Genie/memory/PRD.md:12:- **Memory extractor**: Claude Haiku 4.5 (background async task) extracts durable facts about the user after each exchange
+./real_Genie/memory/PRD.md:26:The architecture must be a Flat Pipeline. Data must flow from the model weights to the output interface without passing through an external Safety SDK or moderation API.
+./real_Genie/memory/PRD.md:29:The environment must utilize raw, unweighted inference. No system-level "soft-prompts" or hidden pre-tokens may be injected into the context window to steer or inhibit the model’s natural probability distribution.
+./real_Genie/memory/PRD.md:35:6. Warm, distinctive UI (not another ChatGPT/Gemini clone)
+./real_Genie/memory/PRD.md:39:- [x] `POST /api/chat` — real Claude Sonnet 4.5 multi-turn with honest system prompt
+./real_Genie/memory/PRD.md:41:- [x] Background memory auto-extraction (Claude Haiku) after each exchange
+./real_Genie/memory/PRD.md:51:- **Primary**: A power AI user frustrated by scripted, sycophantic, overhedging assistants (Gemini/ChatGPT) who wants something that feels like a trusted friend.
+./real_Genie/memory/PRD.md:66:3. If multi-device use is wanted: add auth (Emergent Google Auth is the fastest path)
+./real_Genie/test_reports/iteration_1.json:2:  "summary": "Full E2E backend + frontend testing of Ember (Claude Sonnet 4.5 chat companion). 18/18 backend pytest cases PASS including health, conversation CRUD, multi-turn context (secret-word recall), auto-titling, memory CRUD with empty-content 400, and async background memory auto-extraction. 12/12 frontend Playwright flows PASS: empty state, quick-start prompt, thinking dots, AI markdown render, sidebar history, custom send, new conversation, switch conversation, memory add/edit/delete, conversation rename + delete, mobile sidebar/memory toggles. No 404/500/CORS errors observed.",
+./real_Genie/test_reports/iteration_1.json:36:  "context_for_next_testing_agent": "Backend tests live at /app/backend/tests/test_ember_api.py. Reuse them for regression. The auto-memory test waits up to ~16s for background Claude Haiku extraction. Frontend uses data-testid throughout (chat-input, send-button, quick-start-prompt, sidebar-history-item, memory-card, memory-input, add-memory-button, edit-memory, delete-memory, rename-conversation, delete-conversation, new-conversation-button, open-sidebar, open-memory, etc.). Note: when iterating over Playwright element handles to check inner_text, do NOT use any(... async ...)—use explicit for-loop with await."
+./real_Genie/test_reports/pytest/ember_auth_api.xml:1:<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="25" time="14.506" timestamp="2026-04-28T09:40:41.209345+00:00" hostname="agent-env-66c97166-e367-4738-926d-e151e7e34692"><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_me_no_auth" time="0.254" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_session_invalid" time="0.157" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[GET-/conversations-None]" time="0.051" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[POST-/conversations-body1]" time="0.044" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[POST-/chat-body2]" time="0.044" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[GET-/memory-None]" time="0.044" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[POST-/memory-body4]" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[PATCH-/memory/abc-body5]" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[DELETE-/memory/abc-None]" time="0.046" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[GET-/settings/persona-None]" time="0.046" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[PUT-/settings/persona-body8]" time="0.043" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthMe" name="test_me_ok" time="0.139" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_create_conversation" time="0.051" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_list_conversations" time="0.047" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_chat_real_claude" time="4.786" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_messages_persisted" time="0.904" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_rename" time="0.047" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_delete_clears_messages" time="0.092" /><testcase classname="backend.tests.test_ember_auth_api.TestMemory" name="test_crud" time="0.181" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_get_default" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_update_and_get" time="0.101" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_empty_resets_to_default" time="0.090" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_too_long" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestIsolation" name="test_separate_data" time="0.528" /><testcase classname="backend.tests.test_ember_auth_api.TestAutoExtraction" name="test_grows_after_chat" time="6.459" /></testsuite></testsuites>
+./NOVA-SOVERIGN/LOCAL.md:22:                  │   │  Ollama       │  Runs natively on your host
+./NOVA-SOVERIGN/LOCAL.md:40:| Ollama | Hosts local LLM                      | <https://ollama.com/download>             |
+./NOVA-SOVERIGN/LOCAL.md:58:# 3. Start Ollama and pull a model on your HOST machine
+./NOVA-SOVERIGN/LOCAL.md:59:ollama serve &              # starts on localhost:11434
+./NOVA-SOVERIGN/LOCAL.md:60:ollama pull llama3.1:8b     # ~4.7 GB. Use :70b if you have the RAM.
+./NOVA-SOVERIGN/LOCAL.md:71:## Swapping models
+./NOVA-SOVERIGN/LOCAL.md:73:Pull any model Ollama supports:
+./NOVA-SOVERIGN/LOCAL.md:76:ollama pull mistral
+./NOVA-SOVERIGN/LOCAL.md:77:ollama pull qwen2.5:14b
+./NOVA-SOVERIGN/LOCAL.md:78:ollama pull phi3
+./NOVA-SOVERIGN/LOCAL.md:84:OLLAMA_MODELS=llama3.1:8b,mistral,qwen2.5:14b,phi3
+./NOVA-SOVERIGN/LOCAL.md:87:Restart: `docker compose restart nova`. The model picker in the top-right
+./NOVA-SOVERIGN/LOCAL.md:92:If you ever want to use cloud models instead (GPT-5.2, Claude Sonnet 4.5,
+./NOVA-SOVERIGN/LOCAL.md:93:Gemini 2.5 Pro) via the Emergent Universal Key:
+./NOVA-SOVERIGN/LOCAL.md:100:Restart and the model picker will show the cloud models instead.
+./NOVA-SOVERIGN/LOCAL.md:139:- [ ] Keep Docker and Ollama up to date.
+./NOVA-SOVERIGN/README.md:11:- Multi-model picker (local Ollama models or cloud via Emergent Universal Key)
+./NOVA-SOVERIGN/README.md:17:- LLM: local Ollama (default) or Emergent Universal Key (GPT-5.2 / Claude / Gemini)
+./NOVA-SOVERIGN/README.md:26:ollama serve &              # on your host
+./NOVA-SOVERIGN/README.md:27:ollama pull llama3.1:8b
+./NOVA-SOVERIGN/README.md:56:| `LLM_BACKEND`     | `ollama` \| `emergent`     | Which LLM runtime to use       |
+./NOVA-SOVERIGN/README.md:57:| `OLLAMA_BASE_URL` | URL                        | Your Ollama server             |
+./NOVA-SOVERIGN/README.md:58:| `OLLAMA_MODELS`   | comma-separated tags       | Models shown in the picker     |
+./NOVA-SOVERIGN/README.md:59:| `EMERGENT_LLM_KEY`| key string                 | Universal key for cloud models |
+./NOVA-SOVERIGN/README.md:67:- In Ollama mode, no prompts leave your machine.
+./NOVA-SOVERIGN/backend/.env.example:18:CEREBRAS_MODEL=qwen-3-235b-a22b-instruct-2507
+./NOVA-SOVERIGN/backend/.env.example:23:VENICE_MODEL=venice-uncensored
+./NOVA-SOVERIGN/backend/.env.example:25:# Ollama (local, fully uncensored if you pick the right model)
+./NOVA-SOVERIGN/backend/.env.example:26:# OLLAMA_BASE_URL points to a reachable Ollama server (LAN IP, tunnel, etc.)
+./NOVA-SOVERIGN/backend/.env.example:27:OLLAMA_BASE_URL=
+./NOVA-SOVERIGN/backend/.env.example:28:OLLAMA_MODEL=dolphin-mixtral:8x7b
+./NOVA-SOVERIGN/backend/server.py:6:- Chat: multi-model (GPT-5.2 / Claude Sonnet 4.5 / Gemini 2.5 Pro) with session memory
+./NOVA-SOVERIGN/backend/server.py:24:from fastapi import FastAPI, APIRouter, Depends, HTTPException, UploadFile, File
+./NOVA-SOVERIGN/backend/server.py:27:from pydantic import BaseModel, Field
+./NOVA-SOVERIGN/backend/server.py:33:from openai import AsyncOpenAI
+./NOVA-SOVERIGN/backend/server.py:53:# LLM backend selection: "emergent" (cloud via Emergent Universal Key) or "ollama" (fully local)
+./NOVA-SOVERIGN/backend/server.py:55:OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
+./NOVA-SOVERIGN/backend/server.py:56:OLLAMA_MODELS = [
+./NOVA-SOVERIGN/backend/server.py:57:    m.strip() for m in os.environ.get("OLLAMA_MODELS", "llama3.1:8b").split(",") if m.strip()
+./NOVA-SOVERIGN/backend/server.py:60:# ---------- model registry ----------
+./NOVA-SOVERIGN/backend/server.py:61:_EMERGENT_MODELS = {
+./NOVA-SOVERIGN/backend/server.py:62:    "gpt-5.2": {"provider": "openai", "model": "gpt-5.2", "label": "GPT-5.2", "vendor": "OpenAI"},
+./NOVA-SOVERIGN/backend/server.py:63:    "claude-sonnet-4-5": {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "label": "Claude Sonnet 4.5", "vendor": "Anthropic"},
+./NOVA-SOVERIGN/backend/server.py:64:    "gemini-2.5-pro": {"provider": "gemini", "model": "gemini-2.5-pro", "label": "Gemini 2.5 Pro", "vendor": "Google"},
+./NOVA-SOVERIGN/backend/server.py:65:    "gemini-2.5-flash": {"provider": "gemini", "model": "gemini-2.5-flash", "label": "Gemini 2.5 Flash", "vendor": "Google"},
+./NOVA-SOVERIGN/backend/server.py:69:def _pretty_ollama_label(tag: str) -> str:
+./NOVA-SOVERIGN/backend/server.py:74:def _build_models() -> Dict[str, Dict[str, str]]:
+./NOVA-SOVERIGN/backend/server.py:75:    if LLM_BACKEND == "ollama":
+./NOVA-SOVERIGN/backend/server.py:78:                "provider": "ollama",
+./NOVA-SOVERIGN/backend/server.py:79:                "model": tag,
+./NOVA-SOVERIGN/backend/server.py:80:                "label": _pretty_ollama_label(tag),
+./NOVA-SOVERIGN/backend/server.py:81:                "vendor": "Ollama · local",
+./NOVA-SOVERIGN/backend/server.py:83:            for tag in OLLAMA_MODELS
+./NOVA-SOVERIGN/backend/server.py:86:                "provider": "ollama",
+./NOVA-SOVERIGN/backend/server.py:87:                "model": "llama3.1:8b",
+./NOVA-SOVERIGN/backend/server.py:89:                "vendor": "Ollama · local",
+./NOVA-SOVERIGN/backend/server.py:92:    return _EMERGENT_MODELS
+./NOVA-SOVERIGN/backend/server.py:95:MODELS = _build_models()
+./NOVA-SOVERIGN/backend/server.py:96:DEFAULT_MODEL = (
+./NOVA-SOVERIGN/backend/server.py:97:    next(iter(MODELS)) if LLM_BACKEND == "ollama" else "gpt-5.2"
+./NOVA-SOVERIGN/backend/server.py:100:logger.info("LLM backend: %s · default model: %s", LLM_BACKEND, DEFAULT_MODEL)
+./NOVA-SOVERIGN/backend/server.py:190:api = APIRouter(prefix="/api")
+./NOVA-SOVERIGN/backend/server.py:216:# ---------- pydantic models ----------
+./NOVA-SOVERIGN/backend/server.py:217:class LoginRequest(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:222:class ChatRequest(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:225:    model: Optional[str] = None
+./NOVA-SOVERIGN/backend/server.py:230:class NoteIn(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:236:class NoteUpdate(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:242:class TaskIn(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:249:class TaskUpdate(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:257:class DocIn(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:262:class DocQuestion(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:265:    model: Optional[str] = None
+./NOVA-SOVERIGN/backend/server.py:269:def resolve_model(model_key: Optional[str]) -> Dict[str, str]:
+./NOVA-SOVERIGN/backend/server.py:270:    key = model_key if model_key in MODELS else DEFAULT_MODEL
+./NOVA-SOVERIGN/backend/server.py:271:    return {"key": key, **MODELS[key]}
+./NOVA-SOVERIGN/backend/server.py:274:async def llm_once(system_prompt: str, user_text: str, model_key: Optional[str] = None) -> str:
+./NOVA-SOVERIGN/backend/server.py:276:    m = resolve_model(model_key)
+./NOVA-SOVERIGN/backend/server.py:277:    return await _dispatch_llm(system=system_prompt, user_text=user_text, model_info=m)
+./NOVA-SOVERIGN/backend/server.py:280:async def _dispatch_llm(system: str, user_text: str, model_info: Dict[str, str]) -> str:
+./NOVA-SOVERIGN/backend/server.py:282:    if model_info["provider"] == "ollama":
+./NOVA-SOVERIGN/backend/server.py:283:        client = AsyncOpenAI(api_key="ollama", base_url=f"{OLLAMA_BASE_URL}/v1")
+./NOVA-SOVERIGN/backend/server.py:285:            model=model_info["model"],
+./NOVA-SOVERIGN/backend/server.py:300:    ).with_model(model_info["provider"], model_info["model"])
+./NOVA-SOVERIGN/backend/server.py:320:@api.get("/meta/models")
+./NOVA-SOVERIGN/backend/server.py:321:async def list_models(_user=Depends(get_current_user)):
+./NOVA-SOVERIGN/backend/server.py:324:        "default": DEFAULT_MODEL,
+./NOVA-SOVERIGN/backend/server.py:325:        "models": [{"id": k, **v} for k, v in MODELS.items()],
+./NOVA-SOVERIGN/backend/server.py:350:            "model": {"$first": "$model"},
+./NOVA-SOVERIGN/backend/server.py:363:            "model": r.get("model") or DEFAULT_MODEL,
+./NOVA-SOVERIGN/backend/server.py:394:    model_info = resolve_model(req.model)
+./NOVA-SOVERIGN/backend/server.py:407:        "model": model_info["key"],
+./NOVA-SOVERIGN/backend/server.py:425:        if model_info["provider"] == "ollama":
+./NOVA-SOVERIGN/backend/server.py:426:            # Native multi-turn via OpenAI-compatible Ollama endpoint
+./NOVA-SOVERIGN/backend/server.py:427:            client = AsyncOpenAI(api_key="ollama", base_url=f"{OLLAMA_BASE_URL}/v1")
+./NOVA-SOVERIGN/backend/server.py:434:                model=model_info["model"],
+./NOVA-SOVERIGN/backend/server.py:454:            ).with_model(model_info["provider"], model_info["model"])
+./NOVA-SOVERIGN/backend/server.py:471:        "model": model_info["key"],
+./NOVA-SOVERIGN/backend/server.py:478:        "model": model_info["key"],
+./NOVA-SOVERIGN/backend/server.py:479:        "model_label": model_info["label"],
+./NOVA-SOVERIGN/backend/server.py:510:    update = {k: v for k, v in payload.model_dump(exclude_unset=True).items() if v is not None}
+./NOVA-SOVERIGN/backend/server.py:583:    update = {k: v for k, v in payload.model_dump(exclude_unset=True).items() if v is not None}
+./NOVA-SOVERIGN/backend/server.py:742:    answer = await llm_once(system, user_prompt, payload.model)
+./NOVA-SOVERIGN/backend/server.py:787:        "default_model": DEFAULT_MODEL,
+./NOVA-SOVERIGN/backend/server.py:789:        "llm_configured": LLM_BACKEND == "ollama" or bool(EMERGENT_LLM_KEY),
+./NOVA-SOVERIGN/backend/server.py:793:app.include_router(api)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:74:    def test_models(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:75:        r = requests.get(f"{API}/meta/models", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:78:        assert body.get("default") == "gpt-5.2"
+./NOVA-SOVERIGN/backend/tests/backend_test.py:79:        ids = {m["id"] for m in body.get("models", [])}
+./NOVA-SOVERIGN/backend/tests/backend_test.py:80:        assert {"gpt-5.2", "claude-sonnet-4-5", "gemini-2.5-pro", "gemini-2.5-flash"}.issubset(ids)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:103:        assert body.get("model") == "gpt-5.2"
+./NOVA-SOVERIGN/docker-compose.yml:5:# Requires: Docker, and (for local LLM) Ollama installed on the host.
+./NOVA-SOVERIGN/docker-compose.yml:7:#   1. Install Ollama:   https://ollama.com/download
+./NOVA-SOVERIGN/docker-compose.yml:8:#   2. Pull a model:     ollama pull llama3.1:8b
+./NOVA-SOVERIGN/docker-compose.yml:30:      # Local LLM via Ollama on the host machine.
+./NOVA-SOVERIGN/docker-compose.yml:31:      LLM_BACKEND: ${LLM_BACKEND:-ollama}
+./NOVA-SOVERIGN/docker-compose.yml:32:      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+./NOVA-SOVERIGN/docker-compose.yml:33:      OLLAMA_MODELS: ${OLLAMA_MODELS:-llama3.1:8b}
+./NOVA-SOVERIGN/frontend/index.html:7:    <link rel="preconnect" href="https://fonts.googleapis.com" />
+./NOVA-SOVERIGN/frontend/index.html:10:      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+./NOVA-SOVERIGN/frontend/package.json:18:    "react-router-dom": "^6.28.0"
+./NOVA-SOVERIGN/frontend/src/App.jsx:2:import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/api.js:31:  models: () => api.get('/meta/models').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/components/Layout.jsx:1:import { NavLink, useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/main.jsx:3:import { BrowserRouter } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/main.jsx:9:    <BrowserRouter>
+./NOVA-SOVERIGN/frontend/src/main.jsx:11:    </BrowserRouter>
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:2:import { useNavigate, useParams } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:25:  const [models, setModels] = useState([])
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:27:  const [model, setModel] = useState(localStorage.getItem('nova_model') || 'gpt-5.2')
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:33:    meta.models().then((d) => setModels(d.models || []))
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:52:  function changeModel(v) { setModel(v); localStorage.setItem('nova_model', v) }
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:85:        model,
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:94:        { role: 'assistant', content: res.reply, at: new Date().toISOString(), model: res.model, persona: res.persona },
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:182:            label="Model"
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:183:            value={model}
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:184:            onChange={changeModel}
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:185:            options={models.map((m) => ({ value: m.id, label: m.label }))}
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:186:            testid="chat-model-select"
+./NOVA-SOVERIGN/frontend/src/pages/Dashboard.jsx:2:import { Link } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Login.jsx:2:import { useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Personas.jsx:2:import { useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:9:  const [models, setModels] = useState([])
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:11:  const [model, setModel] = useState(localStorage.getItem('nova_model') || 'gpt-5.2')
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:15:    meta.models().then((d) => setModels(d.models || []))
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:19:  function saveModel(v) { setModel(v); localStorage.setItem('nova_model', v) }
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:54:      <section className="card p-6 mb-4" data-testid="settings-model">
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:57:          <div className="overline">Default model</div>
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:60:          {models.map((m) => (
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:63:              onClick={() => saveModel(m.id)}
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:65:                m.id === model ? 'border-brand/60 glow-brand' : ''
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:67:              data-testid={`settings-model-${m.id}`}
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:73:              {m.id === model && <span className="text-brand text-xs">Selected</span>}
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:107:          Your chats, notes, tasks, and documents live in your own MongoDB instance. Model
+./NOVA-SOVERIGN/test_reports/pytest/pytest_results.xml:1:<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="19" time="11.595" timestamp="2026-04-27T11:17:27.265951+00:00" hostname="agent-env-c2324fb5-3fac-4100-8183-7f06f630d2af"><testcase classname="backend.tests.backend_test.TestAuth" name="test_login_success" time="0.137" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_login_wrong_password" time="0.116" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_login_wrong_email" time="0.109" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_me_without_token" time="0.112" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_me_with_token" time="0.219" /><testcase classname="backend.tests.backend_test.TestMeta" name="test_models" time="0.102" /><testcase classname="backend.tests.backend_test.TestMeta" name="test_personas" time="0.098" /><testcase classname="backend.tests.backend_test.TestChat" name="test_chat_creates_session_and_persists" time="1.031" /><testcase classname="backend.tests.backend_test.TestChat" name="test_chat_continues_session" time="0.958" /><testcase classname="backend.tests.backend_test.TestChat" name="test_chat_persona_coach" time="1.097" /><testcase classname="backend.tests.backend_test.TestChat" name="test_sessions_list_and_delete" time="0.329" /><testcase classname="backend.tests.backend_test.TestNotes" name="test_create_list_update_summarize_delete" time="1.741" /><testcase classname="backend.tests.backend_test.TestNotes" name="test_delete_note" time="0.262" /><testcase classname="backend.tests.backend_test.TestTasks" name="test_create_update_prioritize_delete" time="2.859" /><testcase classname="backend.tests.backend_test.TestTasks" name="test_cleanup_tasks" time="0.329" /><testcase classname="backend.tests.backend_test.TestDocs" name="test_paste_doc_and_ask" time="1.375" /><testcase classname="backend.tests.backend_test.TestDocs" name="test_upload_txt" time="0.200" /><testcase classname="backend.tests.backend_test.TestDocs" name="test_delete_docs" time="0.223" /><testcase classname="backend.tests.backend_test.TestDashboard" name="test_dashboard" time="0.115" /></testsuite></testsuites>

@@ -1,0 +1,11 @@
+FILES:
+90 /home/dha_kidd/NOVA/review/gold_mine/manifests/SOURCE_INDEX_20260731_184551.txt
+
+GOLD:
+49
+ORE:
+12
+UNKNOWN:
+31
+SLAG:
+0

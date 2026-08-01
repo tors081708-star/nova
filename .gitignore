@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+build/
+
+__pycache__/
+*.pyc
+
+*.log
+
+NOVA_BACKUP/

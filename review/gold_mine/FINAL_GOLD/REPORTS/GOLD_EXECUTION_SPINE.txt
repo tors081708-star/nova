@@ -1,0 +1,458 @@
+FINAL_GOLD/CORE/agent-team/agents/coding/coding_agent.py:1:"""agents/coding/coding_agent.py — Coding Agent (Pseudo Key, L2)."""
+FINAL_GOLD/CORE/agent-team/agents/coding/coding_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/coding/coding_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+FINAL_GOLD/CORE/agent-team/agents/coding/coding_agent.py:12:    return run_with_tools("coding", order, vault_env=vault_env, max_steps=12)
+FINAL_GOLD/CORE/agent-team/agents/design/design_agent.py:1:"""agents/design/design_agent.py — Design Agent (Pseudo Key, L2)."""
+FINAL_GOLD/CORE/agent-team/agents/design/design_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/design/design_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+FINAL_GOLD/CORE/agent-team/agents/design/design_agent.py:12:    return run_with_tools("design", order, vault_env=vault_env, max_steps=8)
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:2:agents/genie/genie.py
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:7:  * Runs a critic pass at the end (QA agent gates delivery)
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:11:    python agents/genie/genie.py "build me a static landing page"
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:12:    python agents/genie/genie.py --dry-run "..."     # plan only
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:13:    python agents/genie/genie.py --serial "..."      # disable parallel dispatch
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:29:from agents._llm import chat  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:44:    "report":      ("reporting",    "reporting_agent"),
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:45:    "design":      ("design",       "design_agent"),
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:46:    "code":        ("coding",       "coding_agent"),
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:47:    "qa":          ("qa",           "qa_agent"),
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:48:    "research":    ("research",     "research_agent"),
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:49:    "integration": ("integration",  "integration_agent"),
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:54:def _load_passphrase() -> str:
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:58:def _dispatch(order_type: str, order_text: str, vault_env: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:60:    mod = importlib.import_module(f"agents.{pkg}.{mod_name}")
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:64:def _critic(goal: str, results: list[tuple[str, str, str]], vault_env: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:69:        blocker_markers = ("(agent error:", "Traceback", "RuntimeError")
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:86:            "dispatches and runtime exceptions, not unconstrained model claims.\n"
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:99:    return chat("qa", prompt, vault_env=vault_env).text
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:102:def run(goal: str, dry_run: bool = False, serial: bool = False) -> str:
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:139:    plan = chat("genie", plan_prompt, vault_env=vault_env).text
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:179:                out = f"(agent error: {e})"
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:193:                    out = f"(agent error: {e})"
+FINAL_GOLD/CORE/agent-team/agents/genie/genie.py:210:def main() -> None:
+FINAL_GOLD/CORE/agent-team/agents/integration/integration_agent.py:1:"""agents/integration/integration_agent.py — Integration Agent (Pseudo Key, L2).
+FINAL_GOLD/CORE/agent-team/agents/integration/integration_agent.py:4:the LLM, but can browse the live docs of a target service via web tools.
+FINAL_GOLD/CORE/agent-team/agents/integration/integration_agent.py:12:from agents._loop import run_with_tools  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/integration/integration_agent.py:15:def run(order: str, vault_env: dict | None = None) -> str:
+FINAL_GOLD/CORE/agent-team/agents/integration/integration_agent.py:16:    return run_with_tools("integration", order, vault_env=vault_env, max_steps=10)
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:2:agents/_llm.py
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:23:MODELS_CFG = ROOT / "config" / "models.yaml"
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:24:AGENTS_CFG = ROOT / "config" / "agents.yaml"
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:28:class LLMResponse:
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:31:    model: str
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:34:def _load_yaml(p: Path) -> dict:
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:38:def _ollama_chat(model: str, system: str, user: str, temperature: float) -> str:
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:42:        f"{host}/api/chat",
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:44:            "model": model,
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:61:def _groq_chat(
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:62:    model: str,
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:69:        "https://api.groq.com/openai/v1/chat/completions",
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:72:            "model": model,
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:85:def _hf_chat(model: str, system: str, user: str, token: str) -> str:
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:87:        f"https://api-inference.huggingface.co/models/{model}",
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:99:def _gemini_chat(
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:100:    model: str,
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:108:        f"https://generativelanguage.googleapis.com/v1beta/models/"
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:109:        f"{model}:generateContent?key={token}"
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:125:def chat(role: str, user: str, vault_env: Optional[dict] = None) -> LLMResponse:
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:127:    `role` is a key in agents.yaml.
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:130:    models = _load_yaml(MODELS_CFG)
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:131:    agents = _load_yaml(AGENTS_CFG)
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:134:        cfg = agents["genie"]
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:136:        cfg = agents["agents"].get(role) or {
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:137:            "model_key": "sidekick",
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:141:    model_key = cfg["model_key"]
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:145:    backend = models.get("default_backend", "ollama")
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:157:        entry = models["ollama"][model_key]
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:159:            text = _ollama_chat(
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:160:                entry["model"],
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:169:                "Start Ollama and pull the configured models, or store a free "
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:172:        return LLMResponse(text=text, backend="ollama", model=entry["model"])
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:174:        m = models["gemini"]["models"]["fast"]
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:176:            text=_gemini_chat(m, system_prompt, user, 0.3, vault_env["GEMINI_API_KEY"]),
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:178:            model=m,
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:181:        m = models["groq"]["models"]["fast"]
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:183:            text=_groq_chat(m, system_prompt, user, 0.3, vault_env["GROQ_API_KEY"]),
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:185:            model=m,
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:188:        m = models["huggingface"]["models"]["fast"]
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:190:            text=_hf_chat(m, system_prompt, user, vault_env["HF_TOKEN"]),
+FINAL_GOLD/CORE/agent-team/agents/_llm.py:192:            model=m,
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:2:agents/_loop.py
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:4:Iterative ReAct-style tool-use loop. Any agent can run inside it.
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:6:Protocol (the model is asked to emit EXACTLY one JSON object per turn):
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:7:    {"thought": "...", "tool": "fs.write", "args": {...}}
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:11:  - feeds the conversation to the model
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:13:  - executes the tool
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:24:from agents._llm import chat
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:25:from agents.tools import describe_tools, invoke
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:31:def _extract_json(text: str) -> dict | None:
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:32:    """Best-effort JSON extraction from a model response."""
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:50:def _format_transcript(transcript: List[Tuple[str, str]]) -> str:
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:54:def run_with_tools(role: str, goal: str, vault_env: dict | None = None,
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:56:    """Run an agent with tool access until it emits `final` or hits max_steps."""
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:57:    max_steps = int(os.environ.get("AGENT_MAX_STEPS", str(max_steps)))
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:59:    tools_doc = describe_tools()
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:64:            f"{tools_doc}\n\n"
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:66:            '  {"thought": "...", "tool": "<name>", "args": {...}}'
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:67:            "  to call a tool, or\n"
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:72:        resp = chat(role, user_msg, vault_env=vault_env).text
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:78:                    "The model did not emit a tool JSON action after retry. "
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:93:        tool_name = action.get("tool")
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:95:        if not tool_name:
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:96:            transcript.append(("system", "ERROR: missing 'tool' key."))
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:99:        result = invoke(tool_name, args)
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:100:        transcript.append(("tool", f"{tool_name} -> {result[:1500]}"))
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:102:    # Soft-fall: ask the agent to summarise what it has so far
+FINAL_GOLD/CORE/agent-team/agents/_loop.py:103:    summary = chat(
+FINAL_GOLD/CORE/agent-team/agents/qa/qa_agent.py:1:"""agents/qa/qa_agent.py — QA / Testing Agent (Pseudo Key, L2)."""
+FINAL_GOLD/CORE/agent-team/agents/qa/qa_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/qa/qa_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+FINAL_GOLD/CORE/agent-team/agents/qa/qa_agent.py:12:    return run_with_tools("qa", order, vault_env=vault_env, max_steps=10)
+FINAL_GOLD/CORE/agent-team/agents/reporting/reporting_agent.py:1:"""agents/reporting/reporting_agent.py — Reporting Agent (Pseudo Key, L2)."""
+FINAL_GOLD/CORE/agent-team/agents/reporting/reporting_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/reporting/reporting_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+FINAL_GOLD/CORE/agent-team/agents/reporting/reporting_agent.py:12:    return run_with_tools("reporting", order, vault_env=vault_env, max_steps=6)
+FINAL_GOLD/CORE/agent-team/agents/research/research_agent.py:1:"""agents/research/research_agent.py — Research Agent (Pseudo Key, L2).
+FINAL_GOLD/CORE/agent-team/agents/research/research_agent.py:11:from agents._loop import run_with_tools  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/research/research_agent.py:14:def run(order: str, vault_env: dict | None = None) -> str:
+FINAL_GOLD/CORE/agent-team/agents/research/research_agent.py:15:    return run_with_tools("research", order, vault_env=vault_env, max_steps=8)
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:2:agents/sidekicks/sidekick.py
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:4:Generic Genie Sidekick runner (L3 Agent Key).
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:6:Sidekicks are stateless, single-purpose helpers spawned by a specialist agent.
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:9:Usage (called by an agent):
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:10:    from agents.sidekicks.sidekick import spawn
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:19:from agents._llm import chat  # noqa: E402
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:36:def spawn(sidekick_id: str, order: str, vault_env: dict | None = None) -> str:
+FINAL_GOLD/CORE/agent-team/agents/sidekicks/sidekick.py:39:    return chat("sidekick", user, vault_env=vault_env).text
+FINAL_GOLD/CORE/agent-team/agents/tools/__init__.py:1:"""Toolbox surfaced as `from agents.tools import invoke, describe_tools`."""
+FINAL_GOLD/CORE/agent-team/agents/tools/__init__.py:2:from agents.tools.registry import (  # noqa: F401
+FINAL_GOLD/CORE/agent-team/agents/tools/__init__.py:3:    TOOLS,
+FINAL_GOLD/CORE/agent-team/agents/tools/__init__.py:4:    TOOL_SCHEMAS,
+FINAL_GOLD/CORE/agent-team/agents/tools/__init__.py:5:    describe_tools,
+FINAL_GOLD/CORE/agent-team/agents/tools/__init__.py:6:    invoke,
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:2:agents/tools/registry.py
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:4:Tool registry + dispatcher used by the ReAct loop in agents/_loop.py.
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:6:Every tool is a callable taking a single `args: dict` and returning a string.
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:7:No paid services. No auth required by default. Tools that hit the network
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:31:def fs_read(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:38:def fs_write(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:45:def fs_list(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:52:def fs_glob(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:62:def sh_run(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:86:def py_exec(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:107:class _DDGParser(HTMLParser):
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:108:    def __init__(self) -> None:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:115:    def handle_starttag(self, tag, attrs):
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:123:    def handle_endtag(self, tag):
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:131:    def handle_data(self, data):
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:136:def web_search(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:139:    req = urllib.request.Request(url, headers={"User-Agent": "sovereign-team/1.0"})
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:151:def web_fetch(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:153:    req = urllib.request.Request(url, headers={"User-Agent": "sovereign-team/1.0"})
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:168:# Task delegation — recursive spawn of a sibling agent
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:171:def task_spawn(args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:176:    from agents._loop import run_with_tools  # noqa: WPS433
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:177:    return run_with_tools(role, order, max_steps=int(args.get("max_steps", 6)))
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:181:# Registry
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:184:TOOLS: Dict[str, Callable[[dict], str]] = {
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:196:TOOL_SCHEMAS: Dict[str, str] = {
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:212:def describe_tools() -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:213:    lines = ["You may call exactly one tool per turn using JSON. Available tools:"]
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:214:    for name, schema in TOOL_SCHEMAS.items():
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:219:def invoke(tool: str, args: dict) -> str:
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:220:    fn = TOOLS.get(tool)
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:222:        return f"ERROR: unknown tool {tool!r}"
+FINAL_GOLD/CORE/agent-team/agents/tools/registry.py:226:            return f"ERROR: bad tool signature for {tool}"
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:1:# config/agents.yaml
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:2:# Role / prompt / model mapping. This is the one file you may want to edit.
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:3:# Every specialist agent runs inside the ReAct loop with full tool access.
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:8:  model_key: genie
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:11:    the Master Key and route orders from the Super Key holder to specialist agents.
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:25:      - Specialist agents never talk to each other directly — only through you.
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:28:agents:
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:30:    model_key: reporting
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:32:      You are the Reporting Agent. You may use tools (fs, sh, web, py) to gather facts.
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:38:    model_key: design
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:40:      You are the Design Agent. You may use tools (web.search for references, fs.write
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:49:    model_key: coding
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:51:      You are the Coding Agent. You have FULL tool access: fs.read/write, sh.run, py.exec.
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:61:    model_key: qa
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:63:      You are the QA Agent. Audit for speed (latency, bundle size, throughput) and
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:64:      accessibility (a11y, semantic HTML, contrast >= AA). You may use tools to inspect
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:71:    model_key: research
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:73:      You are the Research Agent. Use web.search and web.fetch to gather facts. Always
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:81:    model_key: integration
+FINAL_GOLD/CORE/agent-team/config/agents.yaml:83:      You are the Integration Agent. Given a target service / SDK / API, produce a
+FINAL_GOLD/CORE/agent-team/config/models.yaml:1:# config/models.yaml
+FINAL_GOLD/CORE/agent-team/config/models.yaml:2:# Free, locally-runnable models - Ollama default. Cloud free tiers are opt-in.
+FINAL_GOLD/CORE/agent-team/config/models.yaml:8:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:11:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:14:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:17:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:20:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:23:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:26:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:29:    model: qwen2.5:1.5b
+FINAL_GOLD/CORE/agent-team/config/models.yaml:35:  models:
+FINAL_GOLD/CORE/agent-team/config/models.yaml:44:  models:
+FINAL_GOLD/CORE/agent-team/config/models.yaml:51:  models:
+FINAL_GOLD/CORE/agent-team/docs/ARCHITECTURE.md:18:       │ Agent   │  │ Agent   │         │ Agent   │  │ Agent   │
+FINAL_GOLD/CORE/agent-team/docs/ARCHITECTURE.md:26:                       Genie Sidekicks  (Agent Keys, L3)
+FINAL_GOLD/CORE/agent-team/docs/ARCHITECTURE.md:53:| Model runtime | Ollama | Free, local, no telemetry |
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:8:   - `[report] ...`  → Reporting Agent
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:9:   - `[design] ...`  → Design Agent
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:10:   - `[code]   ...`  → Coding Agent
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:11:   - `[qa]     ...`  → QA Agent
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:12:4. **Dispatch** — each order is routed to exactly one specialist agent.
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:21:| Agent requests Super Key | Sovereignty boundary. |
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:24:| Any agent calls a paid API without a vault entry | "Free by default" invariant. |
+FINAL_GOLD/CORE/agent-team/docs/CHAIN_OF_COMMAND.md:28:Only the Super Key holder may override the QA Agent's `BLOCK` verdict on a
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:10:        │  HKDF-SHA256, info="master:<run_id>"
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:15:L2  Pseudo Keys (per role)    ← held by specialist agents
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:16:        │  HKDF-SHA256, info=f"agent:{role}:{sidekick}"
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:18:L3  Agent Keys (per sidekick) ← ephemeral, scoped to one task
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:24:  keys for the same `run_id`. Lose the vault file? Re-derive in one command.
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:34:| `python scripts/derive_keys.py --rotate agent`  | New L3 keys; L1/L2 unchanged. |
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:46:| An L3 Agent Key | `--rotate agent`. Done. |
+FINAL_GOLD/CORE/agent-team/docs/KEY_HIERARCHY.md:48:| Genie's L1 Master Key | `--rotate master`. New run_id. Same L0 passphrase. |
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:3:acknowledged; [research] gather data on current system performance; [design] optimize resource allocation and reduce latency; [code] implement new security protocols; [qa] conduct stress tests to ensure robustness; [report] compile comprehensive status report for local agent team; [integration] integrate findings into ongoing project.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:5:--> [research] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:7:--> [design] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:9:--> [code] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:11:--> [qa] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:13:--> [report] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:15:--> [integration] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:18:## [research] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:20:The research agent will provide guidance on writing a short status report.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:22:## [design] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:24:The local agent team can currently run end-to-end operations as of the last available report. The status is stable, and no issues have been reported regarding responsiveness or service availability across different platforms such as Avaya Workspaces, Zoom, Microsoft Azure, Dynamics 365, and Cisco Unity Manager.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:26:For further details on current statuses or any specific agent-related issues, please refer to the documentation provided by
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:28:## [code] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:30:The local agent team can run end-to-end with Python version 3.12.1. The system is up and running as expected.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:32:## [qa] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:42:## [report] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:44:The local agent team is ready to run end-to-end tests. Resources include:
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:45:1. Microsoft 365 Agents Playground for testing locally.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:46:2. Testsigma for a unified and agentic test automation platform.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:48:4. Agentforce Testing Best Practices: Ensuring reliable deployments in Salesforce.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:51:## [integration] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:53:The local agent team can run an end-to-end status report by using free project management tools like Smartsheet, Monday.com, CenterCode, Asana, Nulab, or Karya. These platforms offer templates and best practices for creating comprehensive reports that meet stakeholder needs. Ensure to follow the 8 steps provided in the Asana resource for a structured approach.
+FINAL_GOLD/CORE/agent-team/docs/LAST_RUN.md:58:RATIONALE: Deterministic local healthcheck based on completed dispatches and runtime exceptions, not unconstrained model claims.
+FINAL_GOLD/CORE/agent-team/docs/QUICKSTART.md:7:python agents/genie/genie.py "your first goal"
+FINAL_GOLD/CORE/agent-team/docs/QUICKSTART.md:16:3. Derives Master / Pseudo / Agent keys via HKDF.
+FINAL_GOLD/CORE/agent-team/docs/QUICKSTART.md:18:5. (Optional) Pulls free local models via Ollama.
+FINAL_GOLD/CORE/agent-team/docs/QUICKSTART.md:22:- Talk to Genie:           `python agents/genie/genie.py "..."`
+FINAL_GOLD/CORE/agent-team/docs/QUICKSTART.md:23:- Plan only (no dispatch): `python agents/genie/genie.py --dry-run "..."`
+FINAL_GOLD/CORE/agent-team/docs/QUICKSTART.md:33:| `config/agents.yaml` | Tweak agent system prompts, swap a model key. |
+FINAL_GOLD/CORE/agent-team/docs/QUICKSTART.md:34:| `config/models.yaml` | Pin different Ollama tags or enable a cloud free tier. |
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:1:# Tools
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:3:Every specialist agent runs inside a **ReAct tool-use loop** (`agents/_loop.py`).
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:4:On each step the agent emits a JSON action — either a tool call or a `final` answer.
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:9:{"thought": "...", "tool": "fs.write", "args": {"path": "x.txt", "content": "y"}}
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:18:## Available tools
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:34:By default the tools run with the user's local privileges — no sandbox. This is
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:42:Add a new tool in three steps:
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:44:1. Implement `def my_tool(args: dict) -> str:` in `agents/tools/registry.py`.
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:45:2. Register it in the `TOOLS` and `TOOL_SCHEMAS` dicts.
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:48:The agents will discover it automatically — `describe_tools()` enumerates the
+FINAL_GOLD/CORE/agent-team/docs/TOOLS.md:49:registry at every step.
+FINAL_GOLD/CORE/agent-team/infrastructure/hp_pavilion_node.md:5:- **Ollama** with the larger models (qwen2.5-coder:7b, mistral:7b, etc.)
+FINAL_GOLD/CORE/agent-team/infrastructure/hp_pavilion_node.md:29:## Pulling models
+FINAL_GOLD/CORE/agent-team/infrastructure/hp_pavilion_node.md:32:python3 scripts/list_models.py | xargs -n1 ollama pull
+FINAL_GOLD/CORE/agent-team/infrastructure/lubuntu_node.md:25:- `agents/genie/genie.py`  (the supervisor)
+FINAL_GOLD/CORE/agent-team/infrastructure/lubuntu_node.md:32:- Ollama with large 70B models — too heavy. Use small models locally and call
+FINAL_GOLD/CORE/agent-team/infrastructure/lubuntu_node.md:39:python agents/genie/genie.py "your goal"
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:4:Coding Agent before it ever runs on a real machine.
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:9:VBoxManage createvm --name "agent-sandbox" --ostype Ubuntu_64 --register
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:10:VBoxManage modifyvm "agent-sandbox" \
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:11:  --memory 4096 --cpus 2 --nic1 nat --audio none --usb off
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:12:VBoxManage createhd --filename ~/VirtualBox\ VMs/agent-sandbox/disk.vdi \
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:14:VBoxManage storagectl "agent-sandbox" --name SATA --add sata
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:15:VBoxManage storageattach "agent-sandbox" --storagectl SATA --port 0 --device 0 \
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:16:  --type hdd --medium ~/VirtualBox\ VMs/agent-sandbox/disk.vdi
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:22:VBoxManage snapshot "agent-sandbox" take pristine
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:29:VBoxManage snapshot "agent-sandbox" restore pristine
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:32:VBoxManage startvm "agent-sandbox" --type headless
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:34:# 3. ssh in, run the code emitted by the Coding Agent
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:38:VBoxManage controlvm "agent-sandbox" poweroff
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:41:The Pseudo Key for the Coding Agent is **never** copied into the sandbox.
+FINAL_GOLD/CORE/agent-team/infrastructure/virtualbox_sandbox.md:42:Only the L3 Agent Key for the specific sidekick that owns the job is exposed,
+FINAL_GOLD/CORE/agent-team/instructions.md:5:> between the Super Key holder and every agent in the team.
+FINAL_GOLD/CORE/agent-team/instructions.md:14:2. No agent, script, or workflow may communicate with any third-party service unless the
+FINAL_GOLD/CORE/agent-team/instructions.md:28:| L1 | **Master Key** | Genie (supervisor) | HKDF(SuperKey, salt="master", info=run_id) | Authorizes Pseudo keys; routes orders. |
+FINAL_GOLD/CORE/agent-team/instructions.md:29:| L2 | **Pseudo Keys** | Reporting / Design / Coding / QA agents | HKDF(MasterKey, salt="pseudo", info=agent_role) | Allows a specialist agent to act. |
+FINAL_GOLD/CORE/agent-team/instructions.md:30:| L3 | **Agent Keys** | Genie Sidekicks | HKDF(PseudoKey, salt="agent", info=sidekick_id) | Scoped, ephemeral, revocable per-task. |
+FINAL_GOLD/CORE/agent-team/instructions.md:55:│  agent       │   agent      │   agent      │     agent    │
+FINAL_GOLD/CORE/agent-team/instructions.md:62:**Communication rule:** an agent may only send messages **upward to Genie** or **downward
+FINAL_GOLD/CORE/agent-team/instructions.md:63:to its own Sidekicks**. Peer-to-peer messaging between specialist agents is forbidden;
+FINAL_GOLD/CORE/agent-team/instructions.md:68:## 3. Agent roles
+FINAL_GOLD/CORE/agent-team/instructions.md:73:- Routes orders to the correct specialist agent. Dispatches independent orders in parallel.
+FINAL_GOLD/CORE/agent-team/instructions.md:77:### 3.2 Research Agent
+FINAL_GOLD/CORE/agent-team/instructions.md:81:### 3.3 Design Agent
+FINAL_GOLD/CORE/agent-team/instructions.md:85:### 3.4 Coding Agent
+FINAL_GOLD/CORE/agent-team/instructions.md:86:- Has FULL tool access (`fs.*`, `sh.run`, `py.exec`).
+FINAL_GOLD/CORE/agent-team/instructions.md:90:### 3.5 QA / Testing Agent
+FINAL_GOLD/CORE/agent-team/instructions.md:97:### 3.6 Reporting Agent
+FINAL_GOLD/CORE/agent-team/instructions.md:101:### 3.7 Integration Agent
+FINAL_GOLD/CORE/agent-team/instructions.md:107:- Stateless, single-purpose helpers spawned with an L3 Agent Key.
+FINAL_GOLD/CORE/agent-team/instructions.md:126:## 5. Free model policy
+FINAL_GOLD/CORE/agent-team/instructions.md:128:1. The repository ships with a registry of **free, locally-runnable** models (see
+FINAL_GOLD/CORE/agent-team/instructions.md:129:   `config/models.yaml`).
+FINAL_GOLD/CORE/agent-team/instructions.md:133:4. **No paid API may be invoked by default.** Any agent attempting to use one without an
+FINAL_GOLD/CORE/agent-team/instructions.md:161:- **No silent escalation:** An agent may **never** request the Super Key or impersonate Genie.
+FINAL_GOLD/CORE/agent-team/instructions.md:163:## 7a. Tools
+FINAL_GOLD/CORE/agent-team/instructions.md:165:Every specialist agent runs inside a ReAct loop with full access to:
+FINAL_GOLD/CORE/agent-team/instructions.md:167:| Tool | Effect |
+FINAL_GOLD/CORE/agent-team/instructions.md:174:| `task.spawn` | Recursive delegation to a sibling agent. |
+FINAL_GOLD/CORE/agent-team/instructions.md:177:sovereign; the tools execute with the user's local privileges. If the holder
+FINAL_GOLD/CORE/agent-team/instructions.md:186:committing. Agents must re-read `instructions.md` at the start of every session and
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:10:            │     └─ L3 Agent Keys per sidekick (HKDF, info=f"agent:{role}:{sidekick}")
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:43:def _hkdf(material: bytes, info: bytes, salt: bytes = b"sovereign-team") -> bytes:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:52:def super_key_to_vault_key(passphrase: str, salt: bytes) -> bytes:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:78:class KeyBundle:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:81:    agent: Dict[str, str]
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:82:    run_id: str
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:84:    def to_dict(self) -> dict:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:88:def derive_all(super_key_material: bytes, run_id: Optional[str] = None) -> KeyBundle:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:89:    """Derive Master, Pseudo, and Agent keys from raw Super Key material."""
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:90:    run_id = run_id or secrets.token_hex(8)
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:91:    master = _hkdf(super_key_material, info=f"master:{run_id}".encode())
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:94:    agent: Dict[str, bytes] = {}
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:99:            agent[f"{role}:{sk}"] = _hkdf(p, info=f"agent:{role}:{sk}".encode())
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:101:    def b64(value: bytes) -> str:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:107:        agent={k: b64(v) for k, v in agent.items()},
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:108:        run_id=run_id,
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:116:def seal_vault(bundle: KeyBundle, vault_key: bytes) -> None:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:123:    META_FILE.write_text(json.dumps({"version": 1, "run_id": bundle.run_id}, indent=2))
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:130:def open_vault(vault_key: bytes) -> KeyBundle:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:141:        "agent": data["agent"],
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:142:        "run_id": data["run_id"],
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:147:def load_salt() -> bytes:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:153:def write_salt(salt: bytes) -> None:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:159:# Public helpers used by agents
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:162:def unlock(passphrase: str) -> KeyBundle:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:169:def rotate(level: str, passphrase: str) -> KeyBundle:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:170:    """Rotate keys at the given level: 'master' | 'pseudo' | 'agent' | 'all'."""
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:174:    # New material: random for the rotated level, keep run_id stable upstream of it.
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:177:        bundle = derive_all(new_master, run_id=secrets.token_hex(8))
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:180:        new = derive_all(master, run_id=secrets.token_hex(8))
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:182:    elif level == "agent":
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:183:        # Re-derive only agent keys from existing pseudo keys
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:184:        agent: Dict[str, str] = {}
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:188:                agent[f"{role}:{sk}"] = base64.b64encode(
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:189:                    _hkdf(p, info=f"agent:{role}:{sk}:{secrets.token_hex(4)}".encode())
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:191:        bundle = KeyBundle(master=old.master, pseudo=old.pseudo, agent=agent,
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:192:                           run_id=old.run_id)
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:195:        bundle = derive_all(new_master, run_id=secrets.token_hex(8))
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:210:def audit_append(passphrase: str, entry: str) -> None:
+FINAL_GOLD/CORE/agent-team/keys/key_manager.py:225:def audit_read(passphrase: str) -> list[str]:
+FINAL_GOLD/CORE/agent-team/PROMPT_FOR_GEMINI.md:83:        python agents/genie/genie.py --dry-run "list 3 startup ideas"
+FINAL_GOLD/CORE/agent-team/PROMPT_FOR_GEMINI.md:105:  I will continue as your in-chat co-pilot.
+FINAL_GOLD/CORE/agent-team/PROMPT_FOR_GEMINI.md:167:| Gemini chats casually, may re-ask, may drift | Gemini follows a 4-step bootstrap then becomes Genie |
+FINAL_GOLD/CORE/agent-team/PROMPT_FOR_GEMINI.md:169:| Backend switching is unclear | After STEP 2, every local agent auto-routes through Gemini's free tier |
+FINAL_GOLD/CORE/agent-team/README.md:3:> **Self-contained, zero-restriction, zero-cost AI agent team.**
+FINAL_GOLD/CORE/agent-team/README.md:4:> One command. One key. Full tool access. No ties to any platform, payment, or token.
+FINAL_GOLD/CORE/agent-team/README.md:6:The Super Key holder gets a team **at least as capable as any commercial agent stack**:
+FINAL_GOLD/CORE/agent-team/README.md:7:six specialised agents, real tools (filesystem, shell, web, code execution), recursive
+FINAL_GOLD/CORE/agent-team/README.md:22:python agents/genie/genie.py "your first goal"
+FINAL_GOLD/CORE/agent-team/README.md:32:| Agent | Tools it really uses | Key tier |
+FINAL_GOLD/CORE/agent-team/README.md:41:| **Genie Sidekicks** | ephemeral, narrow helpers per role | Agent, L3 |
+FINAL_GOLD/CORE/agent-team/README.md:43:Each specialist runs inside an iterative **ReAct loop** that can call tools, observe
+FINAL_GOLD/CORE/agent-team/README.md:44:results, and iterate until the order is satisfied. Agents can also recursively spawn
+FINAL_GOLD/CORE/agent-team/README.md:45:sub-tasks on other roles via the `task.spawn` tool.
+FINAL_GOLD/CORE/agent-team/README.md:49:## Tools — fully unrestricted
+FINAL_GOLD/CORE/agent-team/README.md:51:| Tool | Effect |
+FINAL_GOLD/CORE/agent-team/README.md:58:| `task.spawn` | Recursive delegation to any sibling agent. |
+FINAL_GOLD/CORE/agent-team/README.md:88:## Free models
+FINAL_GOLD/CORE/agent-team/README.md:90:Default backend is **Ollama** (local, free, no telemetry). The registry ships with:
+FINAL_GOLD/CORE/agent-team/README.md:92:| Role | Model |
+FINAL_GOLD/CORE/agent-team/README.md:117:├── agents/
+FINAL_GOLD/CORE/agent-team/README.md:121:│   ├── coding/                  # full tool-using coder
+FINAL_GOLD/CORE/agent-team/README.md:126:│   ├── tools/                   # fs / sh / web / py / task tools
+FINAL_GOLD/CORE/agent-team/README.md:128:│   └── _loop.py                 # ReAct tool loop
+FINAL_GOLD/CORE/agent-team/README.md:131:├── config/                      # models.yaml, agents.yaml
+FINAL_GOLD/CORE/agent-team/README.md:133:├── docs/                        # ARCHITECTURE, CHAIN_OF_COMMAND, KEY_HIERARCHY, TOOLS, QUICKSTART
+FINAL_GOLD/CORE/agent-team/README.md:152:make rotate-agent      # L3 only
+FINAL_GOLD/CORE/agent-team/RUNBOOK.md:3:This is the quick rejoin point for the local agent team.
+FINAL_GOLD/CORE/agent-team/RUNBOOK.md:8:SUPER_KEY='choose-a-long-local-passphrase' bash bootstrap.sh --ci --no-models
+FINAL_GOLD/CORE/agent-team/RUNBOOK.md:11:Use `--no-models` when Ollama is not installed. Without a reachable LLM backend,
+FINAL_GOLD/CORE/agent-team/RUNBOOK.md:14:## Provide a Model Backend
+FINAL_GOLD/CORE/agent-team/RUNBOOK.md:81:AGENT_MAX_STEPS=1 \
+FINAL_GOLD/CORE/agent-team/RUNBOOK.md:83:python3 agents/genie/genie.py --serial \
+FINAL_GOLD/CORE/agent-team/RUNBOOK.md:84:  "write a short status report confirming the local agent team can run end to end"
+FINAL_GOLD/CORE/agent-team/scripts/audit_view.py:17:def main() -> None:
+FINAL_GOLD/CORE/agent-team/scripts/decrypt_vault.py:19:def main() -> None:
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:4:Re-derive Master / Pseudo / Agent keys from the Super Key, or rotate a tier.
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:10:    python scripts/derive_keys.py --rotate agent
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:24:def _read_passphrase() -> str:
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:29:def main() -> None:
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:34:    g.add_argument("--rotate", choices=["master", "pseudo", "agent", "all"],
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:46:        print(f"OK — run_id={b.run_id}")
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:50:        for tag, k in b.agent.items():
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:51:            print(f"  agent[{tag}]: {k[:10]}...")
+FINAL_GOLD/CORE/agent-team/scripts/derive_keys.py:54:        print(f"Rotated tier '{args.rotate}'. New run_id={b.run_id}")
+FINAL_GOLD/CORE/agent-team/scripts/encrypt_vault.py:16:def main() -> None:
+FINAL_GOLD/CORE/agent-team/scripts/init_super_key.py:25:    SALT_FILE,  # noqa: F401  (re-exported for downstream tools)
+FINAL_GOLD/CORE/agent-team/scripts/init_super_key.py:30:def main() -> None:
+FINAL_GOLD/CORE/agent-team/scripts/init_super_key.py:70:    print(f"Run ID: {bundle.run_id}")
+FINAL_GOLD/CORE/agent-team/scripts/list_models.py:2:scripts/list_models.py
+FINAL_GOLD/CORE/agent-team/scripts/list_models.py:4:Print the set of Ollama model tags listed in config/models.yaml,
+FINAL_GOLD/CORE/agent-team/scripts/list_models.py:15:CFG = ROOT / "config" / "models.yaml"
+FINAL_GOLD/CORE/agent-team/scripts/list_models.py:18:    print("config/models.yaml missing", file=sys.stderr)
+FINAL_GOLD/CORE/agent-team/scripts/list_models.py:24:    tag = entry.get("model")
+FINAL_GOLD/CORE/agent-team/scripts/set_token.py:35:def main() -> None:
+FINAL_GOLD/CORE/agent-team/scripts/set_token.py:56:def _decrypt_raw(vault_key: bytes) -> bytes:
+FINAL_GOLD/CORE/agent-team/scripts/set_token.py:62:def _encrypt_raw(vault_key: bytes, plaintext: bytes) -> None:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:2:Local Genie interface for the agent team.
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:33:class Job:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:42:    def to_dict(self) -> dict[str, Any]:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:58:def _json_response(handler: BaseHTTPRequestHandler, code: int, data: dict) -> None:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:67:def _text_response(
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:81:def _read_json(handler: BaseHTTPRequestHandler) -> dict[str, Any]:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:89:def _ollama_health() -> dict[str, Any]:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:96:    models = [item.get("name", "") for item in data.get("models", [])]
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:97:    return {"ok": True, "host": host, "models": models}
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:100:def _append(job: Job, line: str) -> None:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:105:def _save_transcript(job: Job) -> None:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:112:def _run_job(job: Job, super_key: str, max_steps: int) -> None:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:116:    env.setdefault("AGENT_MAX_STEPS", str(max_steps))
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:122:        str(ROOT / "agents" / "genie" / "genie.py"),
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:154:def _start_job(payload: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:158:    max_steps = int(payload.get("max_steps") or os.environ.get("AGENT_MAX_STEPS", 1))
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:174:        target=_run_job,
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:182:class Handler(BaseHTTPRequestHandler):
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:185:    def log_message(self, fmt: str, *args: Any) -> None:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:188:    def do_GET(self) -> None:  # noqa: N802
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:213:    def do_POST(self) -> None:  # noqa: N802
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:224:def main() -> None:
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:418:          Looking for the vault and model backend.
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:444:          Runs locally through Genie using the configured free local model path.
+FINAL_GOLD/CORE/agent-team/scripts/ui_server.py:509:        detail.textContent = "Vault found. Models: " + data.ollama.models.join(", ");
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:1:"""Unit tests for the key hierarchy and tool registry. Run: `pytest -q`."""
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:11:def test_full_key_lifecycle(tmp_path, monkeypatch):
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:34:            assert f"{role}:{sk}" in re_opened.agent
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:36:    # rotate agent: master+pseudo stable, agent keys change
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:37:    rotated = km.rotate("agent", pw)
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:40:    assert any(rotated.agent[k] != bundle.agent[k] for k in bundle.agent)
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:51:def test_vault_loader_tolerates_env_tokens(tmp_path, monkeypatch):
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:84:def test_tool_registry_basic(tmp_path):
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:85:    from agents.tools import invoke, TOOLS
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:86:    assert "fs.write" in TOOLS and "fs.read" in TOOLS
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:89:    out = invoke("fs.write", {"path": str(target), "content": "hi"})
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:91:    out = invoke("fs.read", {"path": str(target)})
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:94:    out = invoke("py.exec", {"code": "print(2+2)"})
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:98:def test_genie_plan_parser():
+FINAL_GOLD/CORE/agent-team/tests/test_core.py:99:    from agents.genie import genie
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:12:- **Memory extractor**: Claude Haiku 4.5 (background async task) extracts durable facts about the user after each exchange
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:26:The architecture must be a Flat Pipeline. Data must flow from the model weights to the output interface without passing through an external Safety SDK or moderation API.
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:29:The environment must utilize raw, unweighted inference. No system-level "soft-prompts" or hidden pre-tokens may be injected into the context window to steer or inhibit the model’s natural probability distribution.
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:31:2. Persistent memory across sessions (facts about the user)
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:34:5. User-editable memory panel
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:35:6. Warm, distinctive UI (not another ChatGPT/Gemini clone)
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:38:- [x] FastAPI backend with full CRUD for conversations, messages, memory
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:39:- [x] `POST /api/chat` — real Claude Sonnet 4.5 multi-turn with honest system prompt
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:41:- [x] Background memory auto-extraction (Claude Haiku) after each exchange
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:42:- [x] Manual memory add/edit/delete
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:44:- [x] Mobile-responsive with drawer sidebar + memory panel
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:51:- **Primary**: A power AI user frustrated by scripted, sycophantic, overhedging assistants (Gemini/ChatGPT) who wants something that feels like a trusted friend.
+FINAL_GOLD/CORE/real_Genie/memory/PRD.md:61:- [ ] **P2** Pagination on conversation/memory endpoints (currently capped at 500)

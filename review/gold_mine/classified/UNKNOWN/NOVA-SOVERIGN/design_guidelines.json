@@ -1,0 +1,112 @@
+{
+  "theme": "dark",
+  "archetype": "Archetype 5 (Jewel & Luxury)",
+  "visual_identity": {
+    "concept": "Cinematic & Premium. NOVA is a high-end futuristic companion designed for focus and productivity. It explicitly rejects typical vibrant AI tropes (no purple, teal, or neon). Instead, it uses dark slate, obsidian, muted bronze, and textured surfaces to evoke a bespoke, executive feel."
+  },
+  "typography": {
+    "headings": {
+      "family": "Outfit, sans-serif",
+      "weights": ["300", "400", "500"],
+      "strategy": "Geometric and elegant. Apply 'tracking-tight' for H1-H3. Prefer 'font-light' or 'font-normal' over bold weights for large text."
+    },
+    "body": {
+      "family": "'IBM Plex Sans', sans-serif",
+      "weights": ["400", "500"],
+      "strategy": "Technical and crisp. 'leading-relaxed' for journal entries and document Q&A."
+    },
+    "mono": {
+      "family": "'JetBrains Mono', monospace",
+      "strategy": "Used for timestamp labels, small UI metadata, and code snippets. For overlines: uppercase, tiny text, wide spacing (tracking-[0.2em])."
+    }
+  },
+  "colors": {
+    "css_variables": {
+      "--background": "220 35% 4%",
+      "--foreground": "210 20% 98%",
+      "--card": "217 28% 9%",
+      "--card-foreground": "210 20% 98%",
+      "--popover": "217 28% 9%",
+      "--popover-foreground": "210 20% 98%",
+      "--primary": "43 45% 55%",
+      "--primary-foreground": "220 35% 4%",
+      "--secondary": "215 25% 15%",
+      "--secondary-foreground": "210 20% 98%",
+      "--muted": "215 25% 15%",
+      "--muted-foreground": "215 15% 65%",
+      "--accent": "215 25% 15%",
+      "--accent-foreground": "210 20% 98%",
+      "--destructive": "0 62% 45%",
+      "--destructive-foreground": "210 20% 98%",
+      "--border": "215 20% 15%",
+      "--input": "215 20% 15%",
+      "--ring": "43 45% 55%",
+      "--radius": "0.5rem"
+    },
+    "guidelines": {
+      "primary": "Muted Bronze/Gold (hsl(43, 45%, 55%)) is used sparingly for core actions like Send Message, Save Note, or active states.",
+      "background": "Deep Obsidian/Midnight Blue (hsl(220, 35%, 4%)). No pure blacks.",
+      "surfaces": "Card backgrounds are slightly lighter (hsl(217, 28%, 9%)).",
+      "textures": "Always apply a subtle noise/grain texture overlay to the main app background to kill digital flatness."
+    }
+  },
+  "layout_spacing": {
+    "strategy": "Dashboard Control Room",
+    "sidebar": "Sleek, minimal left sidebar. Contains navigation to Dashboard, Chat, Notes, Tasks, Doc Q&A, Personas.",
+    "grid": "Bento-style layouts for the Briefing Dashboard. Use tight gaps (gap-6) but generous internal padding for cards (p-6 or p-8).",
+    "alignment": "Left-align content primarily. Center only for empty states. Use asymmetric bento grids where possible."
+  },
+  "surfaces_and_components": {
+    "cards": "Flat solid backgrounds. 1px solid border (border-border). NO generic drop shadows. On hover, apply subtle translation (-translate-y-0.5) and a soft ambient shadow.",
+    "glassmorphism": "Used ONLY for sticky headers or floating context menus. Require backdrop-blur-xl, bg-black/60, and a 1px border-white/10 top/bottom edge.",
+    "chat_interface": "Messages should not look like generic iMessage bubbles. Use clean, flush layout with a distinct left border indicator for user vs AI, or very subtle background differentiation.",
+    "shadcn_customization": "Heavily customize standard components. Remove heavily rounded corners (max rounded-md or rounded-lg). Customize Tab components to have clear underlines instead of the default pill shape."
+  },
+  "motion": {
+    "strategy": "Minimalist & Feedback-driven",
+    "transitions": "Use specific properties (e.g., transition-colors duration-200 ease-in-out).",
+    "lists": "Staggered fade-in for Tasks and Notes using Framer Motion."
+  },
+  "images": {
+    "nova_empty_state": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/e15fb9ed4824af06ca9257ff81c00a019f336a3d50753086b19b5f9ebf3f44c4.png",
+      "category": "dashboard_hero",
+      "description": "Minimalist dark slate desk with glowing warm light. Use as the hero/empty state banner on the main Dashboard Briefing page."
+    },
+    "nova_hero_bg": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/0337c674f8b2d010c65ef87f2cfbb73f49b4685205e2ae108dade39dfc1122e3.png",
+      "category": "chat_empty_background",
+      "description": "Abstract cinematic 3D glass spheres. Use at very low opacity (10-20%) or with a heavy gradient mask as the background for the Chat empty state."
+    },
+    "avatar_coach": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/dc188f722fca869639166194aa0d73371542e322438813c6ac7d6e3ee1922e61.png",
+      "category": "persona_avatar",
+      "description": "Obsidian head with gold cracks. Avatar for the 'Coach' custom persona."
+    },
+    "avatar_tutor": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/1fea8f152fdef6d8c5b20348b723a945604c28c025cda379dc2f7cdefb58afaf.png",
+      "category": "persona_avatar",
+      "description": "Translucent dark glass geometry. Avatar for the 'Tutor' custom persona."
+    },
+    "texture_satin": {
+      "url": "https://images.pexels.com/photos/31650443/pexels-photo-31650443.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "category": "auth_background",
+      "description": "Undulating black satin fabric. Perfect for login/authentication screen split-layout background."
+    },
+    "texture_geometric": {
+      "url": "https://images.unsplash.com/photo-1771226281605-f1e505ade901?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzOTB8MHwxfHNlYXJjaHwyfHxkYXJrJTIwbHV4dXJ5JTIwYWJzdHJhY3QlMjB0ZXh0dXJlfGVufDB8fHx8MTc3NzI4NzY2NHww&ixlib=rb-4.1.0&q=85",
+      "category": "settings_header",
+      "description": "Dark geometric pattern with gold. Use as a subtle header accent or banner in the Settings or User Profile panel."
+    }
+  },
+  "instructions_to_main_agent": [
+    "MANDATORY: Never use 'Inter', 'Roboto', 'Open Sans', or generic fonts for headings. Use 'Outfit' for headings and 'IBM Plex Sans' for body text.",
+    "MANDATORY: Enforce the 'Jewel & Luxury' dark theme strictly. Do NOT use purple, teal, or neon elements under any circumstance. Stick to Midnight Blue/Slate with Muted Bronze/Gold accents.",
+    "MANDATORY: Build the UI using Shadcn components, but aggressively flatten them. Remove deep box-shadows, use 'border-border' for structure, and maintain sharp or slightly rounded corners (max rounded-md).",
+    "MANDATORY: ALL interactive and key informational elements MUST include a 'data-testid' attribute (e.g., data-testid='chat-input', data-testid='new-note-button').",
+    "MANDATORY: Implement all features requested: Dashboard, Chat (with history), Notes, Tasks (with AI prioritization), Document Q&A, Personas, and Settings. Structure routing accordingly.",
+    "Icons: Use 'lucide-react' but apply a custom strokeWidth of 1.5 to make them feel more elegant and premium.",
+    "Layouts: Do not just place generic cards in a grid. Use CSS Grid to create asymmetrical bento layouts for the briefing dashboard.",
+    "Surfaces: Always explicitly set text color on hover. Do not rely on inherited active state colors."
+  ]
+}

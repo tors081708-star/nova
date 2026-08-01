@@ -1,0 +1,4 @@
+./real_Genie/backend/.env
+./NOVA-SOVERIGN/backend/.env.example
+./NOVA-SOVERIGN/discord_bot/.env.example
+./NOVA-SOVERIGN/frontend/.env.example

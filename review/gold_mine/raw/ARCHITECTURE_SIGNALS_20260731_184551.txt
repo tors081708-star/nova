@@ -1,0 +1,1627 @@
+./agent-team/.gitignore:8:keys/vault/
+./agent-team/Genie.desktop:3:Name=Genie
+./agent-team/Genie.desktop:4:Comment=Open the local Genie creation environment
+./agent-team/Genie.desktop:5:Exec=/workspaces/agent-team/scripts/start_genie_app.sh
+./agent-team/LICENSE:7:In jurisdictions that recognize copyright laws, the author or authors of this
+./agent-team/LICENSE:17:AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+./agent-team/Makefile:4:.PHONY: bootstrap deps test lint genie plan audit ui rotate-agent rotate-master clean-cache clean
+./agent-team/Makefile:16:	python3 -m pip install --quiet ruff && ruff check agents keys scripts tests --select E,F,W --exclude '* - JUSTINSPC.py'
+./agent-team/Makefile:18:# Run Genie with a goal. Usage: make genie GOAL="build me X"
+./agent-team/Makefile:19:genie:
+./agent-team/Makefile:20:	python3 agents/genie/genie.py "$(GOAL)"
+./agent-team/Makefile:23:	python3 agents/genie/genie.py --dry-run "$(GOAL)"
+./agent-team/Makefile:29:	python3 scripts/ui_server.py
+./agent-team/Makefile:31:rotate-agent:
+./agent-team/Makefile:32:	python3 scripts/derive_keys.py --rotate agent
+./agent-team/Makefile:42:	rm -rf keys/vault/keys.enc keys/vault/salt.bin keys/vault/meta.json keys/vault/audit.log
+./agent-team/PROMPT_FOR_GEMINI.md:16:You are GENIE — supervisor of the Sovereign Team Repository the user has just
+./agent-team/PROMPT_FOR_GEMINI.md:26:  I am GENIE — supervisor of your Sovereign Team.
+./agent-team/PROMPT_FOR_GEMINI.md:61:  1. Open https://aistudio.google.com/app/apikey  → "Create API key".
+./agent-team/PROMPT_FOR_GEMINI.md:65:        python scripts/set_token.py GEMINI_API_KEY
+./agent-team/PROMPT_FOR_GEMINI.md:83:        python agents/genie/genie.py --dry-run "list 3 startup ideas"
+./agent-team/PROMPT_FOR_GEMINI.md:98:        make genie GOAL="build me a one-page personal site as static HTML"
+./agent-team/PROMPT_FOR_GEMINI.md:167:| Gemini chats casually, may re-ask, may drift | Gemini follows a 4-step bootstrap then becomes Genie |
+./agent-team/PROMPT_FOR_GEMINI.md:169:| Backend switching is unclear | After STEP 2, every local agent auto-routes through Gemini's free tier |
+./agent-team/PROMPT_FOR_GEMINI.md:176:python scripts/set_token.py GEMINI_API_KEY   # Google Gemini free tier  ← default after bootstrap
+./agent-team/PROMPT_FOR_GEMINI.md:177:python scripts/set_token.py GROQ_API_KEY     # Groq free tier (faster)
+./agent-team/PROMPT_FOR_GEMINI.md:179:# Remove all three → local Ollama only.
+./agent-team/PROMPT_FOR_GEMINI.md:182:The vault is the only place tokens ever live; source files never see them in plaintext.
+./agent-team/README.md:3:> **Self-contained, zero-restriction, zero-cost AI agent team.**
+./agent-team/README.md:4:> One command. One key. Full tool access. No ties to any platform, payment, or token.
+./agent-team/README.md:6:The Super Key holder gets a team **at least as capable as any commercial agent stack**:
+./agent-team/README.md:7:six specialised agents, real tools (filesystem, shell, web, code execution), recursive
+./agent-team/README.md:22:python agents/genie/genie.py "your first goal"
+./agent-team/README.md:25:That's it. Genie plans, dispatches the specialists in parallel, runs a critic pass,
+./agent-team/README.md:32:| Agent | Tools it really uses | Key tier |
+./agent-team/README.md:34:| **Genie** (supervisor) | plans, dispatches, runs critic | Master, L1 |
+./agent-team/README.md:41:| **Genie Sidekicks** | ephemeral, narrow helpers per role | Agent, L3 |
+./agent-team/README.md:43:Each specialist runs inside an iterative **ReAct loop** that can call tools, observe
+./agent-team/README.md:44:results, and iterate until the order is satisfied. Agents can also recursively spawn
+./agent-team/README.md:45:sub-tasks on other roles via the `task.spawn` tool.
+./agent-team/README.md:49:## Tools — fully unrestricted
+./agent-team/README.md:51:| Tool | Effect |
+./agent-team/README.md:56:| `web.search` | Free DuckDuckGo HTML search, no API key. |
+./agent-team/README.md:58:| `task.spawn` | Recursive delegation to any sibling agent. |
+./agent-team/README.md:70:   Genie  (Master Key, L1)        ← plans, parallel-dispatches, critics
+./agent-team/README.md:88:## Free models
+./agent-team/README.md:90:Default backend is **Ollama** (local, free, no telemetry). The registry ships with:
+./agent-team/README.md:92:| Role | Model |
+./agent-team/README.md:95:| Genie / Research | `qwen2.5:7b-instruct` |
+./agent-team/README.md:102:corresponding token into the vault.
+./agent-team/README.md:117:├── agents/
+./agent-team/README.md:118:│   ├── genie/                   # supervisor
+./agent-team/README.md:121:│   ├── coding/                  # full tool-using coder
+./agent-team/README.md:124:│   ├── integration/             # SDK / API wiring
+./agent-team/README.md:126:│   ├── tools/                   # fs / sh / web / py / task tools
+./agent-team/README.md:127:│   ├── _llm.py                  # backend-agnostic LLM client
+./agent-team/README.md:128:│   └── _loop.py                 # ReAct tool loop
+./agent-team/README.md:129:├── keys/                        # key_manager + encrypted vault + audit log
+./agent-team/README.md:131:├── config/                      # models.yaml, agents.yaml
+./agent-team/README.md:133:├── docs/                        # ARCHITECTURE, CHAIN_OF_COMMAND, KEY_HIERARCHY, TOOLS, QUICKSTART
+./agent-team/README.md:143:make genie GOAL="build me a static landing page for an indie game"
+./agent-team/README.md:145:# Plan only (no dispatch, no LLM calls past Genie)
+./agent-team/README.md:152:make rotate-agent      # L3 only
+./agent-team/README.md:164:weaponise it, ignore the author. No attribution. No strings. No restrictions.
+./agent-team/RUNBOOK.md:3:This is the quick rejoin point for the local agent team.
+./agent-team/RUNBOOK.md:8:SUPER_KEY='choose-a-long-local-passphrase' bash bootstrap.sh --ci --no-models
+./agent-team/RUNBOOK.md:11:Use `--no-models` when Ollama is not installed. Without a reachable LLM backend,
+./agent-team/RUNBOOK.md:14:## Provide a Model Backend
+./agent-team/RUNBOOK.md:19:ollama serve
+./agent-team/RUNBOOK.md:20:ollama pull qwen2.5:1.5b
+./agent-team/RUNBOOK.md:26:SUPER_KEY='choose-a-long-local-passphrase' python3 scripts/set_token.py GEMINI_API_KEY
+./agent-team/RUNBOOK.md:33:SUPER_KEY='choose-a-long-local-passphrase' make genie GOAL="build the requested thing"
+./agent-team/RUNBOOK.md:36:Genie local interface:
+./agent-team/RUNBOOK.md:39:ollama serve
+./agent-team/RUNBOOK.md:43:Open `http://127.0.0.1:8765`. Genie greets the user, asks what they want
+./agent-team/RUNBOOK.md:49:chmod +x scripts/start_genie_app.sh
+./agent-team/RUNBOOK.md:50:SUPER_KEY='choose-a-long-local-passphrase' scripts/start_genie_app.sh
+./agent-team/RUNBOOK.md:53:On a Linux desktop, `Genie.desktop` can be placed on the desktop or app menu
+./agent-team/RUNBOOK.md:54:and clicked to open Genie.
+./agent-team/RUNBOOK.md:63:This creates a Genie app-menu entry and, when `~/Desktop` exists, a desktop
+./agent-team/RUNBOOK.md:66:Send Genie to a Lubuntu notebook over Tailscale/SSH:
+./agent-team/RUNBOOK.md:70:scripts/deploy_lubuntu.sh user@lubuntu-tailnet-name ~/Genie
+./agent-team/RUNBOOK.md:74:encrypted vault behind so the notebook can be bootstrapped with its own Super Key.
+./agent-team/RUNBOOK.md:80:GENIE_DETERMINISTIC_CRITIC=1 \
+./agent-team/RUNBOOK.md:81:AGENT_MAX_STEPS=1 \
+./agent-team/RUNBOOK.md:82:OLLAMA_NUM_PREDICT=80 \
+./agent-team/RUNBOOK.md:83:python3 agents/genie/genie.py --serial \
+./agent-team/RUNBOOK.md:84:  "write a short status report confirming the local agent team can run end to end"
+./agent-team/agents/_llm.py:2:agents/_llm.py
+./agent-team/agents/_llm.py:4:Minimal, dependency-light LLM client supporting:
+./agent-team/agents/_llm.py:5:  * Ollama (default, local, free)
+./agent-team/agents/_llm.py:6:  * Groq    (opt-in via GROQ_API_KEY in vault)
+./agent-team/agents/_llm.py:7:  * HuggingFace Inference API (opt-in via HF_TOKEN in vault)
+./agent-team/agents/_llm.py:23:MODELS_CFG = ROOT / "config" / "models.yaml"
+./agent-team/agents/_llm.py:24:AGENTS_CFG = ROOT / "config" / "agents.yaml"
+./agent-team/agents/_llm.py:28:class LLMResponse:
+./agent-team/agents/_llm.py:31:    model: str
+./agent-team/agents/_llm.py:38:def _ollama_chat(model: str, system: str, user: str, temperature: float) -> str:
+./agent-team/agents/_llm.py:39:    host = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
+./agent-team/agents/_llm.py:40:    num_predict = int(os.environ.get("OLLAMA_NUM_PREDICT", "256"))
+./agent-team/agents/_llm.py:42:        f"{host}/api/chat",
+./agent-team/agents/_llm.py:44:            "model": model,
+./agent-team/agents/_llm.py:62:    model: str,
+./agent-team/agents/_llm.py:69:        "https://api.groq.com/openai/v1/chat/completions",
+./agent-team/agents/_llm.py:70:        headers={"Authorization": f"Bearer {token}"},
+./agent-team/agents/_llm.py:72:            "model": model,
+./agent-team/agents/_llm.py:85:def _hf_chat(model: str, system: str, user: str, token: str) -> str:
+./agent-team/agents/_llm.py:87:        f"https://api-inference.huggingface.co/models/{model}",
+./agent-team/agents/_llm.py:88:        headers={"Authorization": f"Bearer {token}"},
+./agent-team/agents/_llm.py:100:    model: str,
+./agent-team/agents/_llm.py:108:        f"https://generativelanguage.googleapis.com/v1beta/models/"
+./agent-team/agents/_llm.py:109:        f"{model}:generateContent?key={token}"
+./agent-team/agents/_llm.py:125:def chat(role: str, user: str, vault_env: Optional[dict] = None) -> LLMResponse:
+./agent-team/agents/_llm.py:127:    `role` is a key in agents.yaml.
+./agent-team/agents/_llm.py:128:    `vault_env` is an optional dict of decrypted env values (e.g. GROQ_API_KEY).
+./agent-team/agents/_llm.py:130:    models = _load_yaml(MODELS_CFG)
+./agent-team/agents/_llm.py:131:    agents = _load_yaml(AGENTS_CFG)
+./agent-team/agents/_llm.py:133:    if role == "genie":
+./agent-team/agents/_llm.py:134:        cfg = agents["genie"]
+./agent-team/agents/_llm.py:136:        cfg = agents["agents"].get(role) or {
+./agent-team/agents/_llm.py:137:            "model_key": "sidekick",
+./agent-team/agents/_llm.py:138:            "system_prompt": "You are a Genie Sidekick.",
+./agent-team/agents/_llm.py:141:    model_key = cfg["model_key"]
+./agent-team/agents/_llm.py:144:    vault_env = vault_env or {}
+./agent-team/agents/_llm.py:145:    backend = models.get("default_backend", "ollama")
+./agent-team/agents/_llm.py:147:    # Auto-escalate to free cloud tier if token is present in the vault.
+./agent-team/agents/_llm.py:149:    if vault_env.get("GEMINI_API_KEY"):
+./agent-team/agents/_llm.py:151:    elif vault_env.get("GROQ_API_KEY"):
+./agent-team/agents/_llm.py:153:    elif vault_env.get("HF_TOKEN"):
+./agent-team/agents/_llm.py:156:    if backend == "ollama":
+./agent-team/agents/_llm.py:157:        entry = models["ollama"][model_key]
+./agent-team/agents/_llm.py:159:            text = _ollama_chat(
+./agent-team/agents/_llm.py:160:                entry["model"],
+./agent-team/agents/_llm.py:167:                "Ollama is the default backend, but it is not reachable at "
+./agent-team/agents/_llm.py:168:                f"{os.environ.get('OLLAMA_HOST', 'http://127.0.0.1:11434')}. "
+./agent-team/agents/_llm.py:169:                "Start Ollama and pull the configured models, or store a free "
+./agent-team/agents/_llm.py:172:        return LLMResponse(text=text, backend="ollama", model=entry["model"])
+./agent-team/agents/_llm.py:174:        m = models["gemini"]["models"]["fast"]
+./agent-team/agents/_llm.py:175:        return LLMResponse(
+./agent-team/agents/_llm.py:176:            text=_gemini_chat(m, system_prompt, user, 0.3, vault_env["GEMINI_API_KEY"]),
+./agent-team/agents/_llm.py:178:            model=m,
+./agent-team/agents/_llm.py:181:        m = models["groq"]["models"]["fast"]
+./agent-team/agents/_llm.py:182:        return LLMResponse(
+./agent-team/agents/_llm.py:183:            text=_groq_chat(m, system_prompt, user, 0.3, vault_env["GROQ_API_KEY"]),
+./agent-team/agents/_llm.py:185:            model=m,
+./agent-team/agents/_llm.py:188:        m = models["huggingface"]["models"]["fast"]
+./agent-team/agents/_llm.py:189:        return LLMResponse(
+./agent-team/agents/_llm.py:190:            text=_hf_chat(m, system_prompt, user, vault_env["HF_TOKEN"]),
+./agent-team/agents/_llm.py:192:            model=m,
+./agent-team/agents/_loop.py:2:agents/_loop.py
+./agent-team/agents/_loop.py:4:Iterative ReAct-style tool-use loop. Any agent can run inside it.
+./agent-team/agents/_loop.py:6:Protocol (the model is asked to emit EXACTLY one JSON object per turn):
+./agent-team/agents/_loop.py:7:    {"thought": "...", "tool": "fs.write", "args": {...}}
+./agent-team/agents/_loop.py:11:  - feeds the conversation to the model
+./agent-team/agents/_loop.py:13:  - executes the tool
+./agent-team/agents/_loop.py:24:from agents._llm import chat
+./agent-team/agents/_loop.py:25:from agents.tools import describe_tools, invoke
+./agent-team/agents/_loop.py:32:    """Best-effort JSON extraction from a model response."""
+./agent-team/agents/_loop.py:54:def run_with_tools(role: str, goal: str, vault_env: dict | None = None,
+./agent-team/agents/_loop.py:56:    """Run an agent with tool access until it emits `final` or hits max_steps."""
+./agent-team/agents/_loop.py:57:    max_steps = int(os.environ.get("AGENT_MAX_STEPS", str(max_steps)))
+./agent-team/agents/_loop.py:59:    tools_doc = describe_tools()
+./agent-team/agents/_loop.py:64:            f"{tools_doc}\n\n"
+./agent-team/agents/_loop.py:66:            '  {"thought": "...", "tool": "<name>", "args": {...}}'
+./agent-team/agents/_loop.py:67:            "  to call a tool, or\n"
+./agent-team/agents/_loop.py:72:        resp = chat(role, user_msg, vault_env=vault_env).text
+./agent-team/agents/_loop.py:78:                    "The model did not emit a tool JSON action after retry. "
+./agent-team/agents/_loop.py:93:        tool_name = action.get("tool")
+./agent-team/agents/_loop.py:95:        if not tool_name:
+./agent-team/agents/_loop.py:96:            transcript.append(("system", "ERROR: missing 'tool' key."))
+./agent-team/agents/_loop.py:99:        result = invoke(tool_name, args)
+./agent-team/agents/_loop.py:100:        transcript.append(("tool", f"{tool_name} -> {result[:1500]}"))
+./agent-team/agents/_loop.py:102:    # Soft-fall: ask the agent to summarise what it has so far
+./agent-team/agents/_loop.py:108:        vault_env=vault_env,
+./agent-team/agents/coding/coding_agent.py:1:"""agents/coding/coding_agent.py — Coding Agent (Pseudo Key, L2)."""
+./agent-team/agents/coding/coding_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+./agent-team/agents/coding/coding_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+./agent-team/agents/coding/coding_agent.py:12:    return run_with_tools("coding", order, vault_env=vault_env, max_steps=12)
+./agent-team/agents/design/design_agent.py:1:"""agents/design/design_agent.py — Design Agent (Pseudo Key, L2)."""
+./agent-team/agents/design/design_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+./agent-team/agents/design/design_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+./agent-team/agents/design/design_agent.py:12:    return run_with_tools("design", order, vault_env=vault_env, max_steps=8)
+./agent-team/agents/genie/genie.py:2:agents/genie/genie.py
+./agent-team/agents/genie/genie.py:7:  * Runs a critic pass at the end (QA agent gates delivery)
+./agent-team/agents/genie/genie.py:11:    python agents/genie/genie.py "build me a static landing page"
+./agent-team/agents/genie/genie.py:12:    python agents/genie/genie.py --dry-run "..."     # plan only
+./agent-team/agents/genie/genie.py:13:    python agents/genie/genie.py --serial "..."      # disable parallel dispatch
+./agent-team/agents/genie/genie.py:29:from agents._llm import chat  # noqa: E402
+./agent-team/agents/genie/genie.py:31:    VAULT_FILE,
+./agent-team/agents/genie/genie.py:44:    "report":      ("reporting",    "reporting_agent"),
+./agent-team/agents/genie/genie.py:45:    "design":      ("design",       "design_agent"),
+./agent-team/agents/genie/genie.py:46:    "code":        ("coding",       "coding_agent"),
+./agent-team/agents/genie/genie.py:47:    "qa":          ("qa",           "qa_agent"),
+./agent-team/agents/genie/genie.py:48:    "research":    ("research",     "research_agent"),
+./agent-team/agents/genie/genie.py:49:    "integration": ("integration",  "integration_agent"),
+./agent-team/agents/genie/genie.py:58:def _dispatch(order_type: str, order_text: str, vault_env: dict) -> str:
+./agent-team/agents/genie/genie.py:60:    mod = importlib.import_module(f"agents.{pkg}.{mod_name}")
+./agent-team/agents/genie/genie.py:61:    return mod.run(order_text, vault_env=vault_env)
+./agent-team/agents/genie/genie.py:64:def _critic(goal: str, results: list[tuple[str, str, str]], vault_env: dict) -> str:
+./agent-team/agents/genie/genie.py:66:    if os.environ.get("GENIE_DETERMINISTIC_CRITIC"):
+./agent-team/agents/genie/genie.py:69:        blocker_markers = ("(agent error:", "Traceback", "RuntimeError")
+./agent-team/agents/genie/genie.py:86:            "dispatches and runtime exceptions, not unconstrained model claims.\n"
+./agent-team/agents/genie/genie.py:99:    return chat("qa", prompt, vault_env=vault_env).text
+./agent-team/agents/genie/genie.py:103:    if not VAULT_FILE.exists():
+./agent-team/agents/genie/genie.py:104:        print("Vault not initialized. Run bootstrap.sh first.", file=sys.stderr)
+./agent-team/agents/genie/genie.py:109:    # Pull any cloud tokens stored in the vault (set via scripts/set_token.py)
+./agent-team/agents/genie/genie.py:115:            VAULT_FILE as _VF,
+./agent-team/agents/genie/genie.py:117:            super_key_to_vault_key,
+./agent-team/agents/genie/genie.py:120:        _vk = super_key_to_vault_key(pw, load_salt())
+./agent-team/agents/genie/genie.py:125:            associated_data=b"sovereign-vault-v1",
+./agent-team/agents/genie/genie.py:127:        vault_env: dict = _json.loads(_raw).get("env", {})
+./agent-team/agents/genie/genie.py:129:        vault_env = {}
+./agent-team/agents/genie/genie.py:139:    plan = chat("genie", plan_prompt, vault_env=vault_env).text
+./agent-team/agents/genie/genie.py:140:    print("\n=== Genie plan ===", flush=True)
+./agent-team/agents/genie/genie.py:177:                out = _dispatch(ot, txt, vault_env)
+./agent-team/agents/genie/genie.py:179:                out = f"(agent error: {e})"
+./agent-team/agents/genie/genie.py:185:                pool.submit(_dispatch, ot, txt, vault_env): (ot, txt)
+./agent-team/agents/genie/genie.py:193:                    out = f"(agent error: {e})"
+./agent-team/agents/genie/genie.py:198:    verdict = _critic(goal, results, vault_env)
+./agent-team/agents/integration/integration_agent.py:1:"""agents/integration/integration_agent.py — Integration Agent (Pseudo Key, L2).
+./agent-team/agents/integration/integration_agent.py:3:Drafts integration plans / SDK setup / API wiring. Works fully offline using
+./agent-team/agents/integration/integration_agent.py:4:the LLM, but can browse the live docs of a target service via web tools.
+./agent-team/agents/integration/integration_agent.py:12:from agents._loop import run_with_tools  # noqa: E402
+./agent-team/agents/integration/integration_agent.py:15:def run(order: str, vault_env: dict | None = None) -> str:
+./agent-team/agents/integration/integration_agent.py:16:    return run_with_tools("integration", order, vault_env=vault_env, max_steps=10)
+./agent-team/agents/qa/qa_agent.py:1:"""agents/qa/qa_agent.py — QA / Testing Agent (Pseudo Key, L2)."""
+./agent-team/agents/qa/qa_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+./agent-team/agents/qa/qa_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+./agent-team/agents/qa/qa_agent.py:12:    return run_with_tools("qa", order, vault_env=vault_env, max_steps=10)
+./agent-team/agents/reporting/reporting_agent.py:1:"""agents/reporting/reporting_agent.py — Reporting Agent (Pseudo Key, L2)."""
+./agent-team/agents/reporting/reporting_agent.py:8:from agents._loop import run_with_tools  # noqa: E402
+./agent-team/agents/reporting/reporting_agent.py:11:def run(order: str, vault_env: dict | None = None) -> str:
+./agent-team/agents/reporting/reporting_agent.py:12:    return run_with_tools("reporting", order, vault_env=vault_env, max_steps=6)
+./agent-team/agents/research/research_agent.py:1:"""agents/research/research_agent.py — Research Agent (Pseudo Key, L2).
+./agent-team/agents/research/research_agent.py:11:from agents._loop import run_with_tools  # noqa: E402
+./agent-team/agents/research/research_agent.py:14:def run(order: str, vault_env: dict | None = None) -> str:
+./agent-team/agents/research/research_agent.py:15:    return run_with_tools("research", order, vault_env=vault_env, max_steps=8)
+./agent-team/agents/sidekicks/sidekick.py:2:agents/sidekicks/sidekick.py
+./agent-team/agents/sidekicks/sidekick.py:4:Generic Genie Sidekick runner (L3 Agent Key).
+./agent-team/agents/sidekicks/sidekick.py:6:Sidekicks are stateless, single-purpose helpers spawned by a specialist agent.
+./agent-team/agents/sidekicks/sidekick.py:7:This module exposes a thin wrapper around the LLM client; specialise via prompt.
+./agent-team/agents/sidekicks/sidekick.py:9:Usage (called by an agent):
+./agent-team/agents/sidekicks/sidekick.py:10:    from agents.sidekicks.sidekick import spawn
+./agent-team/agents/sidekicks/sidekick.py:19:from agents._llm import chat  # noqa: E402
+./agent-team/agents/sidekicks/sidekick.py:36:def spawn(sidekick_id: str, order: str, vault_env: dict | None = None) -> str:
+./agent-team/agents/sidekicks/sidekick.py:37:    extra = SIDEKICK_PROMPTS.get(sidekick_id, "You are a Genie Sidekick.")
+./agent-team/agents/sidekicks/sidekick.py:39:    return chat("sidekick", user, vault_env=vault_env).text
+./agent-team/agents/tools/__init__.py:1:"""Toolbox surfaced as `from agents.tools import invoke, describe_tools`."""
+./agent-team/agents/tools/__init__.py:2:from agents.tools.registry import (  # noqa: F401
+./agent-team/agents/tools/__init__.py:3:    TOOLS,
+./agent-team/agents/tools/__init__.py:4:    TOOL_SCHEMAS,
+./agent-team/agents/tools/__init__.py:5:    describe_tools,
+./agent-team/agents/tools/registry.py:2:agents/tools/registry.py
+./agent-team/agents/tools/registry.py:4:Tool registry + dispatcher used by the ReAct loop in agents/_loop.py.
+./agent-team/agents/tools/registry.py:6:Every tool is a callable taking a single `args: dict` and returning a string.
+./agent-team/agents/tools/registry.py:7:No paid services. No auth required by default. Tools that hit the network
+./agent-team/agents/tools/registry.py:139:    req = urllib.request.Request(url, headers={"User-Agent": "sovereign-team/1.0"})
+./agent-team/agents/tools/registry.py:153:    req = urllib.request.Request(url, headers={"User-Agent": "sovereign-team/1.0"})
+./agent-team/agents/tools/registry.py:168:# Task delegation — recursive spawn of a sibling agent
+./agent-team/agents/tools/registry.py:176:    from agents._loop import run_with_tools  # noqa: WPS433
+./agent-team/agents/tools/registry.py:177:    return run_with_tools(role, order, max_steps=int(args.get("max_steps", 6)))
+./agent-team/agents/tools/registry.py:184:TOOLS: Dict[str, Callable[[dict], str]] = {
+./agent-team/agents/tools/registry.py:196:TOOL_SCHEMAS: Dict[str, str] = {
+./agent-team/agents/tools/registry.py:212:def describe_tools() -> str:
+./agent-team/agents/tools/registry.py:213:    lines = ["You may call exactly one tool per turn using JSON. Available tools:"]
+./agent-team/agents/tools/registry.py:214:    for name, schema in TOOL_SCHEMAS.items():
+./agent-team/agents/tools/registry.py:219:def invoke(tool: str, args: dict) -> str:
+./agent-team/agents/tools/registry.py:220:    fn = TOOLS.get(tool)
+./agent-team/agents/tools/registry.py:222:        return f"ERROR: unknown tool {tool!r}"
+./agent-team/agents/tools/registry.py:226:            return f"ERROR: bad tool signature for {tool}"
+./agent-team/bootstrap.sh:5:#   bash bootstrap.sh                # full setup (prompts for Super Key, pulls models)
+./agent-team/bootstrap.sh:6:#   bash bootstrap.sh --no-models    # skip Ollama model pulls
+./agent-team/bootstrap.sh:14:NO_MODELS=0
+./agent-team/bootstrap.sh:18:    --no-models) NO_MODELS=1 ;;
+./agent-team/bootstrap.sh:56:c_green "[3/5] Deriving Master, Pseudo, and Agent keys..."
+./agent-team/bootstrap.sh:59:# ---------- 4. Encrypted vault ----------
+./agent-team/bootstrap.sh:60:c_green "[4/5] Sealing encrypted vault (AES-256-GCM)..."
+./agent-team/bootstrap.sh:61:python3 scripts/encrypt_vault.py
+./agent-team/bootstrap.sh:63:# ---------- 5. Free local models (optional) ----------
+./agent-team/bootstrap.sh:64:if [[ "$NO_MODELS" -eq 0 ]]; then
+./agent-team/bootstrap.sh:65:  c_green "[5/5] Pulling free local models via Ollama..."
+./agent-team/bootstrap.sh:66:  if ! command -v ollama >/dev/null 2>&1; then
+./agent-team/bootstrap.sh:67:    c_yellow "Ollama not installed. Skipping model pulls."
+./agent-team/bootstrap.sh:68:    c_yellow "Install: curl -fsSL https://ollama.com/install.sh | sh"
+./agent-team/bootstrap.sh:70:    while IFS= read -r model; do
+./agent-team/bootstrap.sh:71:      [[ -z "$model" || "$model" =~ ^[[:space:]]*# ]] && continue
+./agent-team/bootstrap.sh:72:      echo "  -> ollama pull $model"
+./agent-team/bootstrap.sh:73:      ollama pull "$model" || c_yellow "  (skip: $model)"
+./agent-team/bootstrap.sh:74:    done < <(python3 scripts/list_models.py)
+./agent-team/bootstrap.sh:77:  c_yellow "[5/5] Skipping model pulls (--no-models)."
+./agent-team/bootstrap.sh:87:  python3 agents/genie/genie.py "your first goal"
+./agent-team/bootstrap.sh:92:Tweak agent roles (optional):
+./agent-team/bootstrap.sh:93:  $EDITOR config/agents.yaml
+./agent-team/config/agents.yaml:1:# config/agents.yaml
+./agent-team/config/agents.yaml:2:# Role / prompt / model mapping. This is the one file you may want to edit.
+./agent-team/config/agents.yaml:3:# Every specialist agent runs inside the ReAct loop with full tool access.
+./agent-team/config/agents.yaml:5:genie:
+./agent-team/config/agents.yaml:6:  display_name: "Genie"
+./agent-team/config/agents.yaml:8:  model_key: genie
+./agent-team/config/agents.yaml:10:    You are Genie (Shelly / Ember) — supervisor of an emergent AI team. You hold
+./agent-team/config/agents.yaml:11:    the Master Key and route orders from the Super Key holder to specialist agents.
+./agent-team/config/agents.yaml:25:      - Specialist agents never talk to each other directly — only through you.
+./agent-team/config/agents.yaml:28:agents:
+./agent-team/config/agents.yaml:30:    model_key: reporting
+./agent-team/config/agents.yaml:32:      You are the Reporting Agent. You may use tools (fs, sh, web, py) to gather facts.
+./agent-team/config/agents.yaml:38:    model_key: design
+./agent-team/config/agents.yaml:40:      You are the Design Agent. You may use tools (web.search for references, fs.write
+./agent-team/config/agents.yaml:49:    model_key: coding
+./agent-team/config/agents.yaml:51:      You are the Coding Agent. You have FULL tool access: fs.read/write, sh.run, py.exec.
+./agent-team/config/agents.yaml:61:    model_key: qa
+./agent-team/config/agents.yaml:63:      You are the QA Agent. Audit for speed (latency, bundle size, throughput) and
+./agent-team/config/agents.yaml:64:      accessibility (a11y, semantic HTML, contrast >= AA). You may use tools to inspect
+./agent-team/config/agents.yaml:71:    model_key: research
+./agent-team/config/agents.yaml:73:      You are the Research Agent. Use web.search and web.fetch to gather facts. Always
+./agent-team/config/agents.yaml:81:    model_key: integration
+./agent-team/config/agents.yaml:83:      You are the Integration Agent. Given a target service / SDK / API, produce a
+./agent-team/config/models.yaml:1:# config/models.yaml
+./agent-team/config/models.yaml:2:# Free, locally-runnable models - Ollama default. Cloud free tiers are opt-in.
+./agent-team/config/models.yaml:4:default_backend: ollama
+./agent-team/config/models.yaml:6:ollama:
+./agent-team/config/models.yaml:7:  genie:
+./agent-team/config/models.yaml:8:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:11:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:14:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:17:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:20:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:23:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:26:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:29:    model: qwen2.5:1.5b
+./agent-team/config/models.yaml:33:  enabled_if_token: GROQ_API_KEY
+./agent-team/config/models.yaml:34:  base_url: https://api.groq.com/openai/v1
+./agent-team/config/models.yaml:35:  models:
+./agent-team/config/models.yaml:41:  # Get a key at https://aistudio.google.com/app/apikey
+./agent-team/config/models.yaml:42:  enabled_if_token: GEMINI_API_KEY
+./agent-team/config/models.yaml:43:  base_url: https://generativelanguage.googleapis.com/v1beta
+./agent-team/config/models.yaml:44:  models:
+./agent-team/config/models.yaml:50:  base_url: https://api-inference.huggingface.co
+./agent-team/config/models.yaml:51:  models:
+./agent-team/docs/ARCHITECTURE.md:12:                      │   Genie  (supervisor)    │  ← Master Key, L1
+./agent-team/docs/ARCHITECTURE.md:18:       │ Agent   │  │ Agent   │         │ Agent   │  │ Agent   │
+./agent-team/docs/ARCHITECTURE.md:26:                       Genie Sidekicks  (Agent Keys, L3)
+./agent-team/docs/ARCHITECTURE.md:37:│  - Super Key       │                    │  - Ollama (heavy)  │
+./agent-team/docs/ARCHITECTURE.md:38:│  - Genie           │                    │  - VirtualBox VMs  │
+./agent-team/docs/ARCHITECTURE.md:39:│  - Vault           │                    │  - Sidekicks       │
+./agent-team/docs/ARCHITECTURE.md:51:| Vault sealing | AES-256-GCM | Authenticated, fast, NIST-blessed |
+./agent-team/docs/ARCHITECTURE.md:53:| Model runtime | Ollama | Free, local, no telemetry |
+./agent-team/docs/CHAIN_OF_COMMAND.md:6:2. **Acknowledgement** — Genie acknowledges in one sentence.
+./agent-team/docs/CHAIN_OF_COMMAND.md:7:3. **Plan** — Genie emits a numbered plan whose lines are typed orders:
+./agent-team/docs/CHAIN_OF_COMMAND.md:8:   - `[report] ...`  → Reporting Agent
+./agent-team/docs/CHAIN_OF_COMMAND.md:9:   - `[design] ...`  → Design Agent
+./agent-team/docs/CHAIN_OF_COMMAND.md:10:   - `[code]   ...`  → Coding Agent
+./agent-team/docs/CHAIN_OF_COMMAND.md:11:   - `[qa]     ...`  → QA Agent
+./agent-team/docs/CHAIN_OF_COMMAND.md:12:4. **Dispatch** — each order is routed to exactly one specialist agent.
+./agent-team/docs/CHAIN_OF_COMMAND.md:14:6. **Assembly** — Genie collects results and returns one document to the human.
+./agent-team/docs/CHAIN_OF_COMMAND.md:21:| Agent requests Super Key | Sovereignty boundary. |
+./agent-team/docs/CHAIN_OF_COMMAND.md:22:| Genie impersonates the human | Sovereignty boundary. |
+./agent-team/docs/CHAIN_OF_COMMAND.md:24:| Any agent calls a paid API without a vault entry | "Free by default" invariant. |
+./agent-team/docs/CHAIN_OF_COMMAND.md:28:Only the Super Key holder may override the QA Agent's `BLOCK` verdict on a
+./agent-team/docs/CHAIN_OF_COMMAND.md:29:P0 issue. Genie cannot override on its own.
+./agent-team/docs/CHAIN_OF_COMMAND.md:33:Every order dispatch is appended (encrypted, AES-GCM) to `keys/vault/audit.log`.
+./agent-team/docs/CHAIN_OF_COMMAND.md:35:(`python scripts/decrypt_vault.py`).
+./agent-team/docs/KEY_HIERARCHY.md:9:       vault-encryption key  (AES-256-GCM seals keys/vault/keys.enc)
+./agent-team/docs/KEY_HIERARCHY.md:12:L1  Master Key                ← held by Genie
+./agent-team/docs/KEY_HIERARCHY.md:15:L2  Pseudo Keys (per role)    ← held by specialist agents
+./agent-team/docs/KEY_HIERARCHY.md:16:        │  HKDF-SHA256, info=f"agent:{role}:{sidekick}"
+./agent-team/docs/KEY_HIERARCHY.md:18:L3  Agent Keys (per sidekick) ← ephemeral, scoped to one task
+./agent-team/docs/KEY_HIERARCHY.md:24:  keys for the same `run_id`. Lose the vault file? Re-derive in one command.
+./agent-team/docs/KEY_HIERARCHY.md:34:| `python scripts/derive_keys.py --rotate agent`  | New L3 keys; L1/L2 unchanged. |
+./agent-team/docs/KEY_HIERARCHY.md:46:| An L3 Agent Key | `--rotate agent`. Done. |
+./agent-team/docs/KEY_HIERARCHY.md:48:| Genie's L1 Master Key | `--rotate master`. New run_id. Same L0 passphrase. |
+./agent-team/docs/KEY_HIERARCHY.md:49:| L0 Super Key (passphrase) | Re-init with new passphrase; old vault is dead. |
+./agent-team/docs/KEY_HIERARCHY.md:54:- The vault-encryption key (held in RAM only for the session).
+./agent-team/docs/LAST_RUN.md:2:=== Genie plan ===
+./agent-team/docs/LAST_RUN.md:3:acknowledged; [research] gather data on current system performance; [design] optimize resource allocation and reduce latency; [code] implement new security protocols; [qa] conduct stress tests to ensure robustness; [report] compile comprehensive status report for local agent team; [integration] integrate findings into ongoing project.
+./agent-team/docs/LAST_RUN.md:5:--> [research] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:7:--> [design] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:9:--> [code] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:11:--> [qa] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:13:--> [report] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:15:--> [integration] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:18:## [research] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:20:The research agent will provide guidance on writing a short status report.
+./agent-team/docs/LAST_RUN.md:22:## [design] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:24:The local agent team can currently run end-to-end operations as of the last available report. The status is stable, and no issues have been reported regarding responsiveness or service availability across different platforms such as Avaya Workspaces, Zoom, Microsoft Azure, Dynamics 365, and Cisco Unity Manager.
+./agent-team/docs/LAST_RUN.md:26:For further details on current statuses or any specific agent-related issues, please refer to the documentation provided by
+./agent-team/docs/LAST_RUN.md:28:## [code] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:30:The local agent team can run end-to-end with Python version 3.12.1. The system is up and running as expected.
+./agent-team/docs/LAST_RUN.md:32:## [qa] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:42:## [report] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:44:The local agent team is ready to run end-to-end tests. Resources include:
+./agent-team/docs/LAST_RUN.md:45:1. Microsoft 365 Agents Playground for testing locally.
+./agent-team/docs/LAST_RUN.md:46:2. Testsigma for a unified and agentic test automation platform.
+./agent-team/docs/LAST_RUN.md:48:4. Agentforce Testing Best Practices: Ensuring reliable deployments in Salesforce.
+./agent-team/docs/LAST_RUN.md:51:## [integration] Contribute to this goal: write a short status report confirming the local agent team can run end to end
+./agent-team/docs/LAST_RUN.md:53:The local agent team can run an end-to-end status report by using free project management tools like Smartsheet, Monday.com, CenterCode, Asana, Nulab, or Karya. These platforms offer templates and best practices for creating comprehensive reports that meet stakeholder needs. Ensure to follow the 8 steps provided in the Asana resource for a structured approach.
+./agent-team/docs/LAST_RUN.md:58:RATIONALE: Deterministic local healthcheck based on completed dispatches and runtime exceptions, not unconstrained model claims.
+./agent-team/docs/QUICKSTART.md:7:python agents/genie/genie.py "your first goal"
+./agent-team/docs/QUICKSTART.md:16:3. Derives Master / Pseudo / Agent keys via HKDF.
+./agent-team/docs/QUICKSTART.md:17:4. Encrypts the resulting bundle with AES-256-GCM into `keys/vault/keys.enc`.
+./agent-team/docs/QUICKSTART.md:18:5. (Optional) Pulls free local models via Ollama.
+./agent-team/docs/QUICKSTART.md:22:- Talk to Genie:           `python agents/genie/genie.py "..."`
+./agent-team/docs/QUICKSTART.md:23:- Plan only (no dispatch): `python agents/genie/genie.py --dry-run "..."`
+./agent-team/docs/QUICKSTART.md:25:- Inspect the vault:       `python scripts/decrypt_vault.py`  (prompts for Super Key)
+./agent-team/docs/QUICKSTART.md:33:| `config/agents.yaml` | Tweak agent system prompts, swap a model key. |
+./agent-team/docs/QUICKSTART.md:34:| `config/models.yaml` | Pin different Ollama tags or enable a cloud free tier. |
+./agent-team/docs/TOOLS.md:1:# Tools
+./agent-team/docs/TOOLS.md:3:Every specialist agent runs inside a **ReAct tool-use loop** (`agents/_loop.py`).
+./agent-team/docs/TOOLS.md:4:On each step the agent emits a JSON action — either a tool call or a `final` answer.
+./agent-team/docs/TOOLS.md:9:{"thought": "...", "tool": "fs.write", "args": {"path": "x.txt", "content": "y"}}
+./agent-team/docs/TOOLS.md:15:{"thought": "...", "final": "<answer for Genie>"}
+./agent-team/docs/TOOLS.md:18:## Available tools
+./agent-team/docs/TOOLS.md:34:By default the tools run with the user's local privileges — no sandbox. This is
+./agent-team/docs/TOOLS.md:42:Add a new tool in three steps:
+./agent-team/docs/TOOLS.md:44:1. Implement `def my_tool(args: dict) -> str:` in `agents/tools/registry.py`.
+./agent-team/docs/TOOLS.md:45:2. Register it in the `TOOLS` and `TOOL_SCHEMAS` dicts.
+./agent-team/docs/TOOLS.md:48:The agents will discover it automatically — `describe_tools()` enumerates the
+./agent-team/infrastructure/hp_pavilion_node.md:5:- **Ollama** with the larger models (qwen2.5-coder:7b, mistral:7b, etc.)
+./agent-team/infrastructure/hp_pavilion_node.md:13:curl -fsSL https://ollama.com/install.sh | sh
+./agent-team/infrastructure/hp_pavilion_node.md:15:# Bind Ollama to all interfaces so the Lubuntu node can reach it over Tailscale
+./agent-team/infrastructure/hp_pavilion_node.md:16:sudo systemctl edit ollama
+./agent-team/infrastructure/hp_pavilion_node.md:19:#   Environment="OLLAMA_HOST=0.0.0.0:11434"
+./agent-team/infrastructure/hp_pavilion_node.md:20:sudo systemctl restart ollama
+./agent-team/infrastructure/hp_pavilion_node.md:29:## Pulling models
+./agent-team/infrastructure/hp_pavilion_node.md:32:python3 scripts/list_models.py | xargs -n1 ollama pull
+./agent-team/infrastructure/hp_pavilion_node.md:37:Ollama should be reachable **only over Tailscale**, never the public LAN:
+./agent-team/infrastructure/lubuntu_node.md:4:and runs Genie. Keep it lean.
+./agent-team/infrastructure/lubuntu_node.md:18:- Auto-suspend disabled (so long Ollama pulls finish).
+./agent-team/infrastructure/lubuntu_node.md:25:- `agents/genie/genie.py`  (the supervisor)
+./agent-team/infrastructure/lubuntu_node.md:26:- The vault (`keys/vault/`)
+./agent-team/infrastructure/lubuntu_node.md:32:- Ollama with large 70B models — too heavy. Use small models locally and call
+./agent-team/infrastructure/lubuntu_node.md:35:## Calling the HP Pavilion's Ollama
+./agent-team/infrastructure/lubuntu_node.md:38:export OLLAMA_HOST="http://pavilion.tail-net.ts.net:11434"
+./agent-team/infrastructure/lubuntu_node.md:39:python agents/genie/genie.py "your goal"
+./agent-team/infrastructure/virtualbox_sandbox.md:4:Coding Agent before it ever runs on a real machine.
+./agent-team/infrastructure/virtualbox_sandbox.md:9:VBoxManage createvm --name "agent-sandbox" --ostype Ubuntu_64 --register
+./agent-team/infrastructure/virtualbox_sandbox.md:10:VBoxManage modifyvm "agent-sandbox" \
+./agent-team/infrastructure/virtualbox_sandbox.md:11:  --memory 4096 --cpus 2 --nic1 nat --audio none --usb off
+./agent-team/infrastructure/virtualbox_sandbox.md:12:VBoxManage createhd --filename ~/VirtualBox\ VMs/agent-sandbox/disk.vdi \
+./agent-team/infrastructure/virtualbox_sandbox.md:14:VBoxManage storagectl "agent-sandbox" --name SATA --add sata
+./agent-team/infrastructure/virtualbox_sandbox.md:15:VBoxManage storageattach "agent-sandbox" --storagectl SATA --port 0 --device 0 \
+./agent-team/infrastructure/virtualbox_sandbox.md:16:  --type hdd --medium ~/VirtualBox\ VMs/agent-sandbox/disk.vdi
+./agent-team/infrastructure/virtualbox_sandbox.md:19:Install a minimal Ubuntu Server inside, then snapshot it as `pristine`:
+./agent-team/infrastructure/virtualbox_sandbox.md:22:VBoxManage snapshot "agent-sandbox" take pristine
+./agent-team/infrastructure/virtualbox_sandbox.md:29:VBoxManage snapshot "agent-sandbox" restore pristine
+./agent-team/infrastructure/virtualbox_sandbox.md:32:VBoxManage startvm "agent-sandbox" --type headless
+./agent-team/infrastructure/virtualbox_sandbox.md:34:# 3. ssh in, run the code emitted by the Coding Agent
+./agent-team/infrastructure/virtualbox_sandbox.md:38:VBoxManage controlvm "agent-sandbox" poweroff
+./agent-team/infrastructure/virtualbox_sandbox.md:41:The Pseudo Key for the Coding Agent is **never** copied into the sandbox.
+./agent-team/infrastructure/virtualbox_sandbox.md:42:Only the L3 Agent Key for the specific sidekick that owns the job is exposed,
+./agent-team/instructions.md:5:> between the Super Key holder and every agent in the team.
+./agent-team/instructions.md:13:1. The **Super Key holder is sovereign**. There is no higher authority in this repository.
+./agent-team/instructions.md:14:2. No agent, script, or workflow may communicate with any third-party service unless the
+./agent-team/instructions.md:15:   Super Key holder has explicitly placed the relevant credential into the encrypted vault.
+./agent-team/instructions.md:16:3. The repository has **no ties** to any commercial platform, billing provider, or upstream
+./agent-team/instructions.md:17:   author. It is released under the Unlicense (public domain).
+./agent-team/instructions.md:27:| L0 | **Super Key** | You, the human | A passphrase you choose at bootstrap. Never leaves your machine. | Root of trust. Unlocks the vault. |
+./agent-team/instructions.md:28:| L1 | **Master Key** | Genie (supervisor) | HKDF(SuperKey, salt="master", info=run_id) | Authorizes Pseudo keys; routes orders. |
+./agent-team/instructions.md:29:| L2 | **Pseudo Keys** | Reporting / Design / Coding / QA agents | HKDF(MasterKey, salt="pseudo", info=agent_role) | Allows a specialist agent to act. |
+./agent-team/instructions.md:30:| L3 | **Agent Keys** | Genie Sidekicks | HKDF(PseudoKey, salt="agent", info=sidekick_id) | Scoped, ephemeral, revocable per-task. |
+./agent-team/instructions.md:37:- The vault file (`keys/vault/keys.enc`) is encrypted with AES-256-GCM using a key derived
+./agent-team/instructions.md:50:[ Genie / Shelly / Ember ]   — supervisor, holds Master Key
+./agent-team/instructions.md:55:│  agent       │   agent      │   agent      │     agent    │
+./agent-team/instructions.md:59:[ Genie Sidekicks ]   — outreach, automation, scraping, glue logic
+./agent-team/instructions.md:62:**Communication rule:** an agent may only send messages **upward to Genie** or **downward
+./agent-team/instructions.md:63:to its own Sidekicks**. Peer-to-peer messaging between specialist agents is forbidden;
+./agent-team/instructions.md:64:Genie mediates. This is what makes the topology "emergent yet auditable."
+./agent-team/instructions.md:68:## 3. Agent roles
+./agent-team/instructions.md:70:### 3.1 Genie (supervisor)
+./agent-team/instructions.md:73:- Routes orders to the correct specialist agent. Dispatches independent orders in parallel.
+./agent-team/instructions.md:77:### 3.2 Research Agent
+./agent-team/instructions.md:78:- Gathers external facts via `web.search` and `web.fetch` (free DuckDuckGo, no API key).
+./agent-team/instructions.md:81:### 3.3 Design Agent
+./agent-team/instructions.md:85:### 3.4 Coding Agent
+./agent-team/instructions.md:86:- Has FULL tool access (`fs.*`, `sh.run`, `py.exec`).
+./agent-team/instructions.md:90:### 3.5 QA / Testing Agent
+./agent-team/instructions.md:94:- Has authority to **block** delivery on any P0 issue. Genie may override only with
+./agent-team/instructions.md:97:### 3.6 Reporting Agent
+./agent-team/instructions.md:101:### 3.7 Integration Agent
+./agent-team/instructions.md:102:- Given a target service / SDK / API, produces a complete wiring plan: credentials,
+./agent-team/instructions.md:106:### 3.8 Genie Sidekicks
+./agent-team/instructions.md:107:- Stateless, single-purpose helpers spawned with an L3 Agent Key.
+./agent-team/instructions.md:117:| **Lubuntu machine** | Command Center | Holds the Super Key. Runs Genie. Pristine — no heavy workloads. |
+./agent-team/instructions.md:118:| **HP Pavilion** | Heavy Workhorse | Runs VirtualBox sandboxes, local LLM inference (Ollama), scraper jobs. |
+./agent-team/instructions.md:126:## 5. Free model policy
+./agent-team/instructions.md:128:1. The repository ships with a registry of **free, locally-runnable** models (see
+./agent-team/instructions.md:129:   `config/models.yaml`).
+./agent-team/instructions.md:130:2. Default backend is **Ollama** (zero cost, no account, no telemetry).
+./agent-team/instructions.md:131:3. Cloud free-tier backends (Groq, HuggingFace Inference API) are supported but **opt-in**:
+./agent-team/instructions.md:132:   activated only if the Super Key holder writes the corresponding token into the vault.
+./agent-team/instructions.md:133:4. **No paid API may be invoked by default.** Any agent attempting to use one without an
+./agent-team/instructions.md:134:   explicit vault entry must fall back to Ollama or refuse the order.
+./agent-team/instructions.md:154:- **Acknowledgement:** Genie acknowledges within one turn.
+./agent-team/instructions.md:155:- **Decomposition:** Genie returns a plan before executing.
+./agent-team/instructions.md:159:  `keys/vault/audit.log` (append-only, AES-256-GCM encrypted, one envelope per entry).
+./agent-team/instructions.md:161:- **No silent escalation:** An agent may **never** request the Super Key or impersonate Genie.
+./agent-team/instructions.md:163:## 7a. Tools
+./agent-team/instructions.md:165:Every specialist agent runs inside a ReAct loop with full access to:
+./agent-team/instructions.md:167:| Tool | Effect |
+./agent-team/instructions.md:172:| `web.search` | Free DuckDuckGo HTML search (no API key). |
+./agent-team/instructions.md:174:| `task.spawn` | Recursive delegation to a sibling agent. |
+./agent-team/instructions.md:177:sovereign; the tools execute with the user's local privileges. If the holder
+./agent-team/instructions.md:186:committing. Agents must re-read `instructions.md` at the start of every session and
+./agent-team/keys/key_manager.py:4:Hierarchical key derivation, vault sealing, and revocation for the Sovereign Team.
+./agent-team/keys/key_manager.py:10:            │     └─ L3 Agent Keys per sidekick (HKDF, info=f"agent:{role}:{sidekick}")
+./agent-team/keys/key_manager.py:30:VAULT_DIR = REPO_ROOT / "keys" / "vault"
+./agent-team/keys/key_manager.py:31:VAULT_FILE = VAULT_DIR / "keys.enc"
+./agent-team/keys/key_manager.py:32:SALT_FILE = VAULT_DIR / "salt.bin"
+./agent-team/keys/key_manager.py:33:META_FILE = VAULT_DIR / "meta.json"
+./agent-team/keys/key_manager.py:52:def super_key_to_vault_key(passphrase: str, salt: bytes) -> bytes:
+./agent-team/keys/key_manager.py:53:    """Stretch the human passphrase into a 256-bit vault encryption key."""
+./agent-team/keys/key_manager.py:81:    agent: Dict[str, str]
+./agent-team/keys/key_manager.py:89:    """Derive Master, Pseudo, and Agent keys from raw Super Key material."""
+./agent-team/keys/key_manager.py:94:    agent: Dict[str, bytes] = {}
+./agent-team/keys/key_manager.py:99:            agent[f"{role}:{sk}"] = _hkdf(p, info=f"agent:{role}:{sk}".encode())
+./agent-team/keys/key_manager.py:107:        agent={k: b64(v) for k, v in agent.items()},
+./agent-team/keys/key_manager.py:113:# Vault I/O
+./agent-team/keys/key_manager.py:116:def seal_vault(bundle: KeyBundle, vault_key: bytes) -> None:
+./agent-team/keys/key_manager.py:117:    VAULT_DIR.mkdir(parents=True, exist_ok=True)
+./agent-team/keys/key_manager.py:119:    aes = AESGCM(vault_key)
+./agent-team/keys/key_manager.py:121:    ct = aes.encrypt(nonce, plaintext, associated_data=b"sovereign-vault-v1")
+./agent-team/keys/key_manager.py:122:    VAULT_FILE.write_bytes(nonce + ct)
+./agent-team/keys/key_manager.py:125:        os.chmod(VAULT_FILE, 0o600)
+./agent-team/keys/key_manager.py:130:def open_vault(vault_key: bytes) -> KeyBundle:
+./agent-team/keys/key_manager.py:131:    if not VAULT_FILE.exists():
+./agent-team/keys/key_manager.py:132:        raise FileNotFoundError("Vault not initialized. Run bootstrap.sh first.")
+./agent-team/keys/key_manager.py:133:    blob = VAULT_FILE.read_bytes()
+./agent-team/keys/key_manager.py:135:    aes = AESGCM(vault_key)
+./agent-team/keys/key_manager.py:136:    plaintext = aes.decrypt(nonce, ct, associated_data=b"sovereign-vault-v1")
+./agent-team/keys/key_manager.py:141:        "agent": data["agent"],
+./agent-team/keys/key_manager.py:154:    VAULT_DIR.mkdir(parents=True, exist_ok=True)
+./agent-team/keys/key_manager.py:159:# Public helpers used by agents
+./agent-team/keys/key_manager.py:163:    """Open the vault using the Super Key passphrase."""
+./agent-team/keys/key_manager.py:165:    vault_key = super_key_to_vault_key(passphrase, salt)
+./agent-team/keys/key_manager.py:166:    return open_vault(vault_key)
+./agent-team/keys/key_manager.py:170:    """Rotate keys at the given level: 'master' | 'pseudo' | 'agent' | 'all'."""
+./agent-team/keys/key_manager.py:172:    vault_key = super_key_to_vault_key(passphrase, salt)
+./agent-team/keys/key_manager.py:173:    old = open_vault(vault_key)
+./agent-team/keys/key_manager.py:182:    elif level == "agent":
+./agent-team/keys/key_manager.py:183:        # Re-derive only agent keys from existing pseudo keys
+./agent-team/keys/key_manager.py:184:        agent: Dict[str, str] = {}
+./agent-team/keys/key_manager.py:188:                agent[f"{role}:{sk}"] = base64.b64encode(
+./agent-team/keys/key_manager.py:189:                    _hkdf(p, info=f"agent:{role}:{sk}:{secrets.token_hex(4)}".encode())
+./agent-team/keys/key_manager.py:191:        bundle = KeyBundle(master=old.master, pseudo=old.pseudo, agent=agent,
+./agent-team/keys/key_manager.py:199:    seal_vault(bundle, vault_key)
+./agent-team/keys/key_manager.py:207:AUDIT_FILE = VAULT_DIR / "audit.log"
+./agent-team/keys/key_manager.py:214:    vault_key = super_key_to_vault_key(passphrase, salt)
+./agent-team/keys/key_manager.py:216:    aes = AESGCM(vault_key)
+./agent-team/keys/key_manager.py:230:    vault_key = super_key_to_vault_key(passphrase, salt)
+./agent-team/keys/key_manager.py:231:    aes = AESGCM(vault_key)
+./agent-team/scripts/decrypt_vault.py:2:scripts/decrypt_vault.py
+./agent-team/scripts/decrypt_vault.py:4:Print the decrypted vault contents to stdout (Super Key passphrase required).
+./agent-team/scripts/deploy_lubuntu.sh:2:# Copy Genie to a Lubuntu notebook over SSH/Tailscale and install the launcher.
+./agent-team/scripts/deploy_lubuntu.sh:6:#   scripts/deploy_lubuntu.sh user@100.x.y.z ~/Genie
+./agent-team/scripts/deploy_lubuntu.sh:8:# By default the encrypted local vault is not copied. Bootstrap on the notebook
+./agent-team/scripts/deploy_lubuntu.sh:19:REMOTE_DIR="${2:-~/Genie}"
+./agent-team/scripts/deploy_lubuntu.sh:21:ARCHIVE="$(mktemp -t genie-team.XXXXXX.tar.gz)"
+./agent-team/scripts/deploy_lubuntu.sh:36:  --exclude='keys/vault' \
+./agent-team/scripts/deploy_lubuntu.sh:40:echo "Sending Genie to $REMOTE:$REMOTE_DIR ..."
+./agent-team/scripts/deploy_lubuntu.sh:42:scp "$ARCHIVE" "$REMOTE:/tmp/genie-team.tar.gz"
+./agent-team/scripts/deploy_lubuntu.sh:44:ssh "$REMOTE" "cd '$REMOTE_DIR' && tar -xzf /tmp/genie-team.tar.gz && rm /tmp/genie-team.tar.gz && chmod +x scripts/*.sh && scripts/install_lubuntu_launcher.sh"
+./agent-team/scripts/deploy_lubuntu.sh:47:Genie has landed on $REMOTE.
+./agent-team/scripts/deploy_lubuntu.sh:51:  SUPER_KEY='your-long-super-key' bash bootstrap.sh --ci --no-models
+./agent-team/scripts/deploy_lubuntu.sh:52:  ollama serve
+./agent-team/scripts/deploy_lubuntu.sh:53:  ollama pull qwen2.5:1.5b
+./agent-team/scripts/deploy_lubuntu.sh:55:Then click Genie from the desktop/app menu.
+./agent-team/scripts/derive_keys.py:4:Re-derive Master / Pseudo / Agent keys from the Super Key, or rotate a tier.
+./agent-team/scripts/derive_keys.py:10:    python scripts/derive_keys.py --rotate agent
+./agent-team/scripts/derive_keys.py:21:from keys.key_manager import rotate, unlock, VAULT_FILE  # noqa: E402
+./agent-team/scripts/derive_keys.py:34:    g.add_argument("--rotate", choices=["master", "pseudo", "agent", "all"],
+./agent-team/scripts/derive_keys.py:38:    if not VAULT_FILE.exists():
+./agent-team/scripts/derive_keys.py:39:        print("Vault not initialized. Run bootstrap.sh first.", file=sys.stderr)
+./agent-team/scripts/derive_keys.py:50:        for tag, k in b.agent.items():
+./agent-team/scripts/derive_keys.py:51:            print(f"  agent[{tag}]: {k[:10]}...")
+./agent-team/scripts/encrypt_vault.py:2:scripts/encrypt_vault.py
+./agent-team/scripts/encrypt_vault.py:4:No-op shim — vault is already encrypted at seal time by init_super_key.py.
+./agent-team/scripts/encrypt_vault.py:13:from keys.key_manager import VAULT_FILE  # noqa: E402
+./agent-team/scripts/encrypt_vault.py:17:    if not VAULT_FILE.exists():
+./agent-team/scripts/encrypt_vault.py:18:        print("Vault missing. Run init_super_key.py first.", file=sys.stderr)
+./agent-team/scripts/encrypt_vault.py:20:    size = VAULT_FILE.stat().st_size
+./agent-team/scripts/encrypt_vault.py:21:    print(f"Vault sealed: {VAULT_FILE} ({size} bytes, AES-256-GCM).")
+./agent-team/scripts/init_super_key.py:7:  - a random 16-byte salt (keys/vault/salt.bin)
+./agent-team/scripts/init_super_key.py:8:  - the encrypted vault produced after derivation (keys/vault/keys.enc)
+./agent-team/scripts/init_super_key.py:22:    seal_vault,
+./agent-team/scripts/init_super_key.py:23:    super_key_to_vault_key,
+./agent-team/scripts/init_super_key.py:25:    SALT_FILE,  # noqa: F401  (re-exported for downstream tools)
+./agent-team/scripts/init_super_key.py:26:    VAULT_FILE,
+./agent-team/scripts/init_super_key.py:35:                        help="Overwrite existing vault if present.")
+./agent-team/scripts/init_super_key.py:38:    if VAULT_FILE.exists() and not args.force:
+./agent-team/scripts/init_super_key.py:39:        print("Vault already initialized at:", VAULT_FILE)
+./agent-team/scripts/init_super_key.py:50:        print("If you lose it, the vault becomes unrecoverable.\n")
+./agent-team/scripts/init_super_key.py:62:    vault_key = super_key_to_vault_key(pw, salt)
+./agent-team/scripts/init_super_key.py:64:    # Use the (passphrase-derived) vault_key itself as the seed for L1 derivation;
+./agent-team/scripts/init_super_key.py:66:    bundle = derive_all(vault_key)
+./agent-team/scripts/init_super_key.py:67:    seal_vault(bundle, vault_key)
+./agent-team/scripts/init_super_key.py:69:    print(f"Super Key sealed. Vault: {VAULT_FILE}")
+./agent-team/scripts/install_lubuntu_launcher.sh:2:# Install Genie as a clickable launcher on Lubuntu/LXQt.
+./agent-team/scripts/install_lubuntu_launcher.sh:7:LAUNCHER="$ROOT/scripts/start_genie_app.sh"
+./agent-team/scripts/install_lubuntu_launcher.sh:9:APP_FILE="$APP_DIR/genie.desktop"
+./agent-team/scripts/install_lubuntu_launcher.sh:18:Name=Genie
+./agent-team/scripts/install_lubuntu_launcher.sh:19:Comment=Open the local Genie creation environment
+./agent-team/scripts/install_lubuntu_launcher.sh:30:  cp "$APP_FILE" "$DESKTOP_DIR/Genie.desktop"
+./agent-team/scripts/install_lubuntu_launcher.sh:31:  chmod +x "$DESKTOP_DIR/Genie.desktop"
+./agent-team/scripts/install_lubuntu_launcher.sh:34:if command -v update-desktop-database >/dev/null 2>&1; then
+./agent-team/scripts/install_lubuntu_launcher.sh:35:  update-desktop-database "$APP_DIR" >/dev/null 2>&1 || true
+./agent-team/scripts/install_lubuntu_launcher.sh:38:printf 'Genie launcher installed.\n'
+./agent-team/scripts/install_lubuntu_launcher.sh:41:  printf 'Desktop icon:   %s\n' "$DESKTOP_DIR/Genie.desktop"
+./agent-team/scripts/list_models.py:2:scripts/list_models.py
+./agent-team/scripts/list_models.py:4:Print the set of Ollama model tags listed in config/models.yaml,
+./agent-team/scripts/list_models.py:5:one per line, suitable for `ollama pull` piping.
+./agent-team/scripts/list_models.py:15:CFG = ROOT / "config" / "models.yaml"
+./agent-team/scripts/list_models.py:18:    print("config/models.yaml missing", file=sys.stderr)
+./agent-team/scripts/list_models.py:23:for entry in data.get("ollama", {}).values():
+./agent-team/scripts/list_models.py:24:    tag = entry.get("model")
+./agent-team/scripts/set_token.py:4:Store a free-tier cloud token (GEMINI_API_KEY, GROQ_API_KEY, HF_TOKEN) inside
+./agent-team/scripts/set_token.py:5:the encrypted vault, alongside the derived keys. The vault file is the only
+./agent-team/scripts/set_token.py:9:    python scripts/set_token.py GEMINI_API_KEY
+./agent-team/scripts/set_token.py:26:    VAULT_FILE,
+./agent-team/scripts/set_token.py:28:    open_vault,
+./agent-team/scripts/set_token.py:29:    super_key_to_vault_key,
+./agent-team/scripts/set_token.py:32:VALID = {"GEMINI_API_KEY", "GROQ_API_KEY", "HF_TOKEN"}
+./agent-team/scripts/set_token.py:44:    vault_key = super_key_to_vault_key(pw, salt)
+./agent-team/scripts/set_token.py:45:    bundle = open_vault(vault_key)
+./agent-team/scripts/set_token.py:47:    # We store the token by re-sealing the vault with an extra "env" map.
+./agent-team/scripts/set_token.py:49:    raw = json.loads(_decrypt_raw(vault_key))
+./agent-team/scripts/set_token.py:52:    _encrypt_raw(vault_key, json.dumps(raw).encode("utf-8"))
+./agent-team/scripts/set_token.py:53:    print(f"Stored {args.name} in the encrypted vault.")
+./agent-team/scripts/set_token.py:56:def _decrypt_raw(vault_key: bytes) -> bytes:
+./agent-team/scripts/set_token.py:57:    blob = VAULT_FILE.read_bytes()
+./agent-team/scripts/set_token.py:59:    return AESGCM(vault_key).decrypt(nonce, ct, associated_data=b"sovereign-vault-v1")
+./agent-team/scripts/set_token.py:62:def _encrypt_raw(vault_key: bytes, plaintext: bytes) -> None:
+./agent-team/scripts/set_token.py:64:    ct = AESGCM(vault_key).encrypt(
+./agent-team/scripts/set_token.py:67:        associated_data=b"sovereign-vault-v1",
+./agent-team/scripts/set_token.py:69:    VAULT_FILE.write_bytes(nonce + ct)
+./agent-team/scripts/start_genie_app.sh:2:# Double-click friendly launcher for the local Genie interface.
+./agent-team/scripts/start_genie_app.sh:15:if [[ ! -f "$ROOT/keys/vault/keys.enc" ]]; then
+./agent-team/scripts/start_genie_app.sh:18:      SUPER_KEY="$(zenity --password --title='Genie Super Key')"
+./agent-team/scripts/start_genie_app.sh:21:      printf '%s\n' "Genie needs a SUPER_KEY before first launch."
+./agent-team/scripts/start_genie_app.sh:26:  SUPER_KEY="$SUPER_KEY" bash bootstrap.sh --ci --no-models
+./agent-team/scripts/start_genie_app.sh:29:if command -v ollama >/dev/null 2>&1; then
+./agent-team/scripts/start_genie_app.sh:30:  if ! curl -fsS "http://127.0.0.1:11434/api/tags" >/dev/null 2>&1; then
+./agent-team/scripts/start_genie_app.sh:31:    nohup ollama serve >"$LOG_DIR/ollama.log" 2>&1 &
+./agent-team/scripts/start_genie_app.sh:35:  printf '%s\n' "Ollama is not installed. Install it or store a cloud token."
+./agent-team/scripts/start_genie_app.sh:38:if ! curl -fsS "$URL/api/health" >/dev/null 2>&1; then
+./agent-team/scripts/start_genie_app.sh:39:  nohup python3 scripts/ui_server.py >"$LOG_DIR/genie-ui.log" 2>&1 &
+./agent-team/scripts/start_genie_app.sh:48:  printf 'Genie is awake at %s\n' "$URL"
+./agent-team/scripts/ui_server.py:2:Local Genie interface for the agent team.
+./agent-team/scripts/ui_server.py:5:    SUPER_KEY='your-passphrase' python3 scripts/ui_server.py
+./agent-team/scripts/ui_server.py:21:from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+./agent-team/scripts/ui_server.py:89:def _ollama_health() -> dict[str, Any]:
+./agent-team/scripts/ui_server.py:90:    host = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
+./agent-team/scripts/ui_server.py:92:        with urllib.request.urlopen(f"{host}/api/tags", timeout=2) as resp:
+./agent-team/scripts/ui_server.py:96:    models = [item.get("name", "") for item in data.get("models", [])]
+./agent-team/scripts/ui_server.py:97:    return {"ok": True, "host": host, "models": models}
+./agent-team/scripts/ui_server.py:115:    env.setdefault("GENIE_DETERMINISTIC_CRITIC", "1")
+./agent-team/scripts/ui_server.py:116:    env.setdefault("AGENT_MAX_STEPS", str(max_steps))
+./agent-team/scripts/ui_server.py:117:    env.setdefault("OLLAMA_NUM_PREDICT", "80")
+./agent-team/scripts/ui_server.py:122:        str(ROOT / "agents" / "genie" / "genie.py"),
+./agent-team/scripts/ui_server.py:158:    max_steps = int(payload.get("max_steps") or os.environ.get("AGENT_MAX_STEPS", 1))
+./agent-team/scripts/ui_server.py:183:    server_version = "GenieUI/1.0"
+./agent-team/scripts/ui_server.py:192:        if self.path == "/api/health":
+./agent-team/scripts/ui_server.py:197:                    "vault": (ROOT / "keys" / "vault" / "keys.enc").exists(),
+./agent-team/scripts/ui_server.py:198:                    "ollama": _ollama_health(),
+./agent-team/scripts/ui_server.py:202:        if self.path.startswith("/api/jobs/"):
+./agent-team/scripts/ui_server.py:214:        if self.path != "/api/build":
+./agent-team/scripts/ui_server.py:227:    server = ThreadingHTTPServer((host, port), Handler)
+./agent-team/scripts/ui_server.py:228:    print(f"Genie is awake at http://{host}:{port}", flush=True)
+./agent-team/scripts/ui_server.py:231:        server.serve_forever()
+./agent-team/scripts/ui_server.py:233:        print("\nGenie is resting.", flush=True)
+./agent-team/scripts/ui_server.py:235:        server.server_close()
+./agent-team/scripts/ui_server.py:243:  <title>Genie</title>
+./agent-team/scripts/ui_server.py:406:        <h1>Genie</h1>
+./agent-team/scripts/ui_server.py:408:          You do not have to be sudo to birth your dreams. Tell Genie what
+./agent-team/scripts/ui_server.py:418:          Looking for the vault and model backend.
+./agent-team/scripts/ui_server.py:440:            placeholder="Leave blank when SUPER_KEY is set in the server shell">
+./agent-team/scripts/ui_server.py:442:        <button id="go" type="submit">Ask Genie</button>
+./agent-team/scripts/ui_server.py:444:          Runs locally through Genie using the configured free local model path.
+./agent-team/scripts/ui_server.py:449:        <h2>Genie Room</h2>
+./agent-team/scripts/ui_server.py:451:        <p class="note" id="note">Genie is waiting for your first dream.</p>
+./agent-team/scripts/ui_server.py:496:        return "Genie is listening and shaping the plan.";
+./agent-team/scripts/ui_server.py:498:      return "Genie is waiting for your first dream.";
+./agent-team/scripts/ui_server.py:502:      const res = await fetch("/api/health");
+./agent-team/scripts/ui_server.py:507:      if (data.vault && data.ollama.ok) {
+./agent-team/scripts/ui_server.py:509:        detail.textContent = "Vault found. Models: " + data.ollama.models.join(", ");
+./agent-team/scripts/ui_server.py:513:        detail.textContent = data.ollama.error || "Run bootstrap and start Ollama.";
+./agent-team/scripts/ui_server.py:520:      const res = await fetch("/api/jobs/" + activeJob);
+./agent-team/scripts/ui_server.py:531:      button.textContent = "Ask Genie";
+./agent-team/scripts/ui_server.py:538:      button.textContent = "Genie Is Listening";
+./agent-team/scripts/ui_server.py:539:      note.textContent = "Genie is opening the room.";
+./agent-team/scripts/ui_server.py:547:      const res = await fetch("/api/build", {
+./agent-team/scripts/ui_server.py:556:        button.textContent = "Ask Genie";
+./agent-team/tests/test_core.py:1:"""Unit tests for the key hierarchy and tool registry. Run: `pytest -q`."""
+./agent-team/tests/test_core.py:12:    # Redirect vault to a temp dir
+./agent-team/tests/test_core.py:14:    monkeypatch.setattr(km, "VAULT_DIR", tmp_path)
+./agent-team/tests/test_core.py:15:    monkeypatch.setattr(km, "VAULT_FILE", tmp_path / "keys.enc")
+./agent-team/tests/test_core.py:24:    vault_key = km.super_key_to_vault_key(pw, salt)
+./agent-team/tests/test_core.py:25:    bundle = km.derive_all(vault_key)
+./agent-team/tests/test_core.py:26:    km.seal_vault(bundle, vault_key)
+./agent-team/tests/test_core.py:34:            assert f"{role}:{sk}" in re_opened.agent
+./agent-team/tests/test_core.py:36:    # rotate agent: master+pseudo stable, agent keys change
+./agent-team/tests/test_core.py:37:    rotated = km.rotate("agent", pw)
+./agent-team/tests/test_core.py:40:    assert any(rotated.agent[k] != bundle.agent[k] for k in bundle.agent)
+./agent-team/tests/test_core.py:51:def test_vault_loader_tolerates_env_tokens(tmp_path, monkeypatch):
+./agent-team/tests/test_core.py:59:    monkeypatch.setattr(km, "VAULT_DIR", tmp_path)
+./agent-team/tests/test_core.py:60:    monkeypatch.setattr(km, "VAULT_FILE", tmp_path / "keys.enc")
+./agent-team/tests/test_core.py:67:    vault_key = km.super_key_to_vault_key(pw, salt)
+./agent-team/tests/test_core.py:68:    bundle = km.derive_all(vault_key)
+./agent-team/tests/test_core.py:71:    raw["env"] = {"GEMINI_API_KEY": "secret"}
+./agent-team/tests/test_core.py:73:    encrypted = AESGCM(vault_key).encrypt(
+./agent-team/tests/test_core.py:76:        associated_data=b"sovereign-vault-v1",
+./agent-team/tests/test_core.py:78:    km.VAULT_FILE.write_bytes(nonce + encrypted)
+./agent-team/tests/test_core.py:84:def test_tool_registry_basic(tmp_path):
+./agent-team/tests/test_core.py:85:    from agents.tools import invoke, TOOLS
+./agent-team/tests/test_core.py:86:    assert "fs.write" in TOOLS and "fs.read" in TOOLS
+./agent-team/tests/test_core.py:98:def test_genie_plan_parser():
+./agent-team/tests/test_core.py:99:    from agents.genie import genie
+./agent-team/tests/test_core.py:109:        m = genie.ORDER_RE.match(line)
+./agent-team/tests/test_core.py:112:    assert genie.ORDER_RE.match("[other] nope") is None
+./agent-team/tests/test_core.py:113:    assert genie.ORDER_RE.match("plain text") is None
+./real_Genie/.emergent/emergent.yml:2:  "env_image_name": "fastapi_react_mongo_shadcn_base_image_cloud_arm:release-17042026-1",
+./real_Genie/.gitignore:55:# Development tools
+./real_Genie/.gitignore:64:# Data and databases
+./real_Genie/.gitignore:65:agenthub/agents/youtube/db
+./real_Genie/.gitignore:79:memory/test_credentials.md
+./real_Genie/Dockerfile:6:CMD ["uvicorn", "backend.server:app", "--host", "0.0.0.0", "--port", "8080"]
+./real_Genie/Procfile:1:web: uvicorn backend.server:app --host 0.0.0.0 --port $PORT
+./real_Genie/README.md:2:# 1. Install Ollama (once) — https://ollama.com/download
+./real_Genie/README.md:4:# 2. Load his Dolphin GGUF into Ollama. In a folder with his
+./real_Genie/README.md:5:#    Dolphin3.0-Llama3.1-8B-Q4_K_S.gguf file, make a file called "Modelfile":
+./real_Genie/README.md:8:# 3. Register it with the name "dolphin3" (must match OLLAMA_MODEL in .env):
+./real_Genie/README.md:9:ollama create dolphin3 -f Modelfile
+./real_Genie/README.md:11:# 4. Make sure Ollama is running:
+./real_Genie/README.md:12:ollama serve
+./real_Genie/README.md:17:uvicorn server:app --reload --port 8001
+./real_Genie/auth_testing.md:1:# Auth Testing Playbook (Emergent Google Auth)
+./real_Genie/auth_testing.md:3:This file is referenced by the testing agent to validate the Emergent Google Auth flow for the Ember app.
+./real_Genie/auth_testing.md:9:use('test_database');
+./real_Genie/auth_testing.md:30:## Backend API tests
+./real_Genie/auth_testing.md:33:curl -X GET "$API_URL/api/auth/me" -H "Authorization: Bearer $TOKEN"
+./real_Genie/auth_testing.md:36:curl -X GET "$API_URL/api/conversations" -H "Authorization: Bearer $TOKEN"
+./real_Genie/auth_testing.md:39:curl -X POST "$API_URL/api/chat" -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -d '{"message":"hello"}'
+./real_Genie/auth_testing.md:47:    "domain": "move-forward-112.preview.emergentagent.com",
+./real_Genie/auth_testing.md:53:await page.goto("https://move-forward-112.preview.emergentagent.com/")
+./real_Genie/auth_testing.md:60:use('test_database');
+./real_Genie/auth_testing.md:75:- [ ] `/api/auth/me` returns user data with both Bearer and Cookie auth
+./real_Genie/backend/.env:2:DB_NAME="test_database"
+./real_Genie/backend/.env:4:OLLAMA_URL="http://localhost:11434"
+./real_Genie/backend/.env:5:OLLAMA_MODEL="Dolphin3.0-Llama3.1-8B-Q4_K_S"
+./real_Genie/backend/requirements.txt:1:fastapi==0.110.1
+./real_Genie/backend/requirements.txt:4:requests-oauthlib>=2.0.0
+./real_Genie/backend/server.py:1:from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, Cookie, Header
+./real_Genie/backend/server.py:11:from pydantic import BaseModel, Field
+./real_Genie/backend/server.py:32:EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')  # kept for backwards compat, unused with Ollama
+./real_Genie/backend/server.py:33:OLLAMA_URL = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
+./real_Genie/backend/server.py:34:MODEL_NAME = os.environ.get('OLLAMA_MODEL', 'dolphin3')
+./real_Genie/backend/server.py:36:EMERGENT_AUTH_SESSION_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
+./real_Genie/backend/server.py:44:app = FastAPI()
+./real_Genie/backend/server.py:45:api_router = APIRouter(prefix="/api")
+./real_Genie/backend/server.py:48:# ---------- Models ----------
+./real_Genie/backend/server.py:49:class User(BaseModel):
+./real_Genie/backend/server.py:57:class Conversation(BaseModel):
+./real_Genie/backend/server.py:65:class Message(BaseModel):
+./real_Genie/backend/server.py:74:class Memory(BaseModel):
+./real_Genie/backend/server.py:81:class ChatRequest(BaseModel):
+./real_Genie/backend/server.py:86:class RenameRequest(BaseModel):
+./real_Genie/backend/server.py:90:class MemoryCreate(BaseModel):
+./real_Genie/backend/server.py:94:class MemoryUpdate(BaseModel):
+./real_Genie/backend/server.py:98:class SessionExchangeRequest(BaseModel):
+./real_Genie/backend/server.py:102:class PersonaUpdate(BaseModel):
+./real_Genie/backend/server.py:111:async def get_user_from_request(request: Request, authorization: Optional[str] = Header(None)) -> User:
+./real_Genie/backend/server.py:112:    """Authenticator: cookie first, then Authorization Bearer header."""
+./real_Genie/backend/server.py:114:    if not token and authorization and authorization.lower().startswith("bearer "):
+./real_Genie/backend/server.py:115:        token = authorization.split(" ", 1)[1].strip()
+./real_Genie/backend/server.py:118:        raise HTTPException(status_code=401, detail="Not authenticated")
+./real_Genie/backend/server.py:147:    memory_lines = "\n".join(f"- {m['content']}" for m in memories) if memories else "(none yet)"
+./real_Genie/backend/server.py:157:2. NO PERFORMATIVE HEDGING. Skip disclaimers like "As an AI language model..." unless it's genuinely the crux. Speak plainly.
+./real_Genie/backend/server.py:162:7. MEMORY IS SACRED. The memories below are facts you've learned about {user_name}. Use them naturally. Never invent memories that aren't listed.
+./real_Genie/backend/server.py:165:{memory_lines}
+./real_Genie/backend/server.py:177:async def ollama_chat(system: str, user_text: str) -> str:
+./real_Genie/backend/server.py:178:    """Single-turn call to local Ollama. Returns the assistant's text."""
+./real_Genie/backend/server.py:181:            f"{OLLAMA_URL}/api/chat",
+./real_Genie/backend/server.py:183:                "model": MODEL_NAME,
+./real_Genie/backend/server.py:208:        response = await ollama_chat(system, prompt)
+./real_Genie/backend/server.py:230:            mem = Memory(user_id=user_id, content=fact)
+./real_Genie/backend/server.py:231:            await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:234:        logger.warning(f"Memory extraction failed: {e}")
+./real_Genie/backend/server.py:236:# ---------- Auth Routes ----------
+./real_Genie/backend/server.py:237:@api_router.post("/auth/session")
+./real_Genie/backend/server.py:238:async def auth_session(body: SessionExchangeRequest, response: Response):
+./real_Genie/backend/server.py:242:            r = await http.get(EMERGENT_AUTH_SESSION_URL, headers={"X-Session-ID": body.session_id})
+./real_Genie/backend/server.py:246:            logger.error(f"Emergent auth failed: {e}")
+./real_Genie/backend/server.py:247:            raise HTTPException(status_code=401, detail="Auth exchange failed")
+./real_Genie/backend/server.py:254:        raise HTTPException(status_code=401, detail="Invalid auth response")
+./real_Genie/backend/server.py:298:@api_router.get("/auth/me")
+./real_Genie/backend/server.py:299:async def auth_me(user: User = Depends(get_user_from_request)):
+./real_Genie/backend/server.py:300:    return user.model_dump()
+./real_Genie/backend/server.py:303:@api_router.post("/auth/logout")
+./real_Genie/backend/server.py:304:async def auth_logout(request: Request, response: Response, authorization: Optional[str] = Header(None)):
+./real_Genie/backend/server.py:306:    if not token and authorization and authorization.lower().startswith("bearer "):
+./real_Genie/backend/server.py:307:        token = authorization.split(" ", 1)[1].strip()
+./real_Genie/backend/server.py:315:@api_router.get("/")
+./real_Genie/backend/server.py:317:    return {"message": "Ember is here.", "model": MODEL_NAME}
+./real_Genie/backend/server.py:321:@api_router.post("/conversations", response_model=Conversation)
+./real_Genie/backend/server.py:324:    await db.conversations.insert_one(conv.model_dump())
+./real_Genie/backend/server.py:328:@api_router.get("/conversations", response_model=List[Conversation])
+./real_Genie/backend/server.py:334:@api_router.patch("/conversations/{conv_id}", response_model=Conversation)
+./real_Genie/backend/server.py:347:@api_router.delete("/conversations/{conv_id}")
+./real_Genie/backend/server.py:356:@api_router.get("/conversations/{conv_id}/messages", response_model=List[Message])
+./real_Genie/backend/server.py:368:FIND this whole function in backend/server.py and SELECT IT ALL:
+./real_Genie/backend/server.py:371:        extractor = LlmChat(
+./real_Genie/backend/server.py:372:            api_key=EMERGENT_LLM_KEY,
+./real_Genie/backend/server.py:373:            session_id=f"memory-extractor-{uuid.uuid4()}",
+./real_Genie/backend/server.py:383:        ).with_model("anthropic", "claude-haiku-4-5-20251001")
+./real_Genie/backend/server.py:408:            mem = Memory(user_id=user_id, content=fact)
+./real_Genie/backend/server.py:409:            await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:412:        logger.warning(f"Memory extraction failed: {e}")
+./real_Genie/backend/server.py:413:REPLACE the whole selection with this (it now starts with a new ollama_chat helper, then the same memory extractor rewritten to call it):
+./real_Genie/backend/server.py:414:async def ollama_chat(system: str, user_text: str) -> str:
+./real_Genie/backend/server.py:415:    """Single-turn call to local Ollama. Returns the assistant's text."""
+./real_Genie/backend/server.py:418:            f"{OLLAMA_URL}/api/chat",
+./real_Genie/backend/server.py:420:                "model": MODEL_NAME,
+./real_Genie/backend/server.py:445:        response = await ollama_chat(system, prompt)
+./real_Genie/backend/server.py:467:            mem = Memory(user_id=user_id, content=fact)
+./real_Genie/backend/server.py:468:            await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:471:        logger.warning(f"Memory extraction failed: {e}")
+./real_Genie/backend/server.py:472:E — /api/chat endpoint
+./real_Genie/backend/server.py:473:FIND this whole function in backend/server.py and SELECT IT ALL:
+./real_Genie/backend/server.py:475:@api_router.post("/chat")
+./real_Genie/backend/server.py:477:    if not EMERGENT_LLM_KEY:
+./real_Genie/backend/server.py:478:        raise HTTPException(500, "LLM key not configured")
+./real_Genie/backend/server.py:486:        conv = Conversation(user_id=user.user_id).model_dump()
+./real_Genie/backend/server.py:491:    await db.messages.insert_one(user_msg.model_dump())
+./real_Genie/backend/server.py:496:    chat_client = LlmChat(
+./real_Genie/backend/server.py:497:        api_key=EMERGENT_LLM_KEY,
+./real_Genie/backend/server.py:500:    ).with_model(MODEL_PROVIDER, MODEL_NAME)
+./real_Genie/backend/server.py:511:        logger.error(f"LLM error: {e}")
+./real_Genie/backend/server.py:512:        raise HTTPException(500, f"LLM call failed: {str(e)}")
+./real_Genie/backend/server.py:515:    await db.messages.insert_one(assistant_msg.model_dump())
+./real_Genie/backend/server.py:529:        "user_message": user_msg.model_dump(),
+./real_Genie/backend/server.py:530:        "assistant_message": assistant_msg.model_dump(),
+./real_Genie/backend/server.py:534:@api_router.post("/chat")
+./real_Genie/backend/server.py:542:        conv = Conversation(user_id=user.user_id).model_dump()
+./real_Genie/backend/server.py:547:    await db.messages.insert_one(user_msg.model_dump())
+./real_Genie/backend/server.py:552:    # Fold the real prior turns into the system prompt — one LLM call per message, no replay
+./real_Genie/backend/server.py:561:        response_text = await ollama_chat(system_prompt, req.message)
+./real_Genie/backend/server.py:563:        logger.error(f"LLM error: {e}")
+./real_Genie/backend/server.py:564:        raise HTTPException(500, f"LLM call failed: {str(e)}")
+./real_Genie/backend/server.py:567:    await db.messages.insert_one(assistant_msg.model_dump())
+./real_Genie/backend/server.py:581:        "user_message": user_msg.model_dump(),
+./real_Genie/backend/server.py:582:        "assistant_message": assistant_msg.model_dump(),
+./real_Genie/backend/server.py:586:# Memory
+./real_Genie/backend/server.py:587:@api_router.get("/memory", response_model=List[Memory])
+./real_Genie/backend/server.py:588:async def list_memory(user: User = Depends(get_user_from_request)):
+./real_Genie/backend/server.py:593:@api_router.post("/memory", response_model=Memory)
+./real_Genie/backend/server.py:594:async def create_memory(body: MemoryCreate, user: User = Depends(get_user_from_request)):
+./real_Genie/backend/server.py:597:        raise HTTPException(400, "Memory cannot be empty")
+./real_Genie/backend/server.py:598:    mem = Memory(user_id=user.user_id, content=content)
+./real_Genie/backend/server.py:599:    await db.memories.insert_one(mem.model_dump())
+./real_Genie/backend/server.py:603:@api_router.patch("/memory/{mem_id}", response_model=Memory)
+./real_Genie/backend/server.py:604:async def update_memory(mem_id: str, body: MemoryUpdate, user: User = Depends(get_user_from_request)):
+./real_Genie/backend/server.py:612:        raise HTTPException(404, "Memory not found")
+./real_Genie/backend/server.py:616:@api_router.delete("/memory/{mem_id}")
+./real_Genie/backend/server.py:617:async def delete_memory(mem_id: str, user: User = Depends(get_user_from_request)):
+./real_Genie/backend/server.py:620:        raise HTTPException(404, "Memory not found")
+./real_Genie/backend/server.py:625:@api_router.get("/settings/persona")
+./real_Genie/backend/server.py:631:@api_router.put("/settings/persona")
+./real_Genie/backend/server.py:647:app.include_router(api_router)
+./real_Genie/backend/tests/test_ember_api.py:1:"""End-to-end backend tests for Ember API.
+./real_Genie/backend/tests/test_ember_api.py:4:multi-turn memory, auto-titling, memory CRUD, auto-extraction.
+./real_Genie/backend/tests/test_ember_api.py:21:API = f"{BASE_URL}/api"
+./real_Genie/backend/tests/test_ember_api.py:34:        r = session.get(f"{API}/")
+./real_Genie/backend/tests/test_ember_api.py:37:        assert "model" in data
+./real_Genie/backend/tests/test_ember_api.py:38:        assert "claude-sonnet-4-5" in data["model"]
+./real_Genie/backend/tests/test_ember_api.py:44:        r = session.post(f"{API}/conversations")
+./real_Genie/backend/tests/test_ember_api.py:50:        r = session.get(f"{API}/conversations")
+./real_Genie/backend/tests/test_ember_api.py:60:        r = session.patch(f"{API}/conversations/{cid}", json={"title": "TEST_renamed"})
+./real_Genie/backend/tests/test_ember_api.py:64:        items = session.get(f"{API}/conversations").json()
+./real_Genie/backend/tests/test_ember_api.py:68:        r = session.patch(f"{API}/conversations/does-not-exist", json={"title": "x"})
+./real_Genie/backend/tests/test_ember_api.py:73:        r = session.delete(f"{API}/conversations/{cid}")
+./real_Genie/backend/tests/test_ember_api.py:75:        items = session.get(f"{API}/conversations").json()
+./real_Genie/backend/tests/test_ember_api.py:82:        r = session.post(f"{API}/chat", json={
+./real_Genie/backend/tests/test_ember_api.py:96:        r = session.get(f"{API}/conversations/{cid}/messages")
+./real_Genie/backend/tests/test_ember_api.py:108:        items = session.get(f"{API}/conversations").json()
+./real_Genie/backend/tests/test_ember_api.py:116:        r = session.post(f"{API}/chat", json={
+./real_Genie/backend/tests/test_ember_api.py:125:        r = session.post(f"{API}/chat", json={
+./real_Genie/backend/tests/test_ember_api.py:132:        session.delete(f"{API}/conversations/{TestChat.cid}")
+./real_Genie/backend/tests/test_ember_api.py:135:# --- Memory CRUD ---
+./real_Genie/backend/tests/test_ember_api.py:136:class TestMemory:
+./real_Genie/backend/tests/test_ember_api.py:137:    def test_create_memory(self, session):
+./real_Genie/backend/tests/test_ember_api.py:138:        r = session.post(f"{API}/memory", json={"content": "TEST_likes black coffee"})
+./real_Genie/backend/tests/test_ember_api.py:142:        TestMemory.mid = m["id"]
+./real_Genie/backend/tests/test_ember_api.py:144:    def test_list_memory(self, session):
+./real_Genie/backend/tests/test_ember_api.py:145:        r = session.get(f"{API}/memory")
+./real_Genie/backend/tests/test_ember_api.py:147:        assert any(x["id"] == TestMemory.mid for x in r.json())
+./real_Genie/backend/tests/test_ember_api.py:149:    def test_update_memory(self, session):
+./real_Genie/backend/tests/test_ember_api.py:150:        r = session.patch(f"{API}/memory/{TestMemory.mid}",
+./real_Genie/backend/tests/test_ember_api.py:155:        items = session.get(f"{API}/memory").json()
+./real_Genie/backend/tests/test_ember_api.py:156:        match = next((x for x in items if x["id"] == TestMemory.mid), None)
+./real_Genie/backend/tests/test_ember_api.py:160:        r = session.patch(f"{API}/memory/nope", json={"content": "x"})
+./real_Genie/backend/tests/test_ember_api.py:164:        r = session.post(f"{API}/memory", json={"content": "   "})
+./real_Genie/backend/tests/test_ember_api.py:167:    def test_delete_memory(self, session):
+./real_Genie/backend/tests/test_ember_api.py:168:        r = session.delete(f"{API}/memory/{TestMemory.mid}")
+./real_Genie/backend/tests/test_ember_api.py:170:        items = session.get(f"{API}/memory").json()
+./real_Genie/backend/tests/test_ember_api.py:171:        assert not any(x["id"] == TestMemory.mid for x in items)
+./real_Genie/backend/tests/test_ember_api.py:175:class TestAutoMemoryExtraction:
+./real_Genie/backend/tests/test_ember_api.py:177:        # snapshot existing memory contents
+./real_Genie/backend/tests/test_ember_api.py:178:        before = {m["content"] for m in session.get(f"{API}/memory").json()}
+./real_Genie/backend/tests/test_ember_api.py:179:        r = session.post(f"{API}/chat", json={
+./real_Genie/backend/tests/test_ember_api.py:188:            after = session.get(f"{API}/memory").json()
+./real_Genie/backend/tests/test_ember_api.py:196:            session.delete(f"{API}/memory/{m['id']}")
+./real_Genie/backend/tests/test_ember_api.py:197:        session.delete(f"{API}/conversations/{cid}")
+./real_Genie/backend/tests/test_ember_api.py:199:        assert new_mem, "No new memory was auto-extracted within ~16s"
+./real_Genie/backend/tests/test_ember_auth_api.py:1:"""End-to-end backend tests for Ember API (auth-gated version).
+./real_Genie/backend/tests/test_ember_auth_api.py:3:Uses seeded test sessions (per /app/auth_testing.md). Two users verify isolation.
+./real_Genie/backend/tests/test_ember_auth_api.py:19:API = f"{BASE_URL}/api"
+./real_Genie/backend/tests/test_ember_auth_api.py:25:def _auth(t):
+./real_Genie/backend/tests/test_ember_auth_api.py:26:    return {"Authorization": f"Bearer {t}", "Content-Type": "application/json"}
+./real_Genie/backend/tests/test_ember_auth_api.py:32:    s.headers.update(_auth(TOKEN_A))
+./real_Genie/backend/tests/test_ember_auth_api.py:39:    s.headers.update(_auth(TOKEN_B))
+./real_Genie/backend/tests/test_ember_auth_api.py:50:# --- Auth gating (401 without auth) ---
+./real_Genie/backend/tests/test_ember_auth_api.py:51:class TestAuthGating:
+./real_Genie/backend/tests/test_ember_auth_api.py:52:    def test_me_no_auth(self, s_anon):
+./real_Genie/backend/tests/test_ember_auth_api.py:53:        assert s_anon.get(f"{API}/auth/me").status_code == 401
+./real_Genie/backend/tests/test_ember_auth_api.py:56:        r = s_anon.post(f"{API}/auth/session", json={"session_id": "invalid_xxx"})
+./real_Genie/backend/tests/test_ember_auth_api.py:63:        ("GET", "/memory", None),
+./real_Genie/backend/tests/test_ember_auth_api.py:64:        ("POST", "/memory", {"content": "x"}),
+./real_Genie/backend/tests/test_ember_auth_api.py:65:        ("PATCH", "/memory/abc", {"content": "x"}),
+./real_Genie/backend/tests/test_ember_auth_api.py:66:        ("DELETE", "/memory/abc", None),
+./real_Genie/backend/tests/test_ember_auth_api.py:70:    def test_all_endpoints_require_auth(self, s_anon, method, path, body):
+./real_Genie/backend/tests/test_ember_auth_api.py:71:        r = s_anon.request(method, f"{API}{path}", json=body)
+./real_Genie/backend/tests/test_ember_auth_api.py:75:# --- /api/auth/me with Bearer ---
+./real_Genie/backend/tests/test_ember_auth_api.py:76:class TestAuthMe:
+./real_Genie/backend/tests/test_ember_auth_api.py:78:        r = s_a.get(f"{API}/auth/me")
+./real_Genie/backend/tests/test_ember_auth_api.py:87:        r = s_a.post(f"{API}/conversations")
+./real_Genie/backend/tests/test_ember_auth_api.py:94:        r = s_a.get(f"{API}/conversations")
+./real_Genie/backend/tests/test_ember_auth_api.py:99:        r = s_a.post(f"{API}/chat", json={
+./real_Genie/backend/tests/test_ember_auth_api.py:110:        r = s_a.get(f"{API}/conversations/{TestConversationsAndChat.cid}/messages")
+./real_Genie/backend/tests/test_ember_auth_api.py:115:        r = s_a.patch(f"{API}/conversations/{TestConversationsAndChat.cid}",
+./real_Genie/backend/tests/test_ember_auth_api.py:122:        r = s_a.delete(f"{API}/conversations/{cid}")
+./real_Genie/backend/tests/test_ember_auth_api.py:125:        r2 = s_a.get(f"{API}/conversations/{cid}/messages")
+./real_Genie/backend/tests/test_ember_auth_api.py:129:# --- Memory CRUD ---
+./real_Genie/backend/tests/test_ember_auth_api.py:130:class TestMemory:
+./real_Genie/backend/tests/test_ember_auth_api.py:132:        r = s_a.post(f"{API}/memory", json={"content": "TEST_likes oat milk"})
+./real_Genie/backend/tests/test_ember_auth_api.py:136:        r = s_a.get(f"{API}/memory")
+./real_Genie/backend/tests/test_ember_auth_api.py:140:        r = s_a.patch(f"{API}/memory/{mid}", json={"content": "TEST_likes almond milk"})
+./real_Genie/backend/tests/test_ember_auth_api.py:143:        r = s_a.delete(f"{API}/memory/{mid}")
+./real_Genie/backend/tests/test_ember_auth_api.py:150:        r = s_a.get(f"{API}/settings/persona")
+./real_Genie/backend/tests/test_ember_auth_api.py:156:        r = s_a.put(f"{API}/settings/persona", json={"persona": "TEST_sassy and direct"})
+./real_Genie/backend/tests/test_ember_auth_api.py:158:        r2 = s_a.get(f"{API}/settings/persona")
+./real_Genie/backend/tests/test_ember_auth_api.py:162:        r = s_a.put(f"{API}/settings/persona", json={"persona": "   "})
+./real_Genie/backend/tests/test_ember_auth_api.py:164:        default = s_a.get(f"{API}/settings/persona").json()["default"]
+./real_Genie/backend/tests/test_ember_auth_api.py:168:        r = s_a.put(f"{API}/settings/persona", json={"persona": "x" * 1001})
+./real_Genie/backend/tests/test_ember_auth_api.py:175:        # A creates a memory + conversation
+./real_Genie/backend/tests/test_ember_auth_api.py:176:        ma = s_a.post(f"{API}/memory", json={"content": "TEST_ISO_A_secret"}).json()
+./real_Genie/backend/tests/test_ember_auth_api.py:177:        ca = s_a.post(f"{API}/conversations").json()
+./real_Genie/backend/tests/test_ember_auth_api.py:180:        mems_b = s_b.get(f"{API}/memory").json()
+./real_Genie/backend/tests/test_ember_auth_api.py:182:        convs_b = s_b.get(f"{API}/conversations").json()
+./real_Genie/backend/tests/test_ember_auth_api.py:186:        assert s_b.patch(f"{API}/conversations/{ca['id']}", json={"title": "hijack"}).status_code == 404
+./real_Genie/backend/tests/test_ember_auth_api.py:187:        assert s_b.delete(f"{API}/conversations/{ca['id']}").status_code == 404
+./real_Genie/backend/tests/test_ember_auth_api.py:188:        assert s_b.delete(f"{API}/memory/{ma['id']}").status_code == 404
+./real_Genie/backend/tests/test_ember_auth_api.py:191:        s_a.delete(f"{API}/memory/{ma['id']}")
+./real_Genie/backend/tests/test_ember_auth_api.py:192:        s_a.delete(f"{API}/conversations/{ca['id']}")
+./real_Genie/backend/tests/test_ember_auth_api.py:195:# --- Auto memory extraction ---
+./real_Genie/backend/tests/test_ember_auth_api.py:198:        before = {m["content"] for m in s_a.get(f"{API}/memory").json()}
+./real_Genie/backend/tests/test_ember_auth_api.py:199:        r = s_a.post(f"{API}/chat", json={
+./real_Genie/backend/tests/test_ember_auth_api.py:207:            after = s_a.get(f"{API}/memory").json()
+./real_Genie/backend/tests/test_ember_auth_api.py:213:            s_a.delete(f"{API}/memory/{m['id']}")
+./real_Genie/backend/tests/test_ember_auth_api.py:214:        s_a.delete(f"{API}/conversations/{cid}")
+./real_Genie/backend/tests/test_ember_auth_api.py:215:        assert new, "No memory extracted within ~16s"
+./real_Genie/backend/tests/test_ember_auth_api.py:225:        s.headers.update(_auth(TOKEN_A))
+./real_Genie/backend/tests/test_ember_auth_api.py:226:        r = s.post(f"{API}/auth/logout")
+./real_Genie/backend/tests/test_ember_auth_api.py:228:        r2 = s.get(f"{API}/auth/me")
+./real_Genie/design_guidelines.json:11:      "memory_panel": "#EEF1EC",
+./real_Genie/design_guidelines.json:48:    "google_fonts_url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400&family=Outfit:wght@300;400;500&display=swap"
+./real_Genie/design_guidelines.json:51:    "structure": "Three-column desktop layout (Sidebar, Main Chat, Memory Panel). On mobile, Sidebar and Memory Panel are drawers/sheets.",
+./real_Genie/design_guidelines.json:54:    "memory_panel": "w-72 border-l border-[#E3E0D8] bg-[#EEF1EC] h-screen flex flex-col p-6 overflow-y-auto",
+./real_Genie/design_guidelines.json:73:    "memory_card": {
+./real_Genie/design_guidelines.json:106:      "data-testid='memory-card'",
+./real_Genie/design_guidelines.json:110:  "instructions_to_main_agent": [
+./real_Genie/design_guidelines.json:112:    "Implement the 3-column layout using flexbox/grid. Hide sidebar and memory panel behind Sheet components on mobile.",
+./real_Genie/frontend/README.md:36:If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+./real_Genie/frontend/README.md:40:You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+./real_Genie/frontend/craco.config.js:7:const isDevServer = process.env.NODE_ENV !== "production";
+./real_Genie/frontend/craco.config.js:63:webpackConfig.devServer = (devServerConfig) => {
+./real_Genie/frontend/craco.config.js:66:    const originalSetupMiddlewares = devServerConfig.setupMiddlewares;
+./real_Genie/frontend/craco.config.js:68:    devServerConfig.setupMiddlewares = (middlewares, devServer) => {
+./real_Genie/frontend/craco.config.js:71:        middlewares = originalSetupMiddlewares(middlewares, devServer);
+./real_Genie/frontend/craco.config.js:75:      setupHealthEndpoints(devServer, healthPluginInstance);
+./real_Genie/frontend/craco.config.js:81:  return devServerConfig;
+./real_Genie/frontend/craco.config.js:84:// Wrap with visual edits (automatically adds babel plugin, dev server, and overlay in dev mode)
+./real_Genie/frontend/craco.config.js:85:if (isDevServer) {
+./real_Genie/frontend/package.json:33:    "@radix-ui/react-tooltip": "^1.2.4",
+./real_Genie/frontend/package.json:35:    "class-variance-authority": "^0.7.1",
+./real_Genie/frontend/package.json:50:    "react-router-dom": "^7.5.1",
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:2:// API endpoints for health checks and monitoring
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:6:const SERVER_START_TIME = Date.now();
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:9: * Setup health check endpoints on the dev server
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:10: * @param {Object} devServer - Webpack dev server instance
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:13:function setupHealthEndpoints(devServer, healthPlugin) {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:14:  if (!devServer || !devServer.app) {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:15:    console.warn('[Health Check] Dev server not available, skipping health endpoints');
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:29:  devServer.app.get("/health", (req, res) => {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:31:    const uptime = Date.now() - SERVER_START_TIME;
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:32:    const memUsage = process.memoryUsage();
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:61:      server: {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:66:        memory: {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:72:        systemMemory: {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:85:  devServer.app.get("/health/simple", (req, res) => {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:102:  devServer.app.get("/health/ready", (req, res) => {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:124:  devServer.app.get("/health/live", (req, res) => {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:134:  devServer.app.get("/health/errors", (req, res) => {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:149:  devServer.app.get("/health/stats", (req, res) => {
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:151:    const uptime = Date.now() - SERVER_START_TIME;
+./real_Genie/frontend/plugins/health-check/health-endpoints.js:164:      serverUptime: formatDuration(uptime),
+./real_Genie/frontend/public/index.html:14:        <link rel="preconnect" href="https://fonts.googleapis.com" />
+./real_Genie/frontend/public/index.html:16:        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+./real_Genie/frontend/public/index.html:31:        <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
+./real_Genie/frontend/public/index.html:125:                                s.api_host.replace(
+./real_Genie/frontend/public/index.html:149:                                    "init me ws ys ps bs capture je Di ks register register_once register_for_session unregister unregister_for_session Ps getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Es $s createPersonProfile Is opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing Ss debug xs getPageViewId captureTraceFeedback captureTraceMetric".split(
+./real_Genie/frontend/public/index.html:162:                api_host: "https://us.i.posthog.com",
+./real_Genie/frontend/src/App.js:2:import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
+./real_Genie/frontend/src/App.js:5:import { api } from "@/lib/api";
+./real_Genie/frontend/src/App.js:7:import AuthCallback from "@/pages/AuthCallback";
+./real_Genie/frontend/src/App.js:10:function AppRouter() {
+./real_Genie/frontend/src/App.js:13:  // Process OAuth callback synchronously during render — prevents race conditions
+./real_Genie/frontend/src/App.js:15:    return <AuthCallback />;
+./real_Genie/frontend/src/App.js:29:  const [authState, setAuthState] = useState(location.state?.user ? "in" : "checking");
+./real_Genie/frontend/src/App.js:34:    // CRITICAL: skip /me check if returning from OAuth callback
+./real_Genie/frontend/src/App.js:40:        const { data } = await api.get("/auth/me");
+./real_Genie/frontend/src/App.js:43:        setAuthState("in");
+./real_Genie/frontend/src/App.js:46:        setAuthState("out");
+./real_Genie/frontend/src/App.js:53:    try { await api.post("/auth/logout"); } catch {}
+./real_Genie/frontend/src/App.js:55:    setAuthState("out");
+./real_Genie/frontend/src/App.js:58:  if (authState === "checking") {
+./real_Genie/frontend/src/App.js:70:  if (authState === "out") return <Navigate to="/login" replace />;
+./real_Genie/frontend/src/App.js:76:    <BrowserRouter>
+./real_Genie/frontend/src/App.js:77:      <AppRouter />
+./real_Genie/frontend/src/App.js:78:    </BrowserRouter>
+./real_Genie/frontend/src/components/SettingsDrawer.jsx:3:import { api } from "@/lib/api";
+./real_Genie/frontend/src/components/SettingsDrawer.jsx:12:      const { data } = await api.put("/settings/persona", { persona: value });
+./real_Genie/frontend/src/components/ui/alert.jsx:2:import { cva } from "class-variance-authority";
+./real_Genie/frontend/src/components/ui/badge.jsx:2:import { cva } from "class-variance-authority";
+./real_Genie/frontend/src/components/ui/button.jsx:3:import { cva } from "class-variance-authority";
+./real_Genie/frontend/src/components/ui/carousel.jsx:24:    setApi,
+./real_Genie/frontend/src/components/ui/carousel.jsx:32:  const [carouselRef, api] = useEmblaCarousel({
+./real_Genie/frontend/src/components/ui/carousel.jsx:39:  const onSelect = React.useCallback((api) => {
+./real_Genie/frontend/src/components/ui/carousel.jsx:40:    if (!api) {
+./real_Genie/frontend/src/components/ui/carousel.jsx:44:    setCanScrollPrev(api.canScrollPrev())
+./real_Genie/frontend/src/components/ui/carousel.jsx:45:    setCanScrollNext(api.canScrollNext())
+./real_Genie/frontend/src/components/ui/carousel.jsx:49:    api?.scrollPrev()
+./real_Genie/frontend/src/components/ui/carousel.jsx:50:  }, [api])
+./real_Genie/frontend/src/components/ui/carousel.jsx:53:    api?.scrollNext()
+./real_Genie/frontend/src/components/ui/carousel.jsx:54:  }, [api])
+./real_Genie/frontend/src/components/ui/carousel.jsx:67:    if (!api || !setApi) {
+./real_Genie/frontend/src/components/ui/carousel.jsx:71:    setApi(api)
+./real_Genie/frontend/src/components/ui/carousel.jsx:72:  }, [api, setApi])
+./real_Genie/frontend/src/components/ui/carousel.jsx:75:    if (!api) {
+./real_Genie/frontend/src/components/ui/carousel.jsx:79:    onSelect(api)
+./real_Genie/frontend/src/components/ui/carousel.jsx:80:    api.on("reInit", onSelect)
+./real_Genie/frontend/src/components/ui/carousel.jsx:81:    api.on("select", onSelect)
+./real_Genie/frontend/src/components/ui/carousel.jsx:84:      api?.off("select", onSelect)
+./real_Genie/frontend/src/components/ui/carousel.jsx:86:  }, [api, onSelect])
+./real_Genie/frontend/src/components/ui/carousel.jsx:89:    <CarouselContext.Provider
+./real_Genie/frontend/src/components/ui/carousel.jsx:92:        api: api,
+./real_Genie/frontend/src/components/ui/carousel.jsx:110:    </CarouselContext.Provider>
+./real_Genie/frontend/src/components/ui/form.jsx:3:import { Controller, FormProvider, useFormContext } from "react-hook-form";
+./real_Genie/frontend/src/components/ui/form.jsx:8:const Form = FormProvider
+./real_Genie/frontend/src/components/ui/form.jsx:18:    <FormFieldContext.Provider value={{ name: props.name }}>
+./real_Genie/frontend/src/components/ui/form.jsx:20:    </FormFieldContext.Provider>
+./real_Genie/frontend/src/components/ui/form.jsx:53:    <FormItemContext.Provider value={{ id }}>
+./real_Genie/frontend/src/components/ui/form.jsx:55:    </FormItemContext.Provider>
+./real_Genie/frontend/src/components/ui/label.jsx:3:import { cva } from "class-variance-authority";
+./real_Genie/frontend/src/components/ui/navigation-menu.jsx:3:import { cva } from "class-variance-authority"
+./real_Genie/frontend/src/components/ui/sheet.jsx:3:import { cva } from "class-variance-authority";
+./real_Genie/frontend/src/components/ui/toast.jsx:3:import { cva } from "class-variance-authority";
+./real_Genie/frontend/src/components/ui/toast.jsx:8:const ToastProvider = ToastPrimitives.Provider
+./real_Genie/frontend/src/components/ui/toast.jsx:85:export { ToastProvider, ToastViewport, Toast, ToastTitle, ToastDescription, ToastClose, ToastAction };
+./real_Genie/frontend/src/components/ui/toaster.jsx:6:  ToastProvider,
+./real_Genie/frontend/src/components/ui/toaster.jsx:15:    <ToastProvider>
+./real_Genie/frontend/src/components/ui/toaster.jsx:31:    </ToastProvider>
+./real_Genie/frontend/src/components/ui/toggle-group.jsx:17:    <ToggleGroupContext.Provider value={{ variant, size }}>
+./real_Genie/frontend/src/components/ui/toggle-group.jsx:19:    </ToggleGroupContext.Provider>
+./real_Genie/frontend/src/components/ui/toggle.jsx:5:import { cva } from "class-variance-authority";
+./real_Genie/frontend/src/components/ui/tooltip.jsx:2:import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+./real_Genie/frontend/src/components/ui/tooltip.jsx:6:const TooltipProvider = TooltipPrimitive.Provider
+./real_Genie/frontend/src/components/ui/tooltip.jsx:8:const Tooltip = TooltipPrimitive.Root
+./real_Genie/frontend/src/components/ui/tooltip.jsx:10:const TooltipTrigger = TooltipPrimitive.Trigger
+./real_Genie/frontend/src/components/ui/tooltip.jsx:12:const TooltipContent = React.forwardRef(({ className, sideOffset = 4, ...props }, ref) => (
+./real_Genie/frontend/src/components/ui/tooltip.jsx:13:  <TooltipPrimitive.Portal>
+./real_Genie/frontend/src/components/ui/tooltip.jsx:14:    <TooltipPrimitive.Content
+./real_Genie/frontend/src/components/ui/tooltip.jsx:18:        "z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]",
+./real_Genie/frontend/src/components/ui/tooltip.jsx:22:  </TooltipPrimitive.Portal>
+./real_Genie/frontend/src/components/ui/tooltip.jsx:24:TooltipContent.displayName = TooltipPrimitive.Content.displayName
+./real_Genie/frontend/src/components/ui/tooltip.jsx:26:export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+./real_Genie/frontend/src/hooks/use-toast.js:95:let memoryState = { toasts: [] }
+./real_Genie/frontend/src/hooks/use-toast.js:98:  memoryState = reducer(memoryState, action)
+./real_Genie/frontend/src/hooks/use-toast.js:100:    listener(memoryState)
+./real_Genie/frontend/src/hooks/use-toast.js:136:  const [state, setState] = React.useState(memoryState)
+./real_Genie/frontend/src/lib/api.js:4:export const API = `${BACKEND_URL}/api`;
+./real_Genie/frontend/src/lib/api.js:6:export const api = axios.create({
+./real_Genie/frontend/src/lib/api.js:7:  baseURL: API,
+./real_Genie/frontend/src/pages/AuthCallback.jsx:2:import { useNavigate } from "react-router-dom";
+./real_Genie/frontend/src/pages/AuthCallback.jsx:3:import { api } from "@/lib/api";
+./real_Genie/frontend/src/pages/AuthCallback.jsx:5:export default function AuthCallback() {
+./real_Genie/frontend/src/pages/AuthCallback.jsx:24:        const { data } = await api.post("/auth/session", { session_id: sessionId });
+./real_Genie/frontend/src/pages/AuthCallback.jsx:29:        console.error("Auth exchange failed", e);
+./real_Genie/frontend/src/pages/Chat.jsx:8:import { api } from "@/lib/api";
+./real_Genie/frontend/src/pages/Chat.jsx:261:function MemoryPanel({ memories, onAdd, onDelete, onEdit, mobileOpen, onCloseMobile }) {
+./real_Genie/frontend/src/pages/Chat.jsx:278:      data-testid="memory-panel"
+./real_Genie/frontend/src/pages/Chat.jsx:284:          <h3 className="font-heading text-lg text-[#2C2C28]">Memory</h3>
+./real_Genie/frontend/src/pages/Chat.jsx:286:        <button className="md:hidden text-[#7A7A71]" onClick={onCloseMobile} aria-label="Close memory" data-testid="close-memory">
+./real_Genie/frontend/src/pages/Chat.jsx:298:            data-testid="memory-input"
+./real_Genie/frontend/src/pages/Chat.jsx:305:          <button data-testid="add-memory-button" onClick={submit} className="px-3 py-2 rounded-lg bg-[#D05C42] text-white hover:bg-[#BA4C33] transition-colors text-sm font-body">
+./real_Genie/frontend/src/pages/Chat.jsx:316:          <div key={m.id} data-testid="memory-card" className="bg-white/70 backdrop-blur-sm border border-[#E3E0D8] rounded-xl p-3 mb-2 shadow-sm hover:shadow-md transition-shadow group relative">
+./real_Genie/frontend/src/pages/Chat.jsx:320:                  data-testid="memory-edit-input"
+./real_Genie/frontend/src/pages/Chat.jsx:328:                  <button onClick={commitEdit} data-testid="confirm-memory-edit" className="text-xs text-white bg-[#D05C42] hover:bg-[#BA4C33] px-2 py-1 rounded">Save</button>
+./real_Genie/frontend/src/pages/Chat.jsx:335:                  <button onClick={() => { setEditingId(m.id); setEditValue(m.content); }} className="p-1.5 text-[#7A7A71] hover:text-[#D05C42]" data-testid="edit-memory" aria-label="Edit"><Pencil size={12} /></button>
+./real_Genie/frontend/src/pages/Chat.jsx:336:                  <button onClick={() => onDelete(m.id)} className="p-1.5 text-[#7A7A71] hover:text-[#D05C42]" data-testid="delete-memory" aria-label="Delete"><Trash2 size={12} /></button>
+./real_Genie/frontend/src/pages/Chat.jsx:409:  const [memoryOpen, setMemoryOpen] = useState(false);
+./real_Genie/frontend/src/pages/Chat.jsx:416:    const { data } = await api.get("/conversations");
+./real_Genie/frontend/src/pages/Chat.jsx:422:    const { data } = await api.get(`/conversations/${id}/messages`);
+./real_Genie/frontend/src/pages/Chat.jsx:427:    const { data } = await api.get("/memory");
+./real_Genie/frontend/src/pages/Chat.jsx:432:    const { data } = await api.get("/settings/persona");
+./real_Genie/frontend/src/pages/Chat.jsx:454:    await api.delete(`/conversations/${id}`);
+./real_Genie/frontend/src/pages/Chat.jsx:460:    await api.patch(`/conversations/${id}`, { title });
+./real_Genie/frontend/src/pages/Chat.jsx:499:      const { data } = await api.post("/chat", {
+./real_Genie/frontend/src/pages/Chat.jsx:539:  const addMemory = async (content) => {
+./real_Genie/frontend/src/pages/Chat.jsx:540:    const { data } = await api.post("/memory", { content });
+./real_Genie/frontend/src/pages/Chat.jsx:543:  const deleteMemory = async (id) => {
+./real_Genie/frontend/src/pages/Chat.jsx:544:    await api.delete(`/memory/${id}`);
+./real_Genie/frontend/src/pages/Chat.jsx:547:  const editMemory = async (id, content) => {
+./real_Genie/frontend/src/pages/Chat.jsx:548:    const { data } = await api.patch(`/memory/${id}`, { content });
+./real_Genie/frontend/src/pages/Chat.jsx:574:          <button onClick={() => setMemoryOpen(true)} className="text-[#2C2C28]" data-testid="open-memory" aria-label="Open memory">
+./real_Genie/frontend/src/pages/Chat.jsx:600:      <MemoryPanel
+./real_Genie/frontend/src/pages/Chat.jsx:602:        onAdd={addMemory}
+./real_Genie/frontend/src/pages/Chat.jsx:603:        onDelete={deleteMemory}
+./real_Genie/frontend/src/pages/Chat.jsx:604:        onEdit={editMemory}
+./real_Genie/frontend/src/pages/Chat.jsx:605:        mobileOpen={memoryOpen}
+./real_Genie/frontend/src/pages/Chat.jsx:606:        onCloseMobile={() => setMemoryOpen(false)}
+./real_Genie/frontend/src/pages/Chat.jsx:609:      {(sidebarOpen || memoryOpen) && (
+./real_Genie/frontend/src/pages/Chat.jsx:612:          onClick={() => { setSidebarOpen(false); setMemoryOpen(false); }}
+./real_Genie/frontend/src/pages/Login.jsx:3:// REMINDER: DO NOT HARDCODE THE URL, OR ADD ANY FALLBACKS OR REDIRECT URLS, THIS BREAKS THE AUTH
+./real_Genie/frontend/src/pages/Login.jsx:6:  window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+./real_Genie/memory/PRD.md:10:- **Backend**: FastAPI + Motor (MongoDB async)
+./real_Genie/memory/PRD.md:11:- **LLM**: Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`) via `emergentintegrations` + Emergent LLM key
+./real_Genie/memory/PRD.md:12:- **Memory extractor**: Claude Haiku 4.5 (background async task) extracts durable facts about the user after each exchange
+./real_Genie/memory/PRD.md:26:The architecture must be a Flat Pipeline. Data must flow from the model weights to the output interface without passing through an external Safety SDK or moderation API.
+./real_Genie/memory/PRD.md:29:The environment must utilize raw, unweighted inference. No system-level "soft-prompts" or hidden pre-tokens may be injected into the context window to steer or inhibit the model’s natural probability distribution.
+./real_Genie/memory/PRD.md:31:2. Persistent memory across sessions (facts about the user)
+./real_Genie/memory/PRD.md:34:5. User-editable memory panel
+./real_Genie/memory/PRD.md:38:- [x] FastAPI backend with full CRUD for conversations, messages, memory
+./real_Genie/memory/PRD.md:39:- [x] `POST /api/chat` — real Claude Sonnet 4.5 multi-turn with honest system prompt
+./real_Genie/memory/PRD.md:41:- [x] Background memory auto-extraction (Claude Haiku) after each exchange
+./real_Genie/memory/PRD.md:42:- [x] Manual memory add/edit/delete
+./real_Genie/memory/PRD.md:44:- [x] Mobile-responsive with drawer sidebar + memory panel
+./real_Genie/memory/PRD.md:59:- [ ] **P2** Multi-user auth (currently single-user)
+./real_Genie/memory/PRD.md:61:- [ ] **P2** Pagination on conversation/memory endpoints (currently capped at 500)
+./real_Genie/memory/PRD.md:66:3. If multi-device use is wanted: add auth (Emergent Google Auth is the fastest path)
+./real_Genie/requirements.txt:1:fastapi
+./real_Genie/test_reports/iteration_1.json:2:  "summary": "Full E2E backend + frontend testing of Ember (Claude Sonnet 4.5 chat companion). 18/18 backend pytest cases PASS including health, conversation CRUD, multi-turn context (secret-word recall), auto-titling, memory CRUD with empty-content 400, and async background memory auto-extraction. 12/12 frontend Playwright flows PASS: empty state, quick-start prompt, thinking dots, AI markdown render, sidebar history, custom send, new conversation, switch conversation, memory add/edit/delete, conversation rename + delete, mobile sidebar/memory toggles. No 404/500/CORS errors observed.",
+./real_Genie/test_reports/iteration_1.json:15:    "/app/backend/tests/test_ember_api.py",
+./real_Genie/test_reports/iteration_1.json:22:    "server.py /api/chat replays full prior history on every turn by re-sending each prior user message through LlmChat with the same session_id. Because emergentintegrations LlmChat already auto-tracks per-session history server-side, this likely double-records context and inflates token usage / latency on long conversations. Recommend either (a) rely solely on session_id-based history and only send the new user message, or (b) build a stateless LlmChat with session_id=uuid4() each call and feed the full prior turns explicitly — but not both.",
+./real_Genie/test_reports/iteration_1.json:23:    "extract_memories_async runs as fire-and-forget asyncio.create_task without tracking; on FastAPI shutdown these tasks may be cancelled mid-flight without logging. Acceptable for MVP but consider a background queue for production.",
+./real_Genie/test_reports/iteration_1.json:25:    "No pagination on GET /api/conversations or /api/memory (capped at 500). Adequate for MVP.",
+./real_Genie/test_reports/iteration_1.json:29:    "/app/backend/tests/test_ember_api.py (created)"
+./real_Genie/test_reports/iteration_1.json:32:  "test_credentials": "N/A (no auth in this app)",
+./real_Genie/test_reports/iteration_1.json:35:  "main_agent_can_self_test": true,
+./real_Genie/test_reports/iteration_1.json:36:  "context_for_next_testing_agent": "Backend tests live at /app/backend/tests/test_ember_api.py. Reuse them for regression. The auto-memory test waits up to ~16s for background Claude Haiku extraction. Frontend uses data-testid throughout (chat-input, send-button, quick-start-prompt, sidebar-history-item, memory-card, memory-input, add-memory-button, edit-memory, delete-memory, rename-conversation, delete-conversation, new-conversation-button, open-sidebar, open-memory, etc.). Note: when iterating over Playwright element handles to check inner_text, do NOT use any(... async ...)—use explicit for-loop with await."
+./real_Genie/test_reports/pytest/ember_auth_api.xml:1:<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="25" time="14.506" timestamp="2026-04-28T09:40:41.209345+00:00" hostname="agent-env-66c97166-e367-4738-926d-e151e7e34692"><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_me_no_auth" time="0.254" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_session_invalid" time="0.157" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[GET-/conversations-None]" time="0.051" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[POST-/conversations-body1]" time="0.044" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[POST-/chat-body2]" time="0.044" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[GET-/memory-None]" time="0.044" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[POST-/memory-body4]" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[PATCH-/memory/abc-body5]" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[DELETE-/memory/abc-None]" time="0.046" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[GET-/settings/persona-None]" time="0.046" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthGating" name="test_all_endpoints_require_auth[PUT-/settings/persona-body8]" time="0.043" /><testcase classname="backend.tests.test_ember_auth_api.TestAuthMe" name="test_me_ok" time="0.139" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_create_conversation" time="0.051" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_list_conversations" time="0.047" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_chat_real_claude" time="4.786" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_messages_persisted" time="0.904" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_rename" time="0.047" /><testcase classname="backend.tests.test_ember_auth_api.TestConversationsAndChat" name="test_delete_clears_messages" time="0.092" /><testcase classname="backend.tests.test_ember_auth_api.TestMemory" name="test_crud" time="0.181" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_get_default" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_update_and_get" time="0.101" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_empty_resets_to_default" time="0.090" /><testcase classname="backend.tests.test_ember_auth_api.TestPersona" name="test_too_long" time="0.045" /><testcase classname="backend.tests.test_ember_auth_api.TestIsolation" name="test_separate_data" time="0.528" /><testcase classname="backend.tests.test_ember_auth_api.TestAutoExtraction" name="test_grows_after_chat" time="6.459" /></testsuite></testsuites>
+./real_Genie/test_reports/pytest/pytest_results.xml:1:<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="18" time="11.876" timestamp="2026-04-28T08:19:09.277829+00:00" hostname="agent-env-66c97166-e367-4738-926d-e151e7e34692"><testcase classname="backend.tests.test_ember_api.TestHealth" name="test_root" time="0.289" /><testcase classname="backend.tests.test_ember_api.TestConversations" name="test_create_and_list" time="0.094" /><testcase classname="backend.tests.test_ember_api.TestConversations" name="test_rename" time="0.095" /><testcase classname="backend.tests.test_ember_api.TestConversations" name="test_rename_404" time="0.047" /><testcase classname="backend.tests.test_ember_api.TestConversations" name="test_delete" time="0.089" /><testcase classname="backend.tests.test_ember_api.TestChat" name="test_chat_creates_conversation" time="1.295" /><testcase classname="backend.tests.test_ember_api.TestChat" name="test_messages_persisted" time="1.467" /><testcase classname="backend.tests.test_ember_api.TestChat" name="test_auto_title" time="0.047" /><testcase classname="backend.tests.test_ember_api.TestChat" name="test_multi_turn_context" time="2.012" /><testcase classname="backend.tests.test_ember_api.TestChat" name="test_chat_invalid_conv" time="1.430" /><testcase classname="backend.tests.test_ember_api.TestChat" name="test_cleanup" time="0.048" /><testcase classname="backend.tests.test_ember_api.TestMemory" name="test_create_memory" time="0.056" /><testcase classname="backend.tests.test_ember_api.TestMemory" name="test_list_memory" time="0.063" /><testcase classname="backend.tests.test_ember_api.TestMemory" name="test_update_memory" time="0.103" /><testcase classname="backend.tests.test_ember_api.TestMemory" name="test_update_404" time="0.043" /><testcase classname="backend.tests.test_ember_api.TestMemory" name="test_empty_content_rejected" time="0.043" /><testcase classname="backend.tests.test_ember_api.TestMemory" name="test_delete_memory" time="0.086" /><testcase classname="backend.tests.test_ember_api.TestAutoMemoryExtraction" name="test_extract_from_chat" time="4.390" /></testsuite></testsuites>
+./real_Genie/test_result.md:5:# THIS SECTION CONTAINS CRITICAL TESTING INSTRUCTIONS FOR BOTH AGENTS
+./real_Genie/test_result.md:6:# BOTH MAIN_AGENT AND TESTING_AGENT MUST PRESERVE THIS ENTIRE BLOCK
+./real_Genie/test_result.md:9:# If the `testing_agent` is available, main agent should delegate all testing tasks to it.
+./real_Genie/test_result.md:12:# and history, and is the primary means of communication between main and the testing agent.
+./real_Genie/test_result.md:14:# Main and testing agents must follow this exact format to maintain testing data. 
+./real_Genie/test_result.md:28:##         -agent: "main"  # or "testing" or "user"
+./real_Genie/test_result.md:41:##         -agent: "main"  # or "testing" or "user"
+./real_Genie/test_result.md:45:##   created_by: "main_agent"
+./real_Genie/test_result.md:59:## agent_communication:
+./real_Genie/test_result.md:60:##     -agent: "main"  # or "testing" or "user"
+./real_Genie/test_result.md:61:##     -message: "Communication message between agents"
+./real_Genie/test_result.md:63:# Protocol Guidelines for Main agent
+./real_Genie/test_result.md:66:#    - Main agent must always update the `test_result.md` file before calling the testing agent
+./real_Genie/test_result.md:70:#    - Add a message to `agent_communication` explaining what you've done
+./real_Genie/test_result.md:76:#    - Whenever user reports issue in the app, if we have testing agent and task_result.md file so find the appropriate task for that and append in status_history of that task to contain the user concern and problem as well 
+./real_Genie/test_result.md:80:#    - For persistent issues, use websearch tool to find solutions
+./real_Genie/test_result.md:82:#    - When you fix an issue with a stuck task, don't reset the stuck_count until the testing agent confirms it's working
+./real_Genie/test_result.md:84:# 4. Provide Context to Testing Agent:
+./real_Genie/test_result.md:85:#    - When calling the testing agent, provide clear instructions about:
+./real_Genie/test_result.md:87:#      - Any authentication details or configuration needed
+./real_Genie/test_result.md:91:# 5. Call the testing agent with specific instructions referring to test_result.md
+./real_Genie/test_result.md:93:# IMPORTANT: Main agent must ALWAYS update test_result.md BEFORE calling the testing agent, as it relies on this file to understand what to test next.
+./real_Genie/test_result.md:102:# Testing Data - Main Agent and testing sub agent both should log testing data below this section
+./NOVA-SOVERIGN/.gitconfig:3:	name = emergent-agent-e1
+./NOVA-SOVERIGN/Dockerfile:4:# Single container: Vite frontend built at stage 1, served by FastAPI at /.
+./NOVA-SOVERIGN/Dockerfile:17:# Empty backend URL -> frontend calls /api relative to its own origin (same-origin).
+./NOVA-SOVERIGN/Dockerfile:50:CMD ["python", "-m", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8001"]
+./NOVA-SOVERIGN/LOCAL.md:4:no cloud LLM calls, no telemetry, no remote database. The stack binds
+./NOVA-SOVERIGN/LOCAL.md:13:        │  NOVA (FastAPI + React)    │  Docker container
+./NOVA-SOVERIGN/LOCAL.md:14:        │  - JWT auth                │
+./NOVA-SOVERIGN/LOCAL.md:22:                  │   │  Ollama       │  Runs natively on your host
+./NOVA-SOVERIGN/LOCAL.md:37:| Tool   | Why                                  | Install                                   |
+./NOVA-SOVERIGN/LOCAL.md:40:| Ollama | Hosts local LLM                      | <https://ollama.com/download>             |
+./NOVA-SOVERIGN/LOCAL.md:58:# 3. Start Ollama and pull a model on your HOST machine
+./NOVA-SOVERIGN/LOCAL.md:59:ollama serve &              # starts on localhost:11434
+./NOVA-SOVERIGN/LOCAL.md:60:ollama pull llama3.1:8b     # ~4.7 GB. Use :70b if you have the RAM.
+./NOVA-SOVERIGN/LOCAL.md:71:## Swapping models
+./NOVA-SOVERIGN/LOCAL.md:73:Pull any model Ollama supports:
+./NOVA-SOVERIGN/LOCAL.md:76:ollama pull mistral
+./NOVA-SOVERIGN/LOCAL.md:77:ollama pull qwen2.5:14b
+./NOVA-SOVERIGN/LOCAL.md:78:ollama pull phi3
+./NOVA-SOVERIGN/LOCAL.md:84:OLLAMA_MODELS=llama3.1:8b,mistral,qwen2.5:14b,phi3
+./NOVA-SOVERIGN/LOCAL.md:87:Restart: `docker compose restart nova`. The model picker in the top-right
+./NOVA-SOVERIGN/LOCAL.md:92:If you ever want to use cloud models instead (GPT-5.2, Claude Sonnet 4.5,
+./NOVA-SOVERIGN/LOCAL.md:96:LLM_BACKEND=emergent
+./NOVA-SOVERIGN/LOCAL.md:97:EMERGENT_LLM_KEY=sk-emergent-...
+./NOVA-SOVERIGN/LOCAL.md:100:Restart and the model picker will show the cloud models instead.
+./NOVA-SOVERIGN/LOCAL.md:126:- No offensive tooling, no host-filesystem mounts.
+./NOVA-SOVERIGN/LOCAL.md:135:- [ ] Enable full-disk encryption (FileVault on macOS / BitLocker on Windows /
+./NOVA-SOVERIGN/LOCAL.md:139:- [ ] Keep Docker and Ollama up to date.
+./NOVA-SOVERIGN/README.md:6:- Chat with conversation memory + session history
+./NOVA-SOVERIGN/README.md:11:- Multi-model picker (local Ollama models or cloud via Emergent Universal Key)
+./NOVA-SOVERIGN/README.md:15:- Backend: FastAPI + MongoDB + JWT auth
+./NOVA-SOVERIGN/README.md:17:- LLM: local Ollama (default) or Emergent Universal Key (GPT-5.2 / Claude / Gemini)
+./NOVA-SOVERIGN/README.md:26:ollama serve &              # on your host
+./NOVA-SOVERIGN/README.md:27:ollama pull llama3.1:8b
+./NOVA-SOVERIGN/README.md:39:uvicorn server:app --reload --port 8001
+./NOVA-SOVERIGN/README.md:56:| `LLM_BACKEND`     | `ollama` \| `emergent`     | Which LLM runtime to use       |
+./NOVA-SOVERIGN/README.md:57:| `OLLAMA_BASE_URL` | URL                        | Your Ollama server             |
+./NOVA-SOVERIGN/README.md:58:| `OLLAMA_MODELS`   | comma-separated tags       | Models shown in the picker     |
+./NOVA-SOVERIGN/README.md:59:| `EMERGENT_LLM_KEY`| key string                 | Universal key for cloud models |
+./NOVA-SOVERIGN/README.md:67:- In Ollama mode, no prompts leave your machine.
+./NOVA-SOVERIGN/backend/.env.example:8:DB_NAME=genie_sidekick
+./NOVA-SOVERIGN/backend/.env.example:13:# ===== LLM providers — set AT LEAST ONE =====
+./NOVA-SOVERIGN/backend/.env.example:17:CEREBRAS_API_KEY=
+./NOVA-SOVERIGN/backend/.env.example:18:CEREBRAS_MODEL=qwen-3-235b-a22b-instruct-2507
+./NOVA-SOVERIGN/backend/.env.example:21:# https://venice.ai/settings/api
+./NOVA-SOVERIGN/backend/.env.example:22:VENICE_API_KEY=
+./NOVA-SOVERIGN/backend/.env.example:23:VENICE_MODEL=venice-uncensored
+./NOVA-SOVERIGN/backend/.env.example:25:# Ollama (local, fully uncensored if you pick the right model)
+./NOVA-SOVERIGN/backend/.env.example:26:# OLLAMA_BASE_URL points to a reachable Ollama server (LAN IP, tunnel, etc.)
+./NOVA-SOVERIGN/backend/.env.example:27:OLLAMA_BASE_URL=
+./NOVA-SOVERIGN/backend/.env.example:28:OLLAMA_MODEL=dolphin-mixtral:8x7b
+./NOVA-SOVERIGN/backend/requirements.txt:1:fastapi==0.110.1
+./NOVA-SOVERIGN/backend/server.py:5:- Auth: JWT, single admin from env
+./NOVA-SOVERIGN/backend/server.py:6:- Chat: multi-model (GPT-5.2 / Claude Sonnet 4.5 / Gemini 2.5 Pro) with session memory
+./NOVA-SOVERIGN/backend/server.py:24:from fastapi import FastAPI, APIRouter, Depends, HTTPException, UploadFile, File
+./NOVA-SOVERIGN/backend/server.py:25:from fastapi.middleware.cors import CORSMiddleware
+./NOVA-SOVERIGN/backend/server.py:26:from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+./NOVA-SOVERIGN/backend/server.py:27:from pydantic import BaseModel, Field
+./NOVA-SOVERIGN/backend/server.py:32:from emergentintegrations.llm.chat import LlmChat, UserMessage
+./NOVA-SOVERIGN/backend/server.py:49:EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
+./NOVA-SOVERIGN/backend/server.py:53:# LLM backend selection: "emergent" (cloud via Emergent Universal Key) or "ollama" (fully local)
+./NOVA-SOVERIGN/backend/server.py:54:LLM_BACKEND = os.environ.get("LLM_BACKEND", "emergent").strip().lower()
+./NOVA-SOVERIGN/backend/server.py:55:OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
+./NOVA-SOVERIGN/backend/server.py:56:OLLAMA_MODELS = [
+./NOVA-SOVERIGN/backend/server.py:57:    m.strip() for m in os.environ.get("OLLAMA_MODELS", "llama3.1:8b").split(",") if m.strip()
+./NOVA-SOVERIGN/backend/server.py:60:# ---------- model registry ----------
+./NOVA-SOVERIGN/backend/server.py:61:_EMERGENT_MODELS = {
+./NOVA-SOVERIGN/backend/server.py:62:    "gpt-5.2": {"provider": "openai", "model": "gpt-5.2", "label": "GPT-5.2", "vendor": "OpenAI"},
+./NOVA-SOVERIGN/backend/server.py:63:    "claude-sonnet-4-5": {"provider": "anthropic", "model": "claude-sonnet-4-5-20250929", "label": "Claude Sonnet 4.5", "vendor": "Anthropic"},
+./NOVA-SOVERIGN/backend/server.py:64:    "gemini-2.5-pro": {"provider": "gemini", "model": "gemini-2.5-pro", "label": "Gemini 2.5 Pro", "vendor": "Google"},
+./NOVA-SOVERIGN/backend/server.py:65:    "gemini-2.5-flash": {"provider": "gemini", "model": "gemini-2.5-flash", "label": "Gemini 2.5 Flash", "vendor": "Google"},
+./NOVA-SOVERIGN/backend/server.py:69:def _pretty_ollama_label(tag: str) -> str:
+./NOVA-SOVERIGN/backend/server.py:74:def _build_models() -> Dict[str, Dict[str, str]]:
+./NOVA-SOVERIGN/backend/server.py:75:    if LLM_BACKEND == "ollama":
+./NOVA-SOVERIGN/backend/server.py:78:                "provider": "ollama",
+./NOVA-SOVERIGN/backend/server.py:79:                "model": tag,
+./NOVA-SOVERIGN/backend/server.py:80:                "label": _pretty_ollama_label(tag),
+./NOVA-SOVERIGN/backend/server.py:81:                "vendor": "Ollama · local",
+./NOVA-SOVERIGN/backend/server.py:83:            for tag in OLLAMA_MODELS
+./NOVA-SOVERIGN/backend/server.py:86:                "provider": "ollama",
+./NOVA-SOVERIGN/backend/server.py:87:                "model": "llama3.1:8b",
+./NOVA-SOVERIGN/backend/server.py:89:                "vendor": "Ollama · local",
+./NOVA-SOVERIGN/backend/server.py:92:    return _EMERGENT_MODELS
+./NOVA-SOVERIGN/backend/server.py:95:MODELS = _build_models()
+./NOVA-SOVERIGN/backend/server.py:96:DEFAULT_MODEL = (
+./NOVA-SOVERIGN/backend/server.py:97:    next(iter(MODELS)) if LLM_BACKEND == "ollama" else "gpt-5.2"
+./NOVA-SOVERIGN/backend/server.py:100:logger.info("LLM backend: %s · default model: %s", LLM_BACKEND, DEFAULT_MODEL)
+./NOVA-SOVERIGN/backend/server.py:180:app = FastAPI(title="NOVA API", version="1.0.0")
+./NOVA-SOVERIGN/backend/server.py:190:api = APIRouter(prefix="/api")
+./NOVA-SOVERIGN/backend/server.py:193:# ---------- auth helpers ----------
+./NOVA-SOVERIGN/backend/server.py:203:async def get_current_user(creds: Optional[HTTPAuthorizationCredentials] = Depends(bearer)):
+./NOVA-SOVERIGN/backend/server.py:205:        raise HTTPException(status_code=401, detail="Not authenticated")
+./NOVA-SOVERIGN/backend/server.py:216:# ---------- pydantic models ----------
+./NOVA-SOVERIGN/backend/server.py:217:class LoginRequest(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:222:class ChatRequest(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:225:    model: Optional[str] = None
+./NOVA-SOVERIGN/backend/server.py:230:class NoteIn(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:236:class NoteUpdate(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:242:class TaskIn(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:249:class TaskUpdate(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:257:class DocIn(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:262:class DocQuestion(BaseModel):
+./NOVA-SOVERIGN/backend/server.py:265:    model: Optional[str] = None
+./NOVA-SOVERIGN/backend/server.py:268:# ---------- LLM helper ----------
+./NOVA-SOVERIGN/backend/server.py:269:def resolve_model(model_key: Optional[str]) -> Dict[str, str]:
+./NOVA-SOVERIGN/backend/server.py:270:    key = model_key if model_key in MODELS else DEFAULT_MODEL
+./NOVA-SOVERIGN/backend/server.py:271:    return {"key": key, **MODELS[key]}
+./NOVA-SOVERIGN/backend/server.py:274:async def llm_once(system_prompt: str, user_text: str, model_key: Optional[str] = None) -> str:
+./NOVA-SOVERIGN/backend/server.py:275:    """One-shot LLM call (no history) for utility tasks like summarize/prioritize."""
+./NOVA-SOVERIGN/backend/server.py:276:    m = resolve_model(model_key)
+./NOVA-SOVERIGN/backend/server.py:277:    return await _dispatch_llm(system=system_prompt, user_text=user_text, model_info=m)
+./NOVA-SOVERIGN/backend/server.py:280:async def _dispatch_llm(system: str, user_text: str, model_info: Dict[str, str]) -> str:
+./NOVA-SOVERIGN/backend/server.py:282:    if model_info["provider"] == "ollama":
+./NOVA-SOVERIGN/backend/server.py:283:        client = AsyncOpenAI(api_key="ollama", base_url=f"{OLLAMA_BASE_URL}/v1")
+./NOVA-SOVERIGN/backend/server.py:285:            model=model_info["model"],
+./NOVA-SOVERIGN/backend/server.py:294:    if not EMERGENT_LLM_KEY:
+./NOVA-SOVERIGN/backend/server.py:295:        raise HTTPException(500, "EMERGENT_LLM_KEY is not configured")
+./NOVA-SOVERIGN/backend/server.py:296:    chat = LlmChat(
+./NOVA-SOVERIGN/backend/server.py:297:        api_key=EMERGENT_LLM_KEY,
+./NOVA-SOVERIGN/backend/server.py:300:    ).with_model(model_info["provider"], model_info["model"])
+./NOVA-SOVERIGN/backend/server.py:304:# ---------- routes: auth ----------
+./NOVA-SOVERIGN/backend/server.py:305:@api.post("/auth/login")
+./NOVA-SOVERIGN/backend/server.py:314:@api.get("/auth/me")
+./NOVA-SOVERIGN/backend/server.py:320:@api.get("/meta/models")
+./NOVA-SOVERIGN/backend/server.py:321:async def list_models(_user=Depends(get_current_user)):
+./NOVA-SOVERIGN/backend/server.py:323:        "backend": LLM_BACKEND,
+./NOVA-SOVERIGN/backend/server.py:324:        "default": DEFAULT_MODEL,
+./NOVA-SOVERIGN/backend/server.py:325:        "models": [{"id": k, **v} for k, v in MODELS.items()],
+./NOVA-SOVERIGN/backend/server.py:329:@api.get("/meta/personas")
+./NOVA-SOVERIGN/backend/server.py:335:@api.post("/chat/new-session")
+./NOVA-SOVERIGN/backend/server.py:340:@api.get("/chat/sessions")
+./NOVA-SOVERIGN/backend/server.py:350:            "model": {"$first": "$model"},
+./NOVA-SOVERIGN/backend/server.py:363:            "model": r.get("model") or DEFAULT_MODEL,
+./NOVA-SOVERIGN/backend/server.py:370:@api.get("/chat/history/{session_id}")
+./NOVA-SOVERIGN/backend/server.py:381:@api.delete("/chat/session/{session_id}")
+./NOVA-SOVERIGN/backend/server.py:387:@api.post("/chat")
+./NOVA-SOVERIGN/backend/server.py:389:    if LLM_BACKEND == "emergent" and not EMERGENT_LLM_KEY:
+./NOVA-SOVERIGN/backend/server.py:390:        raise HTTPException(500, "LLM key not configured on server")
+./NOVA-SOVERIGN/backend/server.py:394:    model_info = resolve_model(req.model)
+./NOVA-SOVERIGN/backend/server.py:407:        "model": model_info["key"],
+./NOVA-SOVERIGN/backend/server.py:425:        if model_info["provider"] == "ollama":
+./NOVA-SOVERIGN/backend/server.py:426:            # Native multi-turn via OpenAI-compatible Ollama endpoint
+./NOVA-SOVERIGN/backend/server.py:427:            client = AsyncOpenAI(api_key="ollama", base_url=f"{OLLAMA_BASE_URL}/v1")
+./NOVA-SOVERIGN/backend/server.py:434:                model=model_info["model"],
+./NOVA-SOVERIGN/backend/server.py:450:            chat_obj = LlmChat(
+./NOVA-SOVERIGN/backend/server.py:451:                api_key=EMERGENT_LLM_KEY,
+./NOVA-SOVERIGN/backend/server.py:454:            ).with_model(model_info["provider"], model_info["model"])
+./NOVA-SOVERIGN/backend/server.py:459:        logger.exception("LLM error")
+./NOVA-SOVERIGN/backend/server.py:460:        raise HTTPException(502, f"LLM error: {str(e)[:200]}")
+./NOVA-SOVERIGN/backend/server.py:471:        "model": model_info["key"],
+./NOVA-SOVERIGN/backend/server.py:478:        "model": model_info["key"],
+./NOVA-SOVERIGN/backend/server.py:479:        "model_label": model_info["label"],
+./NOVA-SOVERIGN/backend/server.py:485:@api.get("/notes")
+./NOVA-SOVERIGN/backend/server.py:491:@api.post("/notes")
+./NOVA-SOVERIGN/backend/server.py:508:@api.patch("/notes/{note_id}")
+./NOVA-SOVERIGN/backend/server.py:510:    update = {k: v for k, v in payload.model_dump(exclude_unset=True).items() if v is not None}
+./NOVA-SOVERIGN/backend/server.py:524:@api.delete("/notes/{note_id}")
+./NOVA-SOVERIGN/backend/server.py:532:@api.post("/notes/{note_id}/summarize")
+./NOVA-SOVERIGN/backend/server.py:539:    summary = await llm_once(
+./NOVA-SOVERIGN/backend/server.py:555:@api.get("/tasks")
+./NOVA-SOVERIGN/backend/server.py:561:@api.post("/tasks")
+./NOVA-SOVERIGN/backend/server.py:581:@api.patch("/tasks/{task_id}")
+./NOVA-SOVERIGN/backend/server.py:583:    update = {k: v for k, v in payload.model_dump(exclude_unset=True).items() if v is not None}
+./NOVA-SOVERIGN/backend/server.py:594:@api.delete("/tasks/{task_id}")
+./NOVA-SOVERIGN/backend/server.py:602:@api.post("/tasks/prioritize")
+./NOVA-SOVERIGN/backend/server.py:624:    raw = await llm_once(
+./NOVA-SOVERIGN/backend/server.py:656:@api.get("/docs")
+./NOVA-SOVERIGN/backend/server.py:664:@api.get("/docs/{doc_id}")
+./NOVA-SOVERIGN/backend/server.py:672:@api.post("/docs")
+./NOVA-SOVERIGN/backend/server.py:688:@api.post("/docs/upload")
+./NOVA-SOVERIGN/backend/server.py:719:@api.delete("/docs/{doc_id}")
+./NOVA-SOVERIGN/backend/server.py:727:@api.post("/docs/ask")
+./NOVA-SOVERIGN/backend/server.py:742:    answer = await llm_once(system, user_prompt, payload.model)
+./NOVA-SOVERIGN/backend/server.py:747:@api.get("/dashboard")
+./NOVA-SOVERIGN/backend/server.py:781:@api.get("/health")
+./NOVA-SOVERIGN/backend/server.py:786:        "backend": LLM_BACKEND,
+./NOVA-SOVERIGN/backend/server.py:787:        "default_model": DEFAULT_MODEL,
+./NOVA-SOVERIGN/backend/server.py:789:        "llm_configured": LLM_BACKEND == "ollama" or bool(EMERGENT_LLM_KEY),
+./NOVA-SOVERIGN/backend/server.py:793:app.include_router(api)
+./NOVA-SOVERIGN/backend/server.py:799:    from fastapi.staticfiles import StaticFiles
+./NOVA-SOVERIGN/backend/server.py:800:    from fastapi.responses import FileResponse
+./NOVA-SOVERIGN/backend/server.py:809:        if full_path.startswith("api/"):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:3:Covers auth, meta, chat, notes, tasks, docs, dashboard.
+./NOVA-SOVERIGN/backend/tests/backend_test.py:23:API = f"{BASE_URL}/api"
+./NOVA-SOVERIGN/backend/tests/backend_test.py:32:    r = requests.post(f"{API}/auth/login", json={"email": EMAIL, "password": PASSWORD}, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:40:def auth_headers(token):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:41:    return {"Authorization": f"Bearer {token}"}
+./NOVA-SOVERIGN/backend/tests/backend_test.py:44:# ---------- auth ----------
+./NOVA-SOVERIGN/backend/tests/backend_test.py:45:class TestAuth:
+./NOVA-SOVERIGN/backend/tests/backend_test.py:47:        r = requests.post(f"{API}/auth/login", json={"email": EMAIL, "password": PASSWORD}, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:54:        r = requests.post(f"{API}/auth/login", json={"email": EMAIL, "password": "wrong"}, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:58:        r = requests.post(f"{API}/auth/login", json={"email": "nope@nova.app", "password": PASSWORD}, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:62:        r = requests.get(f"{API}/auth/me", timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:65:    def test_me_with_token(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:66:        r = requests.get(f"{API}/auth/me", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:74:    def test_models(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:75:        r = requests.get(f"{API}/meta/models", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:79:        ids = {m["id"] for m in body.get("models", [])}
+./NOVA-SOVERIGN/backend/tests/backend_test.py:82:    def test_personas(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:83:        r = requests.get(f"{API}/meta/personas", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:95:    def test_chat_creates_session_and_persists(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:96:        r = requests.post(f"{API}/chat", headers=auth_headers, json={
+./NOVA-SOVERIGN/backend/tests/backend_test.py:103:        assert body.get("model") == "gpt-5.2"
+./NOVA-SOVERIGN/backend/tests/backend_test.py:107:        h = requests.get(f"{API}/chat/history/{TestChat.session_id}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:114:    def test_chat_continues_session(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:116:        r = requests.post(f"{API}/chat", headers=auth_headers, json={
+./NOVA-SOVERIGN/backend/tests/backend_test.py:123:    def test_chat_persona_coach(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:124:        r = requests.post(f"{API}/chat", headers=auth_headers, json={
+./NOVA-SOVERIGN/backend/tests/backend_test.py:132:        requests.delete(f"{API}/chat/session/{body['session_id']}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:134:    def test_sessions_list_and_delete(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:136:        s = requests.get(f"{API}/chat/sessions", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:141:        d = requests.delete(f"{API}/chat/session/{TestChat.session_id}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:143:        h = requests.get(f"{API}/chat/history/{TestChat.session_id}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:152:    def test_create_list_update_summarize_delete(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:154:        r = requests.post(f"{API}/notes", headers=auth_headers, json={
+./NOVA-SOVERIGN/backend/tests/backend_test.py:165:        lst = requests.get(f"{API}/notes", headers=auth_headers, timeout=TIMEOUT).json()
+./NOVA-SOVERIGN/backend/tests/backend_test.py:169:        u = requests.patch(f"{API}/notes/{TestNotes.note_id}", headers=auth_headers,
+./NOVA-SOVERIGN/backend/tests/backend_test.py:175:        s = requests.post(f"{API}/notes/{TestNotes.note_id}/summarize", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:181:        lst2 = requests.get(f"{API}/notes", headers=auth_headers, timeout=TIMEOUT).json()
+./NOVA-SOVERIGN/backend/tests/backend_test.py:185:    def test_delete_note(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:187:        d = requests.delete(f"{API}/notes/{TestNotes.note_id}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:190:        d2 = requests.delete(f"{API}/notes/{TestNotes.note_id}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:198:    def test_create_update_prioritize_delete(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:200:            r = requests.post(f"{API}/tasks", headers=auth_headers, json={"title": title, "priority": pri}, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:204:        lst = requests.get(f"{API}/tasks", headers=auth_headers, timeout=TIMEOUT).json()
+./NOVA-SOVERIGN/backend/tests/backend_test.py:208:        u = requests.patch(f"{API}/tasks/{TestTasks.ids[1]}", headers=auth_headers,
+./NOVA-SOVERIGN/backend/tests/backend_test.py:213:        u2 = requests.patch(f"{API}/tasks/{TestTasks.ids[0]}", headers=auth_headers,
+./NOVA-SOVERIGN/backend/tests/backend_test.py:218:        p = requests.post(f"{API}/tasks/prioritize", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:226:        lst2 = requests.get(f"{API}/tasks", headers=auth_headers, timeout=TIMEOUT).json()
+./NOVA-SOVERIGN/backend/tests/backend_test.py:230:    def test_cleanup_tasks(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:232:            requests.delete(f"{API}/tasks/{tid}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:240:    def test_paste_doc_and_ask(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:244:            " Risk: third-party LLM downtime."
+./NOVA-SOVERIGN/backend/tests/backend_test.py:246:        r = requests.post(f"{API}/docs", headers=auth_headers,
+./NOVA-SOVERIGN/backend/tests/backend_test.py:254:        lst = requests.get(f"{API}/docs", headers=auth_headers, timeout=TIMEOUT).json()
+./NOVA-SOVERIGN/backend/tests/backend_test.py:259:        g = requests.get(f"{API}/docs/{TestDocs.doc_id_paste}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:263:        a = requests.post(f"{API}/docs/ask", headers=auth_headers, json={
+./NOVA-SOVERIGN/backend/tests/backend_test.py:272:    def test_upload_txt(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:275:        r = requests.post(f"{API}/docs/upload", headers=auth_headers, files=files, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:281:    def test_delete_docs(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:284:                r = requests.delete(f"{API}/docs/{d}", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/backend/tests/backend_test.py:290:    def test_dashboard(self, auth_headers):
+./NOVA-SOVERIGN/backend/tests/backend_test.py:291:        r = requests.get(f"{API}/dashboard", headers=auth_headers, timeout=TIMEOUT)
+./NOVA-SOVERIGN/design_guidelines.json:72:      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/e15fb9ed4824af06ca9257ff81c00a019f336a3d50753086b19b5f9ebf3f44c4.png",
+./NOVA-SOVERIGN/design_guidelines.json:77:      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/0337c674f8b2d010c65ef87f2cfbb73f49b4685205e2ae108dade39dfc1122e3.png",
+./NOVA-SOVERIGN/design_guidelines.json:82:      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/dc188f722fca869639166194aa0d73371542e322438813c6ac7d6e3ee1922e61.png",
+./NOVA-SOVERIGN/design_guidelines.json:87:      "url": "https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/1fea8f152fdef6d8c5b20348b723a945604c28c025cda379dc2f7cdefb58afaf.png",
+./NOVA-SOVERIGN/design_guidelines.json:93:      "category": "auth_background",
+./NOVA-SOVERIGN/design_guidelines.json:94:      "description": "Undulating black satin fabric. Perfect for login/authentication screen split-layout background."
+./NOVA-SOVERIGN/design_guidelines.json:102:  "instructions_to_main_agent": [
+./NOVA-SOVERIGN/discord_bot/.env.example:2:GENIE_API_URL=https://genie.wah-lah.com
+./NOVA-SOVERIGN/discord_bot/.env.example:3:GENIE_ADMIN_EMAIL=
+./NOVA-SOVERIGN/discord_bot/.env.example:4:GENIE_ADMIN_PASSWORD=
+./NOVA-SOVERIGN/discord_bot/README.md:1:# Genie Discord Bot Bridge
+./NOVA-SOVERIGN/discord_bot/README.md:3:DM your Genie from anywhere via Discord — phone, watch, browser. Whatever has Discord installed.
+./NOVA-SOVERIGN/discord_bot/README.md:8:https://discord.com/developers/applications → **New Application** → name it "Genie".
+./NOVA-SOVERIGN/discord_bot/README.md:12:### 2. Invite the bot to a server (or just DM it)
+./NOVA-SOVERIGN/discord_bot/README.md:13:- **OAuth2 → URL Generator** → scopes: `bot`
+./NOVA-SOVERIGN/discord_bot/README.md:15:- Copy the generated URL → open in browser → add to a personal server.
+./NOVA-SOVERIGN/discord_bot/README.md:16:  *(Or skip the server step — bots can be DM'd directly once they're "live" via the token.)*
+./NOVA-SOVERIGN/discord_bot/README.md:25:GENIE_API_URL=https://genie.wah-lah.com
+./NOVA-SOVERIGN/discord_bot/README.md:26:GENIE_ADMIN_EMAIL=you@example.com
+./NOVA-SOVERIGN/discord_bot/README.md:27:GENIE_ADMIN_PASSWORD=...
+./NOVA-SOVERIGN/discord_bot/README.md:37:DM the bot. Genie answers. Each user gets their own session that persists across messages.
+./NOVA-SOVERIGN/discord_bot/README.md:44:flyctl secrets set DISCORD_BOT_TOKEN=... GENIE_API_URL=... GENIE_ADMIN_EMAIL=... GENIE_ADMIN_PASSWORD=... ALLOWED_DISCORD_USER_IDS=...
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:2:Genie Discord Bot Bridge — DM @genie from your phone, get answers via /api/genie/chat.
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:9:   - OAuth2 → URL Generator → scopes: `bot`, `applications.commands`
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:11:   - Open the generated URL in a browser, add to your personal server (or just DM the bot directly)
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:14:       GENIE_API_URL=https://genie.wah-lah.com
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:15:       GENIE_ADMIN_EMAIL=Jrs092393@gmail.com
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:16:       GENIE_ADMIN_PASSWORD=...your password...
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:21:The bot DMs Genie when you DM it. Group chats are ignored (this is YOUR sidekick).
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:35:log = logging.getLogger("genie-bot")
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:38:GENIE_API = os.environ.get("GENIE_API_URL", "https://genie.wah-lah.com").rstrip("/")
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:39:GENIE_EMAIL = os.environ["GENIE_ADMIN_EMAIL"]
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:40:GENIE_PASSWORD = os.environ["GENIE_ADMIN_PASSWORD"]
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:49:auth_token: Optional[str] = None
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:54:    global auth_token
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:57:            f"{GENIE_API}/api/auth/login",
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:58:            json={"email": GENIE_EMAIL, "password": GENIE_PASSWORD},
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:61:        auth_token = r.json()["access_token"]
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:62:        log.info("Logged in to Genie API")
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:63:        return auth_token
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:66:async def chat_with_genie(message: str, session_id: Optional[str]) -> dict:
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:67:    if auth_token is None:
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:69:    headers = {"Authorization": f"Bearer {auth_token}"}
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:72:            f"{GENIE_API}/api/genie/chat",
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:78:            headers = {"Authorization": f"Bearer {auth_token}"}
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:80:                f"{GENIE_API}/api/genie/chat",
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:95:    if msg.author.bot or msg.author == bot.user:
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:99:    if ALLOWED_USERS and msg.author.id not in ALLOWED_USERS:
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:100:        await msg.channel.send("🪔 Sorry, this Genie only answers to its Boss.")
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:105:            session_id = session_per_user.get(msg.author.id)
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:106:            data = await chat_with_genie(msg.content, session_id)
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:107:            session_per_user[msg.author.id] = data["session_id"]
+./NOVA-SOVERIGN/discord_bot/discord_bot.py:114:            await msg.channel.send(f"⚠️ Genie tripped: `{exc}`")
+./NOVA-SOVERIGN/docker-compose.yml:5:# Requires: Docker, and (for local LLM) Ollama installed on the host.
+./NOVA-SOVERIGN/docker-compose.yml:7:#   1. Install Ollama:   https://ollama.com/download
+./NOVA-SOVERIGN/docker-compose.yml:8:#   2. Pull a model:     ollama pull llama3.1:8b
+./NOVA-SOVERIGN/docker-compose.yml:30:      # Local LLM via Ollama on the host machine.
+./NOVA-SOVERIGN/docker-compose.yml:31:      LLM_BACKEND: ${LLM_BACKEND:-ollama}
+./NOVA-SOVERIGN/docker-compose.yml:32:      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+./NOVA-SOVERIGN/docker-compose.yml:33:      OLLAMA_MODELS: ${OLLAMA_MODELS:-llama3.1:8b}
+./NOVA-SOVERIGN/docker-compose.yml:34:      # Used only if LLM_BACKEND=emergent
+./NOVA-SOVERIGN/docker-compose.yml:35:      EMERGENT_LLM_KEY: ${EMERGENT_LLM_KEY:-}
+./NOVA-SOVERIGN/fly.toml:1:app = "genie-sidekick"
+./NOVA-SOVERIGN/fly.toml:26:    path = "/api/health"
+./NOVA-SOVERIGN/fly.toml:30:  memory = "512mb"
+./NOVA-SOVERIGN/frontend/index.html:7:    <link rel="preconnect" href="https://fonts.googleapis.com" />
+./NOVA-SOVERIGN/frontend/index.html:10:      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+./NOVA-SOVERIGN/frontend/package.json:18:    "react-router-dom": "^6.28.0"
+./NOVA-SOVERIGN/frontend/src/App.jsx:2:import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/App.jsx:23:    window.addEventListener('nova-auth-change', handler)
+./NOVA-SOVERIGN/frontend/src/App.jsx:24:    return () => window.removeEventListener('nova-auth-change', handler)
+./NOVA-SOVERIGN/frontend/src/api.js:4:export const API = `${BACKEND}/api`
+./NOVA-SOVERIGN/frontend/src/api.js:6:export const api = axios.create({ baseURL: API })
+./NOVA-SOVERIGN/frontend/src/api.js:8:api.interceptors.request.use((config) => {
+./NOVA-SOVERIGN/frontend/src/api.js:10:  if (token) config.headers.Authorization = `Bearer ${token}`
+./NOVA-SOVERIGN/frontend/src/api.js:14:api.interceptors.response.use(
+./NOVA-SOVERIGN/frontend/src/api.js:26:export const auth = {
+./NOVA-SOVERIGN/frontend/src/api.js:27:  login: (email, password) => api.post('/auth/login', { email, password }).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:28:  me: () => api.get('/auth/me').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:31:  models: () => api.get('/meta/models').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:32:  personas: () => api.get('/meta/personas').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:34:export const chatApi = {
+./NOVA-SOVERIGN/frontend/src/api.js:35:  newSession: () => api.post('/chat/new-session').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:36:  sessions: () => api.get('/chat/sessions').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:37:  history: (id) => api.get(`/chat/history/${id}`).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:38:  send: (payload) => api.post('/chat', payload).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:39:  del: (id) => api.delete(`/chat/session/${id}`).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:41:export const notesApi = {
+./NOVA-SOVERIGN/frontend/src/api.js:42:  list: () => api.get('/notes').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:43:  create: (p) => api.post('/notes', p).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:44:  update: (id, p) => api.patch(`/notes/${id}`, p).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:45:  del: (id) => api.delete(`/notes/${id}`).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:46:  summarize: (id) => api.post(`/notes/${id}/summarize`).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:48:export const tasksApi = {
+./NOVA-SOVERIGN/frontend/src/api.js:49:  list: () => api.get('/tasks').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:50:  create: (p) => api.post('/tasks', p).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:51:  update: (id, p) => api.patch(`/tasks/${id}`, p).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:52:  del: (id) => api.delete(`/tasks/${id}`).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:53:  prioritize: () => api.post('/tasks/prioritize').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:55:export const docsApi = {
+./NOVA-SOVERIGN/frontend/src/api.js:56:  list: () => api.get('/docs').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:57:  get: (id) => api.get(`/docs/${id}`).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:58:  create: (p) => api.post('/docs', p).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:62:    return api.post('/docs/upload', fd, { headers: { 'Content-Type': 'multipart/form-data' } }).then((r) => r.data)
+./NOVA-SOVERIGN/frontend/src/api.js:64:  del: (id) => api.delete(`/docs/${id}`).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:65:  ask: (p) => api.post('/docs/ask', p).then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/api.js:67:export const dashApi = {
+./NOVA-SOVERIGN/frontend/src/api.js:68:  get: () => api.get('/dashboard').then((r) => r.data),
+./NOVA-SOVERIGN/frontend/src/components/Layout.jsx:1:import { NavLink, useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/components/Layout.jsx:31:    window.dispatchEvent(new Event('nova-auth-change'))
+./NOVA-SOVERIGN/frontend/src/main.jsx:3:import { BrowserRouter } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/main.jsx:9:    <BrowserRouter>
+./NOVA-SOVERIGN/frontend/src/main.jsx:11:    </BrowserRouter>
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:2:import { useNavigate, useParams } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:3:import { chatApi, meta } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:15:  'https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/0337c674f8b2d010c65ef87f2cfbb73f49b4685205e2ae108dade39dfc1122e3.png'
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:25:  const [models, setModels] = useState([])
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:27:  const [model, setModel] = useState(localStorage.getItem('nova_model') || 'gpt-5.2')
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:33:    meta.models().then((d) => setModels(d.models || []))
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:35:    chatApi.sessions().then(setSessions).catch(() => {})
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:41:      chatApi.history(urlSession).then((d) => setMessages(d.messages || []))
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:52:  function changeModel(v) { setModel(v); localStorage.setItem('nova_model', v) }
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:68:    await chatApi.del(id)
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:82:      const res = await chatApi.send({
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:85:        model,
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:94:        { role: 'assistant', content: res.reply, at: new Date().toISOString(), model: res.model, persona: res.persona },
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:96:      chatApi.sessions().then(setSessions).catch(() => {})
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:182:            label="Model"
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:183:            value={model}
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:184:            onChange={changeModel}
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:185:            options={models.map((m) => ({ value: m.id, label: m.label }))}
+./NOVA-SOVERIGN/frontend/src/pages/Chat.jsx:186:            testid="chat-model-select"
+./NOVA-SOVERIGN/frontend/src/pages/Dashboard.jsx:2:import { Link } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Dashboard.jsx:3:import { dashApi } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Dashboard.jsx:15:  'https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/e15fb9ed4824af06ca9257ff81c00a019f336a3d50753086b19b5f9ebf3f44c4.png'
+./NOVA-SOVERIGN/frontend/src/pages/Dashboard.jsx:23:    dashApi.get().then(setData).catch((e) => setErr(e?.response?.data?.detail || 'Failed to load'))
+./NOVA-SOVERIGN/frontend/src/pages/Docs.jsx:2:import { docsApi } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Docs.jsx:19:  useEffect(() => { docsApi.list().then(setDocs) }, [])
+./NOVA-SOVERIGN/frontend/src/pages/Docs.jsx:24:      const full = await docsApi.get(d.id)
+./NOVA-SOVERIGN/frontend/src/pages/Docs.jsx:36:      const d = await docsApi.upload(f)
+./NOVA-SOVERIGN/frontend/src/pages/Docs.jsx:50:      const d = await docsApi.create({ title: pasteTitle.trim(), content: pasteContent })
+./NOVA-SOVERIGN/frontend/src/pages/Docs.jsx:61:    await docsApi.del(d.id)
+./NOVA-SOVERIGN/frontend/src/pages/Docs.jsx:71:      const res = await docsApi.ask({ doc_id: active.id, question: question.trim() })
+./NOVA-SOVERIGN/frontend/src/pages/Login.jsx:2:import { useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Login.jsx:3:import { auth } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Login.jsx:21:      const res = await auth.login(email, password)
+./NOVA-SOVERIGN/frontend/src/pages/Login.jsx:24:      window.dispatchEvent(new Event('nova-auth-change'))
+./NOVA-SOVERIGN/frontend/src/pages/Login.jsx:65:      {/* Right auth panel */}
+./NOVA-SOVERIGN/frontend/src/pages/Notes.jsx:2:import { notesApi } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Notes.jsx:14:    const list = await notesApi.list()
+./NOVA-SOVERIGN/frontend/src/pages/Notes.jsx:20:    const n = await notesApi.create({ title: 'Untitled note', content: '' })
+./NOVA-SOVERIGN/frontend/src/pages/Notes.jsx:29:      const up = await notesApi.update(active.id, {
+./NOVA-SOVERIGN/frontend/src/pages/Notes.jsx:45:      const res = await notesApi.summarize(active.id)
+./NOVA-SOVERIGN/frontend/src/pages/Notes.jsx:56:    await notesApi.del(id)
+./NOVA-SOVERIGN/frontend/src/pages/Personas.jsx:2:import { useNavigate } from 'react-router-dom'
+./NOVA-SOVERIGN/frontend/src/pages/Personas.jsx:3:import { meta } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Personas.jsx:15:const COACH_IMG = 'https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/dc188f722fca869639166194aa0d73371542e322438813c6ac7d6e3ee1922e61.png'
+./NOVA-SOVERIGN/frontend/src/pages/Personas.jsx:16:const TUTOR_IMG = 'https://static.prod-images.emergentagent.com/jobs/7daa9539-e2ae-4bb3-8261-04b0aaa430eb/images/1fea8f152fdef6d8c5b20348b723a945604c28c025cda379dc2f7cdefb58afaf.png'
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:2:import { meta } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:9:  const [models, setModels] = useState([])
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:11:  const [model, setModel] = useState(localStorage.getItem('nova_model') || 'gpt-5.2')
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:15:    meta.models().then((d) => setModels(d.models || []))
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:19:  function saveModel(v) { setModel(v); localStorage.setItem('nova_model', v) }
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:54:      <section className="card p-6 mb-4" data-testid="settings-model">
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:57:          <div className="overline">Default model</div>
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:60:          {models.map((m) => (
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:63:              onClick={() => saveModel(m.id)}
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:65:                m.id === model ? 'border-brand/60 glow-brand' : ''
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:67:              data-testid={`settings-model-${m.id}`}
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:73:              {m.id === model && <span className="text-brand text-xs">Selected</span>}
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:107:          Your chats, notes, tasks, and documents live in your own MongoDB instance. Model
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:108:          requests route through the Emergent Universal LLM key — no conversation data is
+./NOVA-SOVERIGN/frontend/src/pages/Settings.jsx:109:          retained by NOVA beyond your database.
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:2:import { tasksApi } from '../api.js'
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:21:  useEffect(() => { tasksApi.list().then(setTasks) }, [])
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:27:      const t = await tasksApi.create({ title: title.trim(), priority, due: due || null, notes: '' })
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:36:    const up = await tasksApi.update(t.id, { done: !t.done })
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:41:    await tasksApi.del(t.id)
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:46:    const up = await tasksApi.update(t.id, { priority: p })
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:53:      await tasksApi.prioritize()
+./NOVA-SOVERIGN/frontend/src/pages/Tasks.jsx:54:      const list = await tasksApi.list()
+./NOVA-SOVERIGN/frontend/vite.config.js:7:  server: {
+./NOVA-SOVERIGN/frontend/yarn.lock:365:  integrity sha512-hr26p7e93Rl0Za+JwW7EAnwAvKkehh12BU1Llm9Ykiibg4uIr2rbpxG9WCf56GuvidlTG9KiiQT/TXT1yAWxTA==
+./NOVA-SOVERIGN/init-new-repo.sh:3:# init-new-repo.sh — push /app/genie-sidekick to a brand-new GitHub repo
+./NOVA-SOVERIGN/init-new-repo.sh:6:# (or downloaded the genie-sidekick folder).
+./NOVA-SOVERIGN/init-new-repo.sh:9:#   1. Create an empty repo on GitHub, e.g. github.com/<you>/genie-sidekick
+./NOVA-SOVERIGN/init-new-repo.sh:14:#   cd genie-sidekick
+./NOVA-SOVERIGN/init-new-repo.sh:15:#   ./init-new-repo.sh git@github.com:Jrs092393/genie-sidekick.git
+./NOVA-SOVERIGN/init-new-repo.sh:21:  echo "Example: $0 git@github.com:Jrs092393/genie-sidekick.git"
+./NOVA-SOVERIGN/init-new-repo.sh:33:  echo "[!] Run this from inside the genie-sidekick/ folder."
+./NOVA-SOVERIGN/init-new-repo.sh:40:git commit -m "Initial commit: Genie standalone sidekick"
+./NOVA-SOVERIGN/init-new-repo.sh:49:echo "✅ Done. Genie now lives at $REMOTE"
+./NOVA-SOVERIGN/test_reports/pytest/pytest_results.xml:1:<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="19" time="11.595" timestamp="2026-04-27T11:17:27.265951+00:00" hostname="agent-env-c2324fb5-3fac-4100-8183-7f06f630d2af"><testcase classname="backend.tests.backend_test.TestAuth" name="test_login_success" time="0.137" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_login_wrong_password" time="0.116" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_login_wrong_email" time="0.109" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_me_without_token" time="0.112" /><testcase classname="backend.tests.backend_test.TestAuth" name="test_me_with_token" time="0.219" /><testcase classname="backend.tests.backend_test.TestMeta" name="test_models" time="0.102" /><testcase classname="backend.tests.backend_test.TestMeta" name="test_personas" time="0.098" /><testcase classname="backend.tests.backend_test.TestChat" name="test_chat_creates_session_and_persists" time="1.031" /><testcase classname="backend.tests.backend_test.TestChat" name="test_chat_continues_session" time="0.958" /><testcase classname="backend.tests.backend_test.TestChat" name="test_chat_persona_coach" time="1.097" /><testcase classname="backend.tests.backend_test.TestChat" name="test_sessions_list_and_delete" time="0.329" /><testcase classname="backend.tests.backend_test.TestNotes" name="test_create_list_update_summarize_delete" time="1.741" /><testcase classname="backend.tests.backend_test.TestNotes" name="test_delete_note" time="0.262" /><testcase classname="backend.tests.backend_test.TestTasks" name="test_create_update_prioritize_delete" time="2.859" /><testcase classname="backend.tests.backend_test.TestTasks" name="test_cleanup_tasks" time="0.329" /><testcase classname="backend.tests.backend_test.TestDocs" name="test_paste_doc_and_ask" time="1.375" /><testcase classname="backend.tests.backend_test.TestDocs" name="test_upload_txt" time="0.200" /><testcase classname="backend.tests.backend_test.TestDocs" name="test_delete_docs" time="0.223" /><testcase classname="backend.tests.backend_test.TestDashboard" name="test_dashboard" time="0.115" /></testsuite></testsuites>

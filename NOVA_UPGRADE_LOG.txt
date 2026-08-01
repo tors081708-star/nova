@@ -1,0 +1,183 @@
+======================================
+      NOVA FINAL UPGRADE ENGINE
+======================================
+[1/10] Checking workspace...
+agent-team
+Ai_Station
+bin
+genie-sidekick
+LICENSE
+NOVA-SOVERIGN
+NOVA-SOVERIGN-ENERGENT-CLEAN
+NOVA_UPGRADE_FINAL.sh
+NOVA_UPGRADE_LOG.txt
+onebox_nova_setup.sh
+README.md
+real_Genie
+review
+[2/10] Backing up configuration...
+[3/10] Creating missing env files...
+[4/10] Configuring free AI provider priority...
+Detected config: ./NOVA-SOVERIGN-ENERGENT-CLEAN/backend/.env
+Detected config: ./NOVA-SOVERIGN-ENERGENT-CLEAN/docker-compose.yml
+Detected config: ./NOVA-SOVERIGN/backend/.env
+Detected config: ./NOVA-SOVERIGN/docker-compose.yml
+Detected config: ./genie-sidekick/backend/.env
+Detected config: ./real_Genie/backend/.env
+Detected config: ./review/gold_mine/FINAL_GOLD/CORE/agent-team/config/models.yaml
+Detected config: ./review/gold_mine/PRIME_MIGRATION/ADAPTERS/NOVA-SOVERIGN/docker-compose.yml
+Detected config: ./review/gold_mine/classified/ORE/NOVA-SOVERIGN/docker-compose.yml
+Detected config: ./review/originals/docker-compose.yml
+Detected config: ./NOVA_BACKUP/NOVA-SOVERIGN-ENERGENT-CLEAN/backend/.env
+Detected config: ./NOVA_BACKUP/NOVA-SOVERIGN/backend/.env
+Detected config: ./NOVA_BACKUP/genie-sidekick/backend/.env
+Detected config: ./NOVA_BACKUP/real_Genie/backend/.env
+Detected config: ./NOVA_BACKUP/NOVA_BACKUP/NOVA-SOVERIGN-ENERGENT-CLEAN/backend/.env
+Detected config: ./NOVA_BACKUP/NOVA_BACKUP/NOVA-SOVERIGN/backend/.env
+Detected config: ./NOVA_BACKUP/NOVA_BACKUP/genie-sidekick/backend/.env
+Detected config: ./NOVA_BACKUP/NOVA_BACKUP/real_Genie/backend/.env
+[5/10] Updating Python environments...
+Installing NOVA-SOVERIGN/backend
+Defaulting to user installation because normal site-packages is not writeable
+Requirement already satisfied: fastapi==0.110.1 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 1)) (0.110.1)
+Requirement already satisfied: uvicorn==0.30.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (0.30.0)
+Requirement already satisfied: motor==3.6.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 3)) (3.6.0)
+Requirement already satisfied: pymongo==4.9.2 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 4)) (4.9.2)
+Requirement already satisfied: python-dotenv==1.0.1 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 5)) (1.0.1)
+Requirement already satisfied: pydantic==2.13.3 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 6)) (2.13.3)
+Requirement already satisfied: PyJWT==2.9.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 7)) (2.9.0)
+Requirement already satisfied: bcrypt==4.2.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 8)) (4.2.0)
+Requirement already satisfied: httpx==0.28.1 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 9)) (0.28.1)
+Requirement already satisfied: pypdf==6.10.2 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 10)) (6.10.2)
+Requirement already satisfied: python-multipart==0.0.9 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 11)) (0.0.9)
+Requirement already satisfied: openai==1.50.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from -r requirements.txt (line 12)) (1.50.0)
+Requirement already satisfied: starlette<0.38.0,>=0.37.2 in /home/dha_kidd/.local/lib/python3.14/site-packages (from fastapi==0.110.1->-r requirements.txt (line 1)) (0.37.2)
+Requirement already satisfied: typing-extensions>=4.8.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from fastapi==0.110.1->-r requirements.txt (line 1)) (4.16.0)
+Requirement already satisfied: annotated-types>=0.6.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from pydantic==2.13.3->-r requirements.txt (line 6)) (0.8.0)
+Requirement already satisfied: pydantic-core==2.46.3 in /home/dha_kidd/.local/lib/python3.14/site-packages (from pydantic==2.13.3->-r requirements.txt (line 6)) (2.46.3)
+Requirement already satisfied: typing-inspection>=0.4.2 in /home/dha_kidd/.local/lib/python3.14/site-packages (from pydantic==2.13.3->-r requirements.txt (line 6)) (0.4.2)
+Requirement already satisfied: click>=7.0 in /usr/lib/python3.14/site-packages (from uvicorn==0.30.0->uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (8.3.3)
+Requirement already satisfied: h11>=0.8 in /usr/lib/python3.14/site-packages (from uvicorn==0.30.0->uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (0.16.0)
+Requirement already satisfied: dnspython<3.0.0,>=1.16.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from pymongo==4.9.2->-r requirements.txt (line 4)) (2.8.0)
+Requirement already satisfied: anyio in /usr/lib/python3.14/site-packages (from httpx==0.28.1->-r requirements.txt (line 9)) (4.13.0)
+Requirement already satisfied: certifi in /usr/lib/python3.14/site-packages (from httpx==0.28.1->-r requirements.txt (line 9)) (2026.1.4)
+Requirement already satisfied: httpcore==1.* in /usr/lib/python3.14/site-packages (from httpx==0.28.1->-r requirements.txt (line 9)) (1.0.9)
+Requirement already satisfied: idna in /usr/lib/python3.14/site-packages (from httpx==0.28.1->-r requirements.txt (line 9)) (3.18)
+Requirement already satisfied: distro<2,>=1.7.0 in /usr/lib/python3.14/site-packages (from openai==1.50.0->-r requirements.txt (line 12)) (1.9.0)
+Requirement already satisfied: jiter<1,>=0.4.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from openai==1.50.0->-r requirements.txt (line 12)) (0.16.0)
+Requirement already satisfied: sniffio in /home/dha_kidd/.local/lib/python3.14/site-packages (from openai==1.50.0->-r requirements.txt (line 12)) (1.3.1)
+Requirement already satisfied: tqdm>4 in /home/dha_kidd/.local/lib/python3.14/site-packages (from openai==1.50.0->-r requirements.txt (line 12)) (4.70.0)
+Requirement already satisfied: httptools>=0.5.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (0.8.0)
+Requirement already satisfied: pyyaml>=5.1 in /usr/lib64/python3.14/site-packages (from uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (6.0.3)
+Requirement already satisfied: uvloop!=0.15.0,!=0.15.1,>=0.14.0 in /home/dha_kidd/.local/lib/python3.14/site-packages (from uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (0.22.1)
+Requirement already satisfied: watchfiles>=0.13 in /home/dha_kidd/.local/lib/python3.14/site-packages (from uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (1.2.0)
+Requirement already satisfied: websockets>=10.4 in /home/dha_kidd/.local/lib/python3.14/site-packages (from uvicorn[standard]==0.30.0->-r requirements.txt (line 2)) (17.0.1)
+[6/10] Updating frontend environments...
+[7/10] Checking Python syntax...
+  File "/home/dha_kidd/Downloads/nova-main/genie-sidekick/apps/real_Genie/backend/server.py", line 368
+    FIND this whole function in backend/server.py and SELECT IT ALL:
+         ^^^^
+SyntaxError: invalid syntax
+  File "/home/dha_kidd/Downloads/nova-main/real_Genie/backend/server.py", line 412
+    REPLACE the whole selection with this (it now starts with a new ollama_chat helper, then the same memory extractor rewritten to call it):
+            ^^^
+SyntaxError: invalid syntax
+  File "/home/dha_kidd/Downloads/nova-main/review/gold_mine/PRIME_MIGRATION/ADAPTERS/real_Genie/backend/server.py", line 368
+    FIND this whole function in backend/server.py and SELECT IT ALL:
+         ^^^^
+SyntaxError: invalid syntax
+  File "/home/dha_kidd/Downloads/nova-main/review/gold_mine/classified/ORE/real_Genie/backend/server.py", line 368
+    FIND this whole function in backend/server.py and SELECT IT ALL:
+         ^^^^
+SyntaxError: invalid syntax
+[8/10] Building frontends...
+
+> nova-frontend@1.0.0 build
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 1647 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.82 kB │ gzip:  0.45 kB
+dist/assets/index-BUfC5B3R.css   17.59 kB │ gzip:  4.77 kB
+dist/assets/index-DxPtgwun.js   273.54 kB │ gzip: 86.45 kB
+✓ built in 2.62s
+
+> nova-frontend@1.0.0 build
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 1647 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.82 kB │ gzip:  0.45 kB
+dist/assets/index-BUfC5B3R.css   17.59 kB │ gzip:  4.77 kB
+dist/assets/index-BezgtbU2.js   273.54 kB │ gzip: 86.45 kB
+✓ built in 2.62s
+
+> genie-sidekick-frontend@1.0.0 build
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:  0.30 kB
+dist/assets/index-DKL5ZFmK.css    4.88 kB │ gzip:  1.69 kB
+dist/assets/index-uCt0gyRG.js   143.34 kB │ gzip: 46.02 kB
+✓ built in 743ms
+
+> frontend@0.1.0 build
+> craco build
+
+node:internal/modules/cjs/loader:1430
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'ajv/dist/compile/codegen'
+Require stack:
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/definitions/typeof.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/keywords/typeof.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/keywords/index.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/index.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/schema-utils/dist/validate.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/schema-utils/dist/index.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/terser-webpack-plugin/dist/index.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/react-scripts/config/webpack.config.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/@craco/craco/dist/lib/cra.js
+- /home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/@craco/craco/dist/scripts/build.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1430:15)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1040:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1045:22)
+    at Module._load (node:internal/modules/cjs/loader:1216:25)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+    at Module.require (node:internal/modules/cjs/loader:1527:12)
+    at require (node:internal/modules/helpers:147:16)
+    at Object.<anonymous> (/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/definitions/typeof.js:3:19)
+    at Module._compile (node:internal/modules/cjs/loader:1781:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1913:10) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/definitions/typeof.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/keywords/typeof.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/keywords/index.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/ajv-keywords/dist/index.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/schema-utils/dist/validate.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/schema-utils/dist/index.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/terser-webpack-plugin/dist/index.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/react-scripts/config/webpack.config.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/@craco/craco/dist/lib/cra.js',
+    '/home/dha_kidd/Downloads/nova-main/real_Genie/frontend/node_modules/@craco/craco/dist/scripts/build.js'
+  ]
+}
+
+Node.js v22.23.1
+[9/10] Generating final status...
+[10/10] COMPLETE
+======================================
+ NOVA UPGRADE FINISHED
+======================================
