@@ -207,11 +207,6 @@ async def run_mission(
 
     async def run_one(order: Dict[str, str]) -> None:
         role = order["role"]
-        if role == "repair" and "qa" in store.items:
-            qa_out = store.items["qa"].get("output", "")
-            if re.search(r"VERDICT:\s*PASS", qa_out, re.I) and "FAIL" not in qa_out.split("VERDICT")[0]:
-                # skip repair when QA already passed — checked below more carefully
-                pass
         await _emit({"type": "stage_start", "stage": role, "order": order["order"], "name": order["name"]})
         prior = store.prior_context(exclude=role)
         user_msg = (

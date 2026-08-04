@@ -4,7 +4,7 @@ import { Send, Plus, Loader2, Sparkles, History } from "lucide-react";
 import { api, errText, API } from "@/api";
 import Markdown from "@/components/Markdown";
 
-export default function ChatMode({ activeModel, hasKey }) {
+export default function ChatMode({ activeModel, ready }) {
   const [sessions, setSessions] = useState([]);
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -31,7 +31,7 @@ export default function ChatMode({ activeModel, hasKey }) {
 
   const send = async () => {
     const text = input.trim();
-    if (!text || sending || !hasKey) return;
+    if (!text || sending || !ready) return;
     setError("");
     setInput("");
     setMessages((m) => [...m, { role: "user", content: text }, { role: "assistant", content: "", model: activeModel, streaming: true }]);
@@ -161,10 +161,10 @@ export default function ChatMode({ activeModel, hasKey }) {
             <div className="glass flex items-end gap-2 rounded-2xl p-2">
               <textarea rows={1} value={input} onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-                placeholder={hasKey ? "Message NOVA…" : "Add an OpenRouter key in Settings to begin"}
-                disabled={!hasKey} data-testid="chat-input"
+                placeholder={ready ? "Message NOVA…" : "Add an OpenRouter key or start Ollama to begin"}
+                disabled={!ready} data-testid="chat-input"
                 className="max-h-40 min-h-[44px] flex-1 resize-none bg-transparent px-3 py-2.5 text-[15px] text-white outline-none placeholder:text-zinc-600 disabled:opacity-60" />
-              <button onClick={send} disabled={sending || !input.trim() || !hasKey} data-testid="chat-send-btn"
+              <button onClick={send} disabled={sending || !input.trim() || !ready} data-testid="chat-send-btn"
                 className="glow-primary flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#00FF9D] text-black transition-transform hover:-translate-y-0.5 disabled:opacity-40 disabled:hover:translate-y-0">
                 {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
               </button>

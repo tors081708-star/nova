@@ -28,7 +28,7 @@ function StatDot({ ok }) {
   return (<span className={`h-2 w-2 shrink-0 rounded-full ${ok ? "bg-[#00FF9D] pulse-dot" : "bg-[#FF3366]"}`} />);
 }
 
-export default function DashboardMode({ hasKey }) {
+export default function DashboardMode({ ready }) {
   const [health, setHealth] = useState(null);
   const [loadingHealth, setLoadingHealth] = useState(true);
   const [proof, setProof] = useState(null);
@@ -47,7 +47,7 @@ export default function DashboardMode({ hasKey }) {
   useEffect(() => { loadHealth(); }, []);
 
   const runProof = async () => {
-    if (proving || !hasKey) return;
+    if (proving || !ready) return;
     setProving(true); setError(""); setProof(null);
     try {
       const res = await api.prove();
@@ -128,7 +128,7 @@ NOVA_BASE_URL="${API.replace(/\/api$/, "")}" ./start.sh
           <div className="glass rounded-2xl p-5 lg:col-span-3" data-testid="prove-panel">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="flex items-center gap-2 font-heading text-sm font-bold"><PlayCircle size={16} className="text-[#00FF9D]" /> Phase 5 · Prove It</h2>
-              <button onClick={runProof} disabled={proving || !hasKey} data-testid="run-proof-btn"
+              <button onClick={runProof} disabled={proving || !ready} data-testid="run-proof-btn"
                 className="glow-primary inline-flex items-center gap-2 rounded-xl bg-[#00FF9D] px-5 py-2.5 text-sm font-semibold text-black transition-transform hover:-translate-y-0.5 disabled:opacity-40 disabled:hover:translate-y-0">
                 {proving ? <Loader2 size={16} className="animate-spin" /> : <PlayCircle size={16} />}
                 {proving ? "Proving…" : "Run self-proof"}

@@ -5,4 +5,6 @@ pymongo
 openai>=1.40.0
 python-dotenv
 pydantic>=2.5
+httpx
+PyYAML
 pytest

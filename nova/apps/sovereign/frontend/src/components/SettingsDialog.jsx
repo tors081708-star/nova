@@ -64,6 +64,16 @@ export default function SettingsDialog({ open, onClose, settings, models, active
             <a href="https://openrouter.ai/keys" target="_blank" rel="noreferrer" className="mt-1.5 inline-flex items-center gap-1 text-xs text-[#00E5FF] hover:underline">
               Get a free key <ExternalLink size={11} />
             </a>
+            {settings?.ollama && (
+              <p className="mt-2 font-mono text-[11px] text-[#00FF9D]" data-testid="settings-ollama-hint">
+                Ollama detected · {settings.ollama_model || "local"} — key optional
+              </p>
+            )}
+            {!settings?.has_key && !settings?.ollama && (
+              <p className="mt-2 font-mono text-[11px] text-zinc-500">
+                Or run Ollama locally for a key-free path
+              </p>
+            )}
 
             <label className="mb-1.5 mt-5 flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-zinc-400">
               <Cpu size={13} /> Free Model

@@ -107,13 +107,6 @@ GENIE_SYSTEM = (
     "acknowledgement and the numbered orders, nothing else."
 )
 
-ORDER_RE = re.compile(
-    r"^\s*(?:[-*\d]+[.)]?\s*)?\[?"
-    r"(report|design|code|qa|research|integration|repair)"
-    r"\]?\s*[:\-]?\s*(.*)$",
-    re.IGNORECASE,
-)
-
 
 async def get_settings() -> Dict[str, Any]:
     doc = await db.settings.find_one({"_id": "app"}) or {}
