@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-ROOT="$HOME/Downloads/nova-main"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 echo "======================================"
 echo " NOVA FINAL SURGICAL SWEEP"
@@ -35,12 +36,12 @@ done
 
 echo "[3] Checking launcher..."
 
-chmod +x NOVA_START_ALL.sh
+chmod +x "$ROOT/scripts/start-all.sh"
 
 
 echo "[4] Starting services..."
 
-./NOVA_START_ALL.sh || true
+"$ROOT/scripts/start-all.sh" || true
 
 
 echo "[5] Checking ports..."

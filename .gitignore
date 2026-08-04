@@ -15,3 +15,7 @@ NOVA_BACKUP/
 NOVA_BACKUP/
 __pycache__/
 *.pyc
+
+# Runtime launcher state
+scripts/logs/runtime/
+scripts/logs/pids/

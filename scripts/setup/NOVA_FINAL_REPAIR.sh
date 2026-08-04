@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-ROOT="$HOME/Downloads/nova-main"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 echo "======================================"
 echo " NOVA FINAL REPAIR PASS"
@@ -45,7 +46,7 @@ find . -name server.py \
 
 echo "[4] Creating launch helper..."
 
-cat > NOVA_START_ALL.sh <<'START'
+cat > "$ROOT/scripts/setup/NOVA_START_ALL.sh" <<'START'
 
 #!/usr/bin/env bash
 
@@ -72,7 +73,7 @@ echo "NOVA services launched"
 
 START
 
-chmod +x NOVA_START_ALL.sh
+chmod +x "$ROOT/scripts/start-all.sh" "$ROOT/scripts/setup/NOVA_START_ALL.sh"
 
 
 echo "[5] Generating final report..."
@@ -106,7 +107,7 @@ Provider priority:
 
 Run:
 
-./NOVA_START_ALL.sh
+"$ROOT/scripts/start-all.sh"
 
 ## Ports
 

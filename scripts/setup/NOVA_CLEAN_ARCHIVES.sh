@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-ROOT="$HOME/Downloads/nova-main"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 echo "================================"
 echo " NOVA ARCHIVE CLEANUP"
@@ -37,8 +38,8 @@ echo "================================"
 echo ""
 echo "Starting NOVA..."
 
-chmod +x NOVA_START_ALL.sh
+chmod +x "$ROOT/scripts/start-all.sh"
 
 echo "Ready:"
-echo "./NOVA_START_ALL.sh"
+echo ""$ROOT/scripts/start-all.sh""
 

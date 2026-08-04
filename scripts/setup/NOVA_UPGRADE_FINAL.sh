@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-ROOT="$HOME/Downloads/nova-main"
-LOG="$ROOT/NOVA_UPGRADE_LOG.txt"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+LOG="$ROOT/scripts/logs/NOVA_UPGRADE_LOG.txt"
 
 exec > >(tee -a "$LOG") 2>&1
 

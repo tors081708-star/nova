@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-ROOT="$HOME/Downloads/nova-main"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 echo "======================================"
 echo " NOVA LAST MILE FINISH"
@@ -47,7 +48,7 @@ find . \
 
 echo "[4] Create final launcher..."
 
-cat > NOVA_START_ALL.sh <<'START'
+cat > "$ROOT/scripts/setup/NOVA_START_ALL.sh" <<'START'
 #!/usr/bin/env bash
 
 ROOT="$HOME/Downloads/nova-main"
@@ -72,7 +73,7 @@ nohup npm run dev -- --host 0.0.0.0 --port 5173 >/tmp/genie5173.log 2>&1 &
 echo "NOVA ONLINE"
 START
 
-chmod +x NOVA_START_ALL.sh
+chmod +x "$ROOT/scripts/start-all.sh" "$ROOT/scripts/setup/NOVA_START_ALL.sh"
 
 
 echo "[5] Final status"
@@ -98,7 +99,7 @@ Completed:
 
 Start:
 
-./NOVA_START_ALL.sh
+"$ROOT/scripts/start-all.sh"
 
 Ports:
 

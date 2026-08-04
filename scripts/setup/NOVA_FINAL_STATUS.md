@@ -18,7 +18,7 @@ Completed:
 
 Start:
 
-./NOVA_START_ALL.sh
+./scripts/start-all.sh
 
 Ports:
 

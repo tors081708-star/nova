@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-ROOT="$HOME/Downloads/nova-main"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 echo "Starting NOVA..."
 
