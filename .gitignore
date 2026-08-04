@@ -19,3 +19,6 @@ __pycache__/
 # Runtime launcher state
 scripts/logs/runtime/
 scripts/logs/pids/
+
+.venv/
+venv/
