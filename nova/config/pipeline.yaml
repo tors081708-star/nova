@@ -1,0 +1,13 @@
+# NOVA team pipeline — edit to retune handoffs without code changes.
+# Waves run in order. Roles inside a wave run in parallel.
+# Each specialist receives all prior wave artifacts.
+
+max_tokens: 4096
+repair_on_fail: true
+
+waves:
+  - parallel: [research, design]
+  - serial: [code]
+  - serial: [qa]
+  - serial: [repair]   # skipped automatically when QA PASS
+  - parallel: [report, integration]

@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: nova-open-webui
+    ports:
+      - "3080:8080"
+    environment:
+      - OPENAI_API_BASE_URL=${NOVA_BASE_URL:-http://host.containers.internal:8001}/api/v1
+      - OPENAI_API_KEY=nova-local
+      - WEBUI_AUTH=False
+      - ENABLE_OLLAMA_API=False
+    volumes:
+      - open-webui-data:/app/backend/data
+    restart: unless-stopped
+volumes:
+  open-webui-data: {}

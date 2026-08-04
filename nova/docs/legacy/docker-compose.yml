@@ -1,0 +1,52 @@
+# ---------------------------------------------------------------------------
+# NOVA — local-first personal AI assistant.
+#
+# This stack is bound to 127.0.0.1 ONLY. It is not reachable from your network.
+# Requires: Docker, and (for local LLM) Ollama installed on the host.
+#
+#   1. Install Ollama:   https://ollama.com/download
+#   2. Pull a model:     ollama pull llama3.1:8b
+#   3. Edit .env next to this file (see LOCAL.md)
+#   4. docker compose up -d --build
+#   5. Open http://127.0.0.1:3000
+# ---------------------------------------------------------------------------
+version: "3.9"
+
+services:
+  nova:
+    build: .
+    image: nova:local
+    container_name: nova
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      DB_NAME: ${DB_NAME:-nova_assistant}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:?set ADMIN_EMAIL in .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+      CORS_ORIGINS: "*"
+      # Local LLM via Ollama on the host machine.
+      LLM_BACKEND: ${LLM_BACKEND:-ollama}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODELS: ${OLLAMA_MODELS:-llama3.1:8b}
+      # Used only if LLM_BACKEND=emergent
+      EMERGENT_LLM_KEY: ${EMERGENT_LLM_KEY:-}
+    extra_hosts:
+      # Make host.docker.internal work on Linux too.
+      - "host.docker.internal:host-gateway"
+    ports:
+      # Local-only. No 0.0.0.0. No LAN. No remote access.
+      - "127.0.0.1:3000:8001"
+
+  mongo:
+    image: mongo:7
+    container_name: nova-mongo
+    restart: unless-stopped
+    volumes:
+      - ./data/mongo:/data/db
+    # Only exposed to the nova service on the internal docker network.
+    # Uncomment the next two lines only if you want to use Compass locally.
+    # ports:
+    #   - "127.0.0.1:27017:27017"
