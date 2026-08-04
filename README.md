@@ -11,16 +11,14 @@ nova/apps/
   core/          # Core / Real Genie API
 nova/config/     # Shared models + pipeline config
 nova/docs/       # Deployment notes
-scripts/         # Start/stop/health + archived setup utilities
-NOVA-SOVERIGN/   # Legacy sovereign tree (fallback)
-genie-sidekick/  # Legacy sidekick sources
-real_Genie/      # Legacy core sources
+scripts/         # Bootstrap, start/stop/health, setup utilities
+archive/legacy/  # Historical duplicate trees (not used day-to-day)
 agent-team/      # Agent orchestration helpers
 ```
 
 ## Prerequisites
 
-- Python 3.10+
+- Python 3.12 recommended (3.10+ works; avoid 3.14 for wheels)
 - Node.js 18+ and npm
 - Optional: MongoDB on `:27017` (podman/docker), Ollama for local models
 
@@ -48,6 +46,7 @@ From the repository root:
 
 ```bash
 chmod +x scripts/*.sh
+./scripts/bootstrap.sh   # once: venvs, npm install, .env from examples
 ./scripts/start-all.sh
 ```
 

@@ -25,5 +25,5 @@ Front it with Open WebUI (podman) if you like — same free models.
 
 ## Ports
 - Frontend  http://localhost:3000
-- Backend   http://localhost:8001  (OpenAI-compatible at /api/v1)
+- Backend   http://localhost:8000  (OpenAI-compatible at /api/v1)
 - MongoDB   localhost:27017 (podman container nova-mongo)

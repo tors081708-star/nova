@@ -1,34 +1,45 @@
 # NOVA Sovereign AI Platform Deployment
 
-## Local
+## Local (full stack)
 
-1. Configure environment:
+```bash
+./scripts/bootstrap.sh
+# edit nova/apps/sovereign/backend/.env → OPENROUTER_API_KEY=...
+./scripts/start-all.sh
+./scripts/health-check.sh
+```
 
-.env
+Canonical ports:
 
-2. Install backend:
+| Service | URL |
+|---------|-----|
+| Sovereign UI | http://localhost:3000 |
+| Sidekick UI | http://localhost:5173 |
+| Sovereign API | http://localhost:8000 |
+| Sidekick API | http://localhost:8001 |
+| Core API | http://localhost:8002 |
 
-pip install -r requirements.txt
+## Sovereign only
 
-3. Run:
-
-uvicorn server:app --host 0.0.0.0 --port 8000
-
+```bash
+cd nova/apps/sovereign
+./run.sh
+```
 
 ## Docker
 
+```bash
 docker compose up --build
-
+```
 
 ## Validation
 
-Health endpoint:
+```
+GET http://localhost:8000/health
+```
 
-GET /health
+Expected shape:
 
-Expected:
-
-{
- "status":"healthy",
- "service":"NOVA"
-}
+```json
+{ "status": "healthy", "service": "NOVA" }
+```

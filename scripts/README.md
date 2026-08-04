@@ -8,6 +8,7 @@ From the repository root:
 
 ```bash
 chmod +x scripts/*.sh
+./scripts/bootstrap.sh
 ./scripts/start-all.sh
 ```
 
@@ -27,6 +28,7 @@ Stop everything started by the launcher:
 
 | Path | Purpose |
 |------|---------|
+| `bootstrap.sh` | Create venvs, install deps, seed `.env` from examples |
 | `start-all.sh` | Start Sovereign, Sidekick, and Core APIs + UIs |
 | `health-check.sh` | Probe local service ports |
 | `stop-all.sh` | Stop processes tracked in `logs/pids/` |

@@ -34,11 +34,16 @@ start_backend() {
   echo "[..]  Starting ${name} API on :${port}"
   (
     cd "$dir"
-    if [ -d .venv ]; then
-      # shellcheck disable=SC1091
-      source .venv/bin/activate
+    local py="python3"
+    if [ -x .venv/bin/python ]; then
+      py="$(pwd)/.venv/bin/python"
+    elif [ -x .venv/bin/python3 ]; then
+      py="$(pwd)/.venv/bin/python3"
     fi
-    nohup python3 -m uvicorn server:app --host 0.0.0.0 --port "$port" \
+    if ! "$py" -c "import uvicorn" 2>/dev/null; then
+      echo "[!!]  ${name}: uvicorn missing in ${py}. Run ./scripts/bootstrap.sh" >&2
+    fi
+    nohup "$py" -m uvicorn server:app --host 0.0.0.0 --port "$port" \
       >"$log" 2>&1 &
     echo $! >"$pidf"
   )
@@ -82,11 +87,11 @@ SIDEKICK_BE="${ROOT}/nova/apps/sidekick/backend"
 SIDEKICK_FE="${ROOT}/nova/apps/sidekick/frontend"
 CORE_BE="${ROOT}/nova/apps/core/backend"
 
-[ -f "${SOVEREIGN_BE}/server.py" ] || SOVEREIGN_BE="${ROOT}/NOVA-SOVERIGN/backend"
-[ -f "${SOVEREIGN_FE}/package.json" ] || SOVEREIGN_FE="${ROOT}/NOVA-SOVERIGN/frontend"
-[ -f "${SIDEKICK_BE}/server.py" ] || SIDEKICK_BE="${ROOT}/genie-sidekick/backend"
-[ -f "${SIDEKICK_FE}/package.json" ] || SIDEKICK_FE="${ROOT}/genie-sidekick/frontend"
-[ -f "${CORE_BE}/server.py" ] || CORE_BE="${ROOT}/real_Genie/backend"
+[ -f "${SOVEREIGN_BE}/server.py" ] || SOVEREIGN_BE="${ROOT}/archive/legacy/NOVA-SOVERIGN/backend"
+[ -f "${SOVEREIGN_FE}/package.json" ] || SOVEREIGN_FE="${ROOT}/archive/legacy/NOVA-SOVERIGN/frontend"
+[ -f "${SIDEKICK_BE}/server.py" ] || SIDEKICK_BE="${ROOT}/archive/legacy/genie-sidekick/backend"
+[ -f "${SIDEKICK_FE}/package.json" ] || SIDEKICK_FE="${ROOT}/archive/legacy/genie-sidekick/frontend"
+[ -f "${CORE_BE}/server.py" ] || CORE_BE="${ROOT}/archive/legacy/real_Genie/backend"
 
 if ! have python3; then
   echo "ERROR: python3 is required"

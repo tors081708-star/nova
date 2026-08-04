@@ -16,13 +16,13 @@ else
   echo "!! podman not found. Install it (sudo dnf install -y podman) or run MongoDB yourself on :27017"
 fi
 
-echo ">> 2/3  Backend (FastAPI :8001)"
+echo ">> 2/3  Backend (FastAPI :8000)"
 cd "$ROOT/backend"
 [ -d .venv ] || python3 -m venv .venv
 source .venv/bin/activate
 pip install -q --upgrade pip
 pip install -q -r requirements.txt
-uvicorn server:app --host 0.0.0.0 --port 8001 > "$ROOT/backend/backend.log" 2>&1 &
+uvicorn server:app --host 0.0.0.0 --port 8000 > "$ROOT/backend/backend.log" 2>&1 &
 BACK_PID=$!
 echo "$BACK_PID" > "$ROOT/.backend.pid"
 deactivate || true

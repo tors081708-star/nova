@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export NOVA_BASE_URL="${NOVA_BASE_URL:-http://host.containers.internal:8001}"
+export NOVA_BASE_URL="${NOVA_BASE_URL:-http://host.containers.internal:8000}"
 echo "NOVA OpenAI-compatible endpoint: ${NOVA_BASE_URL}/api/v1"
 if command -v podman-compose >/dev/null 2>&1; then RUNNER="podman-compose";
 elif command -v podman >/dev/null 2>&1; then RUNNER="podman compose";
